@@ -10,7 +10,7 @@ ingressClassName: nginx
 servicePort: 80
 auth:
   enabled: true
-  image: quay.io/oauth2-proxy/oauth2-proxy:v7.12.0
+  image: quay.io/oauth2-proxy/oauth2-proxy:v7.15.3
   existingSecret: labs-auth-secrets
   issuerURL: https://auth.devopsatolyesi.com/realms/devops-atolyesi
   clientID: labs-portal
