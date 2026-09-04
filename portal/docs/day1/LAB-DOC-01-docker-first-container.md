@@ -1,141 +1,339 @@
-# LAB-DOC-01 — Docker Engine Verification, First Container & Port Mapping
+# LAB-DOC-01 — İlk Docker Konteyneri ve Yaşam Döngüsü
 
-## Metadata
-- **Seviye:** CORE
-- **Önerilen Gün:** Gün 1
-- **Tahmini Süre:** 30 dk
-- **Gerekli Profil:** `docker`
-- **Host Portları:** `8080:80`
-- **Çalışma Dizini:** `~/devops-workspace/labs/LAB-DOC-01`
+> [Bu labın başlangıç dosyalarını indir (ZIP)](/downloads/LAB-DOC-01.zip) — paket README, starter ve doğrulama scriptlerini içerir; çözüm içermez.
+
+
+İndirdikten sonra terminalde: `unzip LAB-DOC-01.zip && cd LAB-DOC-01`
+
+## ZIP İndirmeden Dosyaları Oluşturma
+
+Aşağıdaki bloklar ZIP paketiyle birebir aynı dosyaları oluşturur.
+
+```bash
+mkdir -p ~/labs/LAB-DOC-01
+cd ~/labs/LAB-DOC-01
+```
+
+### `starter/Dockerfile`
+
+```bash
+mkdir -p "$(dirname -- starter/Dockerfile)"
+cat > starter/Dockerfile <<'LAB_FILE_EOF_1'
+# TODO: Write Dockerfile for Python HTTP Server
+# Hint: FROM python:3.11-alpine
+LAB_FILE_EOF_1
+```
+
+### `starter/app.py`
+
+```bash
+mkdir -p "$(dirname -- starter/app.py)"
+cat > starter/app.py <<'LAB_FILE_EOF_2'
+# LAB-DOC-01 Starter App
+from http.server import HTTPServer, BaseHTTPRequestHandler
+
+class SimpleHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header('Content-type', 'text/plain')
+        self.end_headers()
+        self.wfile.write(b"Hello from DevOps Atolyesi LAB-DOC-01!\n")
+
+if __name__ == '__main__':
+    server = HTTPServer(('0.0.0.0', 8080), SimpleHandler)
+    print("Serving on port 8080...")
+    server.serve_forever()
+LAB_FILE_EOF_2
+```
+
+### `scripts/cleanup.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/cleanup.sh)"
+cat > scripts/cleanup.sh <<'LAB_FILE_EOF_3'
+#!/usr/bin/env bash
+docker rm -f lab-doc-01-test 2>/dev/null || true
+docker rmi devops-first-container:v1 2>/dev/null || true
+echo "Cleanup completed for LAB-DOC-01."
+LAB_FILE_EOF_3
+chmod +x scripts/cleanup.sh
+```
+
+### `scripts/reset.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/reset.sh)"
+cat > scripts/reset.sh <<'LAB_FILE_EOF_4'
+#!/usr/bin/env bash
+set -euo pipefail
+echo "Resetting workspace for LAB-DOC-01..."
+script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+bash "$script_dir/cleanup.sh"
+cp -a "$script_dir/../starter/." .
+echo "Workspace reset to starter state for LAB-DOC-01."
+LAB_FILE_EOF_4
+chmod +x scripts/reset.sh
+```
+
+### `scripts/validate.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/validate.sh)"
+cat > scripts/validate.sh <<'LAB_FILE_EOF_5'
+#!/usr/bin/env bash
+set -euo pipefail
+echo "==> Validating LAB-DOC-01: First Container..."
+docker build -t devops-first-container:v1 . >/dev/null
+docker run -d --name lab-doc-01-test -p 8080:8080 devops-first-container:v1 >/dev/null
+sleep 2
+HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080 || echo "000")
+docker rm -f lab-doc-01-test >/dev/null 2>&1 || true
+if [ "$HTTP_CODE" = "200" ]; then
+    echo "[PASS] LAB-DOC-01 Container responds with HTTP 200"
+    exit 0
+else
+    echo "[FAIL] LAB-DOC-01 Expected HTTP 200, got $HTTP_CODE"
+    exit 1
+fi
+LAB_FILE_EOF_5
+chmod +x scripts/validate.sh
+```
+
+Başlangıç dosyalarını çalışma dizinine alın:
+
+```bash
+cp -a starter/. .
+```
+
+
+## Amaç
+
+- Docker Engine ortamının çalıştığını doğrulamak.
+- Konteyner yaşam döngüsünü (`run`, `ps`, `logs`, `inspect`, `exec`, `stop`, `start`, `rm`) uygulamalı olarak öğrenmek.
+- Basit bir Python HTTP uygulamasını `Dockerfile` ile paketleyip port yönlendirmesi (`-p 8080:8080`) ile çalıştırmak.
+- İnteraktif Docker temel komut alıştırmalarını çözmek.
 
 ---
 
-## 1. Lab Senaryosu
-Mikroservis mimarisine geçiş yapan bir kurumda, geliştirilen servislerin fiziksel sunucu bağımlılıklarından kurtarılması ve izole ortamlarda çalıştırılması hedeflenmektedir. Bu doğrultuda sunucu üzerindeki Docker Engine çalışma durumu teyit edilmeli, ilk OCI tabanlı web servisi ayağa kaldırılmalıdır. Konteynerin dış dünyaya açılabilmesi için host ve konteyner arasındaki port yönlendirme mekanizması kurgulanacak, erişim logları takip edilerek servis yaşam döngüsü doğrulanacaktır.
+## Ön Koşullar
 
-## 2. Amaç
-Docker CLI ve Daemon durumunu doğrulamak, arka planda (`-d`) port haritalamalı (`-p 8080:80`) Nginx web sunucusu çalıştırmak, canlı log akışını izlemek ve konteyner yaşam döngüsünü yönetmek.
+Çalışma ortamınızda Docker servisinin çalıştığından ve gerekli izinlere sahip olduğunuzdan emin olun:
 
-## 3. Mimari / Akış
+```bash
+docker version
+docker info >/dev/null
+```
+
+> Komutlar hata vermeden tamamlanmalıdır. `8080` portunun boş olduğundan emin olun.
+
+---
+
+## Adımlar
+
+### 1. Çalışma Dizinini Hazırlayın
+
+Standart laboratuvar çalışma dizininizi oluşturun ve içine geçin:
+
+```bash
+mkdir -p ~/labs/LAB-DOC-01
+cd ~/labs/LAB-DOC-01
+```
+
+Eğer laboratuvar paketini indirdiyseniz başlangıç dosyalarını kopyalayabilirsiniz:
+
+```bash
+cp -a starter/. . 2>/dev/null || true
+```
+
+Veya başlangıç dosyalarını doğrudan oluşturun:
+
+```bash
+cat <<'EOF' > app.py
+# LAB-DOC-01 Starter App
+from http.server import HTTPServer, BaseHTTPRequestHandler
+
+class SimpleHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header('Content-type', 'text/plain; charset=utf-8')
+        self.end_headers()
+        self.wfile.write(b"Hello from DevOps Atolyesi LAB-DOC-01!\n")
+
+if __name__ == '__main__':
+    server = HTTPServer(('0.0.0.0', 8080), SimpleHandler)
+    print("Serving on port 8080...")
+    server.serve_forever()
+EOF
+```
+
+---
+
+### 2. Dockerfile Dosyasını Oluşturun
+
+Uygulamayı konteynerize etmek için `Dockerfile` dosyasını oluşturun:
+
+```bash
+cat <<'EOF' > Dockerfile
+FROM python:3.11-alpine
+WORKDIR /app
+COPY app.py .
+EXPOSE 8080
+CMD ["python", "app.py"]
+EOF
+```
+
+---
+
+### 3. İmajı Derleyin ve Konteyneri Başlatın
+
+İmajı `devops-first-container:v1` etiketiyle derleyin:
+
+```bash
+docker build -t devops-first-container:v1 .
+```
+
+Konteyneri arka planda (`-d`), `lab-doc-01-test` ismiyle ve host'un `8080` portunu konteynerin `8080` portuna bağlayarak çalıştırın:
+
+```bash
+docker run -d --name lab-doc-01-test -p 8080:8080 devops-first-container:v1
+```
+
+---
+
+### 4. Konteyner Durumunu ve Yanıtı Kontrol Edin
+
+Çalışan konteyneri listeleyin:
+
+```bash
+docker ps --filter name=lab-doc-01-test
+```
+
+HTTP servisine istek atarak yanıtı doğrulayın:
+
+```bash
+curl http://localhost:8080
+```
+
+Konteynerin loglarını inceleyin:
+
+```bash
+docker logs --tail 10 lab-doc-01-test
+```
+
+---
+
+### 5. Konteyner İçinde Komut Çalıştırma ve İnceleme (Exec & Inspect)
+
+Konteynerin IP adresini ve durumunu JSON formatında inceleyin:
+
+```bash
+docker inspect --format '{{ .NetworkSettings.IPAddress }}' lab-doc-01-test
+```
+
+Konteyner içine bağlanarak süreçleri kontrol edin:
+
+```bash
+docker exec -it lab-doc-01-test ps aux
+```
+
+---
+
+## 💡 Temel Docker Komutları İnteraktif Pratik Alıştırmaları
+
+Aşağıdaki görevleri kendi terminalinizde deneyin. Yanıtınızı kontrol etmek için ipucu kutucuğuna tıklayın.
+
+#### Soru 1: Arka Planda Nginx Başlatma
+> **Görev:** `nginx:alpine` imajını kullanarak `web-test` adında, host `8085` portunu konteynerin `80` portuna yönlendiren bir konteyneri arka planda başlatın.
+
+??? tip "💡 Çözümü Göster"
+    ```bash
+    docker run -d --name web-test -p 8085:80 nginx:alpine
+    curl http://localhost:8085
+    ```
+
+---
+
+#### Soru 2: Konteyner İçine İnteraktif Kabuk (Shell) ile Bağlanma
+> **Görev:** Çalışan `web-test` konteynerinin içine `sh` kabuğu ile bağlanıp `/etc/nginx/nginx.conf` dosyasını görüntüleyin.
+
+??? tip "💡 Çözümü Göster"
+    ```bash
+    docker exec -it web-test sh
+    # Konteyner içinde:
+    cat /etc/nginx/nginx.conf
+    exit
+    ```
+
+---
+
+#### Soru 3: Konteyner Loglarını Canlı Takip Etme
+> **Görev:** `lab-doc-01-test` konteynerinin loglarını canlı akış (follow) modunda izleyin ve son 5 satırı görüntüleyin.
+
+??? tip "💡 Çözümü Göster"
+    ```bash
+    docker logs -f --tail 5 lab-doc-01-test
+    # Çıkış için: Ctrl + C
+    ```
+
+---
+
+#### Soru 4: Konteyneri Durdurma ve Yeniden Başlatma
+> **Görev:** `web-test` konteynerini durdurun, durdurulduğunu teyit edin ve ardından tekrar başlatın.
+
+??? tip "💡 Çözümü Göster"
+    ```bash
+    docker stop web-test
+    docker ps -a --filter name=web-test
+    docker start web-test
+    ```
+
+---
+
+#### Soru 5: Kullanılmayan Kaynakları Temizleme
+> **Görev:** Durdurulmuş konteynerleri ve kullanılmayan ağları tek komutla temizleyin.
+
+??? tip "💡 Çözümü Göster"
+    ```bash
+    docker container prune -f
+    ```
+
+---
+
+## Beklenen Sonuç
+
 ```text
-  [ Host: Ubuntu 24.04 ] (Port: 8080)
-            |
-            v  (Port Mapping: 8080 -> 80)
-  [ Container: my-first-web (nginx:1.27-alpine) ]
-            |
-            +---> Serving HTTP Port 80 (/usr/share/nginx/html)
+Hello from DevOps Atolyesi LAB-DOC-01!
 ```
 
-## 4. Ön Koşullar
-- Docker Engine kurulu ve çalışır durumda olmalıdır
-- Kullanıcı `docker` grubuna üye olmalıdır
-- Host üzerinde 8080 portu boş olmalıdır
+---
 
-Aşağıdaki komutlarla başlangıç durumunu kontrol edin:
+## Doğrulama
+
 ```bash
-docker --version
-docker info --format '{{.ServerVersion}}'
-sudo systemctl is-active docker
+bash scripts/validate.sh
 ```
 
-## 5. Adım Adım Uygulama
+Başarılı sonuç: `[PASS] LAB-DOC-01 Container responds with HTTP 200`
 
-### Adım 1 — Çalışma Dizinini Hazırlama
-Laboratuvar çalışma dizinini oluşturun:
+---
+
+## Sorun Giderme
+
+- **Permission Denied Hatası:** Kullanıcınızın `docker` grubunda olduğunu `groups` komutuyla kontrol edin. Değilseniz `sudo usermod -aG docker $USER` komutunu çalıştırıp yeni oturum açın.
+- **Port Çakışması:** `8080` portu kullanımda ise `docker ps --filter publish=8080` komutu ile çakışan konteyneri bulun ve durdurun.
+- **İmaj Derleme Hatası:** `Dockerfile` dosyasında `COPY app.py .` satırının ve dosya isimlerinin doğruluğunu kontrol edin.
+
+---
+
+## Temizlik
+
 ```bash
-mkdir -p ~/devops-workspace/labs/LAB-DOC-01
-cd ~/devops-workspace/labs/LAB-DOC-01
+bash scripts/cleanup.sh
 ```
 
-### Adım 2 — Konteyneri Arka Planda Başlatma
-Nginx web sunucusunu arka planda (`detached`), `my-first-web` adıyla ve 8080 host portuna yönlendirerek başlatın:
-```bash
-docker run -d \
-  --name my-first-web \
-  -p 8080:80 \
-  nginx:1.27-alpine
-```
+---
 
-### Adım 3 — Çalışan Konteyneri ve Port Haritasını Denetleme
-Konteynerin durumunu listeleyin:
-```bash
-docker ps --filter "name=my-first-web"
-```
+## Kaynak
 
-### Adım 4 — HTTP İsteği ile Servisi Test Etme ve Logları İnceleme
-Host üzerinden web servisine HTTP isteği gönderin ve erişim loglarını görüntüleyin:
-```bash
-# HTTP isteği gönder
-curl -i http://localhost:8080
+- [Hakan Bayraktar — Docker Commands Cheat Sheet with Examples](https://hbayraktar.medium.com/docker-commands-cheat-sheet-with-examples-d9a26396cb6f)
 
-# Konteyner erişim loglarını incele
-docker logs --tail 10 my-first-web
-```
-
-## 6. Beklenen Sonuç
-Adım 3'teki konteyner listesi çıktısı:
-```text
-CONTAINER ID   IMAGE               COMMAND                  PORTS                  NAMES
-...            nginx:1.27-alpine   "/docker-entrypoint.…"   0.0.0.0:8080->80/tcp   my-first-web
-```
-
-Adım 4'teki HTTP yanıtı ve log çıktısı:
-```text
-HTTP/1.1 200 OK
-Server: nginx/...
-...
-GET / HTTP/1.1" 200 ...
-```
-
-## 7. Doğrulama
-Web servisinin port 8080 üzerinden HTTP 200 yanıtı döndürdüğünü doğrulayın:
-```bash
-if curl -sf http://localhost:8080 | grep -q "Welcome to nginx"; then
-  echo "VALIDATION SUCCESS: Docker container is active and serving HTTP on port 8080."
-else
-  echo "VALIDATION FAILED: Unable to reach web service on port 8080." && exit 1
-fi
-```
-
-## 8. Sorun Giderme
-
-### Belirti
-`docker run` komutu verildiğinde `Got permission denied while trying to connect to the Docker daemon socket` hatası alınır.
-
-### Kanıt
-Socket dosya izinlerinde kullanıcının erişim hakkı olmadığı görülür.
-
-### Kontrol Komutu
-```bash
-ls -la /var/run/docker.sock
-groups
-```
-
-### Muhtemel Neden
-Geçerli kullanıcı `docker` grubuna dahil değildir veya yeni eklenen grup üyeliği mevcut oturuma yüklenmemiştir.
-
-### Çözüm
-Kullanıcıyı gruba ekleyin ve grup oturumunu yenileyin:
-```bash
-sudo usermod -aG docker $USER
-newgrp docker
-```
-
-### Tekrar Doğrulama
-```bash
-docker ps
-# Hata almadan çalışan konteyner tablosu listelenmelidir.
-```
-
-## 9. Temizlik / Sıfırlama
-Konteyneri durdurun ve sistemden silin:
-```bash
-docker rm -f my-first-web 2>/dev/null || true
-rm -rf ~/devops-workspace/labs/LAB-DOC-01
-```
-
-## 10. Production Notu
-Üretim ortamlarında konteynerler rastgele isimlerle başlatılmaz; mikroservis adı ve ortam bilgisi içeren isimlendirme standartları (`--name order-api-prod`) uygulanır. Ayrıca beklenmeyen çökmelere karşı `--restart unless-stopped` politikası tanımlanmalı ve logların disk doldurmasını önlemek amacıyla `--log-opt max-size=10m --log-opt max-file=3` gibi log rotasyon kuralları konulmalıdır.
-
-## 11. Challenge
-Konteynerin iç kök dosya sistemindeki `/usr/share/nginx/html/index.html` dosyasını `docker cp` veya `docker exec` komutuyla güncelleyerek tarayıcıda özel bir karşılama metni görüntüleyin.

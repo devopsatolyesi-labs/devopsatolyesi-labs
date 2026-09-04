@@ -1,20 +1,128 @@
 # LAB-JNK-02 — Jenkins Secure Pipeline: SonarQube Gate, Trivy & Harbor
 
-## Metadata
-- **Seviye:** PRACTITIONER
-- **Önerilen Gün:** Gün 3
-- **Tahmini Süre:** 60 dk
-- **Gerekli Profil:** `secure-ci`
-- **Host Portları:** `8080:8080` (Jenkins), `9000:9000` (SonarQube), `8082:8082` (Harbor)
-- **Çalışma Dizini:** `~/devops-workspace/labs/LAB-JNK-02`
+> [Bu labın başlangıç dosyalarını indir (ZIP)](/downloads/LAB-JNK-02.zip) — paket README, starter ve doğrulama scriptlerini içerir; çözüm içermez.
 
----
+
+İndirdikten sonra terminalde: `unzip LAB-JNK-02.zip && cd LAB-JNK-02`
+
+## ZIP İndirmeden Dosyaları Oluşturma
+
+Aşağıdaki bloklar ZIP paketiyle birebir aynı dosyaları oluşturur.
+
+```bash
+mkdir -p ~/labs/LAB-JNK-02
+cd ~/labs/LAB-JNK-02
+```
+
+### `starter/Dockerfile`
+
+```bash
+mkdir -p "$(dirname -- starter/Dockerfile)"
+cat > starter/Dockerfile <<'LAB_FILE_EOF_1'
+FROM python:3.11-alpine
+WORKDIR /app
+COPY app/ /app/
+EXPOSE 8000
+CMD ["python", "main.py"]
+LAB_FILE_EOF_1
+```
+
+### `starter/Jenkinsfile`
+
+```bash
+mkdir -p "$(dirname -- starter/Jenkinsfile)"
+cat > starter/Jenkinsfile <<'LAB_FILE_EOF_2'
+// TODO: DevSecOps pipeline with SonarQube Quality Gate, Trivy scan and Harbor push
+pipeline {
+    agent any
+    stages {
+        stage('Checkout') {
+            steps { echo 'Checkout...' }
+        }
+    }
+}
+LAB_FILE_EOF_2
+```
+
+### `starter/app/main.py`
+
+```bash
+mkdir -p "$(dirname -- starter/app/main.py)"
+cat > starter/app/main.py <<'LAB_FILE_EOF_3'
+from http.server import HTTPServer, BaseHTTPRequestHandler
+import json
+
+class PaymentHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header('Content-Type', 'application/json')
+        self.end_headers()
+        self.wfile.write(json.dumps({"service": "secure-payment-service", "status": "active"}).encode())
+
+if __name__ == '__main__':
+    server = HTTPServer(('0.0.0.0', 8000), PaymentHandler)
+    server.serve_forever()
+LAB_FILE_EOF_3
+```
+
+### `scripts/cleanup.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/cleanup.sh)"
+cat > scripts/cleanup.sh <<'LAB_FILE_EOF_4'
+#!/usr/bin/env bash
+echo "Cleanup completed for LAB-JNK-02."
+LAB_FILE_EOF_4
+chmod +x scripts/cleanup.sh
+```
+
+### `scripts/reset.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/reset.sh)"
+cat > scripts/reset.sh <<'LAB_FILE_EOF_5'
+#!/usr/bin/env bash
+set -euo pipefail
+lab_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+echo "Resetting workspace for LAB-JNK-02..."
+bash "$lab_dir/scripts/cleanup.sh"
+cp -r "$lab_dir/starter"/. .
+echo "Workspace reset to starter state for LAB-JNK-02."
+LAB_FILE_EOF_5
+chmod +x scripts/reset.sh
+```
+
+### `scripts/validate.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/validate.sh)"
+cat > scripts/validate.sh <<'LAB_FILE_EOF_6'
+#!/usr/bin/env bash
+set -euo pipefail
+echo "==> Validating LAB-JNK-02: DevSecOps Pipeline..."
+if [ -f Jenkinsfile ] && grep -q "Trivy" Jenkinsfile && [ -f Dockerfile ]; then
+    echo "[PASS] LAB-JNK-02 DevSecOps pipeline and Dockerfile verified."
+    exit 0
+else
+    echo "[FAIL] LAB-JNK-02 Missing pipeline or Dockerfile."
+    exit 1
+fi
+LAB_FILE_EOF_6
+chmod +x scripts/validate.sh
+```
+
+Başlangıç dosyalarını çalışma dizinine alın:
+
+```bash
+cp -a starter/. .
+```
+
 
 ## 1. Lab Senaryosu
-Yalnızca derleme ve temel testleri çalıştıran geleneksel CI süreçleri, kod kalitesi hatalarını, güvenlik açıklarını ve zafiyetli konteyner imajlarını üretim ortamına taşır. Modern DevSecOps yaklaşımında "Shift-Left Security" prensibi gereğince güvenlik ve kalite denetimleri doğrudan pipeline'ın ilk aşamalarına entegre edilir. Bu çalışmada finansal işlem yapan Python FastAPI mikroservisi için uçtan uca güvenli bir Jenkins DevSecOps pipeline'ı kurulur. Kaynak kod SonarQube Clean Code analizinden geçirilir; `waitForQualityGate()` ile kalite onayı beklenir; derlenen multi-stage Docker imajı Trivy ile taranır ve sıfır kritik açıkla Harbor Private Registry'ye aktarılır.
+Yalnızca derleme ve temel testleri çalıştıran geleneksel CI süreçleri, kod kalitesi hatalarını, güvenlik açıklarını ve zafiyetli konteyner imajlarını üretim ortamına taşır. Modern DevSecOps yaklaşımında "Shift-Left Security" prensibi gereğince güvenlik ve kalite denetimleri doğrudan boru hattının ilk aşamalarına entegre edilir. Bu çalışmada finansal işlem yapan Python FastAPI mikroservisi için uçtan uca güvenli bir Jenkins boru hattı kurulur. Kaynak kod SonarQube Clean Code analizinden geçirilir; `waitForQualityGate()` ile kalite onayı beklenir; derlenen multi-stage Docker imajı Trivy ile taranır ve sıfır kritik açıkla Harbor Private Registry'ye aktarılır.
 
 ## 2. Amaç
-Jenkins üzerinde tam kapsamlı bir DevSecOps pipeline'ı (`Jenkinsfile`) oluşturmak, SonarQube statik analizini ve Quality Gate webhook mekanizmasını çalıştırmak, Trivy ile konteyner seviyesinde CVE taraması yapmak (`--exit-code 1 --severity CRITICAL`) ve onaylanan güvenli imajı Harbor Registry'ye kimlik bilgisi bağlama (Credentials Binding) ile yüklemek.
+Jenkins üzerinde tam kapsamlı bir DevSecOps boru hattı (`Jenkinsfile`) oluşturmak, SonarQube statik analizini ve Quality Gate webhook mekanizmasını çalıştırmak, Trivy ile konteyner seviyesinde CVE taraması yapmak (`--exit-code 1 --severity CRITICAL`) ve onaylanan güvenli imajı Harbor Registry'ye kimlik bilgisi bağlama (Credentials Binding) ile yüklemek.
 
 ## 3. Mimari / Akış
 ```text
@@ -22,34 +130,56 @@ Jenkins üzerinde tam kapsamlı bir DevSecOps pipeline'ı (`Jenkinsfile`) oluşt
                 |
                 v
   [ Jenkins Declarative Pipeline ]
-    ├── Stage 1: Checkout SCM
-    ├── Stage 2: Unit Tests (pytest & coverage.xml)
-    ├── Stage 3: SonarQube Scanner (http://localhost:9000)
+    ├── Aşama 1: Checkout SCM
+    ├── Aşama 2: Unit Tests (pytest & coverage.xml)
+    ├── Aşama 3: SonarQube Scanner (http://localhost:9000)
     │     └── Quality Gate Webhook Callback ---> [ Durum: OK ]
-    ├── Stage 4: Docker Multi-Stage Build (Image: secure-payment-service)
-    ├── Stage 5: Trivy Container Vulnerability Scan (0 CRITICAL CVE)
-    └── Stage 6: Harbor Push (localhost:8082/devops/payment-service:tag)
+    ├── Aşama 4: Docker Multi-Stage Build (Image: secure-payment-service)
+    ├── Aşama 5: Trivy Container Vulnerability Scan (0 CRITICAL CVE)
+    └── Aşama 6: Harbor Push (localhost:8082/devops/payment-service:tag)
 ```
 
-![LAB-JNK-02 DevSecOps Sıralı Akış Mimarisi](images/lab-jnk-02-secure-pipeline.svg)
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Dev as Geliştirici
+    participant SCM as Git Repo
+    participant JNK as Jenkins Pipeline (:8080)
+    participant SQ as SonarQube (:9000)
+    participant TRIVY as Trivy v0.74
+    participant HARBOR as Harbor Registry (:8082)
+
+    Dev->>SCM: git commit & push
+    SCM->>JNK: Webhook / Poll SCM Tetikleme
+    Note over JNK: Aşama 1: Checkout & Aşama 2: Pytest
+    JNK->>SQ: Aşama 3: sonar-scanner rapor gönderimi
+    Note over SQ: Statik Kod & Güvenlik Analizi
+    SQ-->>JNK: Webhook ile Quality Gate Durumu (OK / FAILED)
+    Note over JNK: waitForQualityGate() Onayı
+    JNK->>JNK: Aşama 4: Docker Multi-Stage Build
+    JNK->>TRIVY: Aşama 5: trivy image --severity CRITICAL
+    TRIVY-->>JNK: 0 CRITICAL CVE Onayı
+    JNK->>HARBOR: Aşama 6: docker push (Robot Credentials)
+    HARBOR-->>JNK: OCI İmajı Güvenli Depolandı (HTTP 201)
+```
 
 > [!NOTE]
-> **Quality Gate Webhook Mekanizması:** Jenkins, SonarQube taramasını başlattıktan sonra sonucu beklemeden thread'i askıya alabilir. SonarQube analizi tamamladığında, `http://jenkins:8080/sonarqube-webhook/` adresine bir POST isteği gönderir. `waitForQualityGate()` adımı bu callback bildirimini yakalayarak pipeline'ın sonraki adımlara geçmesini onaylar.
+> **Quality Gate Webhook Mekanizması:** Jenkins, SonarQube taramasını başlattıktan sonra sonucu beklemeden thread'i askıya alabilir. SonarQube analizi tamamladığında, `http://jenkins:8080/sonarqube-webhook/` adresine bir POST isteği gönderir. `waitForQualityGate()` adımı bu callback bildirimini yakalayarak boru hattının sonraki adımlara geçmesini onaylar.
 
 
 ## 4. Ön Koşullar
-- Öğrenci Ubuntu sunucusu üzerinde Docker ve Git kurulu olmalıdır
-- Python 3, `pytest` ve `trivy` CLI kurulu olmalıdır (`trivy --version`)
+- Jenkins (port 8080), SonarQube (port 9000) ve Harbor (port 8082) servisleri çalışır durumda olmalıdır
+- Merkezi referans platformlar için `https://devopsatolyesi.com/sonarqube` ve `https://devopsatolyesi.com/harbor` adreslerini inceleyebilirsiniz
+- `trivy` CLI kurulu olmalıdır (`trivy --version`)
 - Önceden tamamlanması önerilen lablar: `LAB-JNK-01`, `LAB-DOC-06`
 
-> [!TIP]
-> **Referans Laboratuvar İncelemesi (Opsiyonel):**  
-> Bu laboratuvarın merkezi platformdaki hazır ve çalışan referans uygulamasını incelemek isterseniz, [https://jenkins.devopsatolyesi.com](https://jenkins.devopsatolyesi.com) adresine giderek `Labs/07-Security/LAB-JNK-02-secure-pipeline` işini kullanıcı adınız (`devops`) ve eğitim başlangıcında size sağlanan eğitim şifreniz ile görüntüleyebilirsiniz.
-
-Aşağıdaki komutlarla çalışma dizinini hazırlayın:
+Aşağıdaki komutlarla servis durumlarını doğrulayın:
 ```bash
-mkdir -p ~/devops-workspace/labs/LAB-JNK-02/app ~/devops-workspace/labs/LAB-JNK-02/tests
-cd ~/devops-workspace/labs/LAB-JNK-02
+curl -sf http://localhost:8080/login > /dev/null && echo "Jenkins: OK" || echo "Jenkins: Check Port 8080"
+curl -sf http://localhost:9000/api/system/status | grep -q "UP" && echo "SonarQube: OK" || echo "SonarQube: Check Port 9000"
+curl -sf http://localhost:8082/api/v2.0/ping && echo "Harbor: OK" || echo "Harbor: Check Port 8082"
+mkdir -p ~/labs/LAB-JNK-02/app ~/labs/LAB-JNK-02/tests
+cd ~/labs/LAB-JNK-02
 ```
 
 ## 5. Adım Adım Uygulama
@@ -149,7 +279,7 @@ sonar.exclusions=**/__pycache__/**,**/.venv/**
 EOF
 ```
 
-### Adım 3 — Tam DevSecOps `Jenkinsfile` Pipeline Dosyasını Yazma
+### Adım 3 — Tam DevSecOps `Jenkinsfile` Boru Hattını Yazma
 Kod analizi, Quality Gate, Trivy ve Harbor push adımlarını içeren `Jenkinsfile` dosyasını oluşturun:
 ```groovy
 cat <<'EOF' > Jenkinsfile
@@ -260,7 +390,7 @@ pipeline {
 EOF
 ```
 
-### Adım 4 — Pipeline Adımlarını Yerel Olarak Koşturma ve Doğrulama
+### Adım 4 — Boru Hattı Adımlarını Yerel Olarak Koşturma ve Doğrulama
 Pipeline içindeki test, build ve Trivy adımlarını terminal üzerinden test edin:
 ```bash
 # 1. Sanal ortam ve testler
@@ -327,7 +457,7 @@ Test imajını ve geçici dosyaları temizleyin:
 ```bash
 docker rmi localhost:8082/devops/secure-payment-service:v1.2.0-manual 2>/dev/null || true
 rm -rf .venv coverage.xml junit-report.xml .pytest_cache
-rm -rf ~/devops-workspace/labs/LAB-JNK-02
+rm -rf ~/labs/LAB-JNK-02
 ```
 
 ## 10. Production Notu

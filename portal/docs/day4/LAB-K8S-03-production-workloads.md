@@ -1,14 +1,80 @@
 # LAB-K8S-03 — Production Workloads: Resources, Probes, Rollouts & PVC Storage
 
-## Metadata
-- **Seviye:** PRACTITIONER
-- **Önerilen Gün:** Gün 4
-- **Tahmini Süre:** 60 dk
-- **Gerekli Profil:** `kubernetes`
-- **Host Portları:** - (Küme İçi Servis ve Pod Dağıtımı)
-- **Çalışma Dizini:** `~/devops-workspace/labs/LAB-K8S-03`
+> [Bu labın başlangıç dosyalarını indir (ZIP)](/downloads/LAB-K8S-03.zip) — paket README, starter ve doğrulama scriptlerini içerir; çözüm içermez.
 
----
+
+İndirdikten sonra terminalde: `unzip LAB-K8S-03.zip && cd LAB-K8S-03`
+
+## ZIP İndirmeden Dosyaları Oluşturma
+
+Aşağıdaki bloklar ZIP paketiyle birebir aynı dosyaları oluşturur.
+
+```bash
+mkdir -p ~/labs/LAB-K8S-03
+cd ~/labs/LAB-K8S-03
+```
+
+### `starter/ingress.yaml`
+
+```bash
+mkdir -p "$(dirname -- starter/ingress.yaml)"
+cat > starter/ingress.yaml <<'LAB_FILE_EOF_1'
+# TODO: Write Ingress manifest
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web-ingress
+LAB_FILE_EOF_1
+```
+
+### `scripts/cleanup.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/cleanup.sh)"
+cat > scripts/cleanup.sh <<'LAB_FILE_EOF_2'
+#!/usr/bin/env bash
+kubectl delete -f ingress.yaml --ignore-not-found=true 2>/dev/null || true
+echo "Cleanup completed for LAB-K8S-03."
+LAB_FILE_EOF_2
+chmod +x scripts/cleanup.sh
+```
+
+### `scripts/reset.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/reset.sh)"
+cat > scripts/reset.sh <<'LAB_FILE_EOF_3'
+#!/usr/bin/env bash
+set -euo pipefail
+lab_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+echo "Resetting workspace for LAB-K8S-03..."
+bash "$lab_dir/scripts/cleanup.sh"
+cp -r "$lab_dir/starter"/. .
+echo "Workspace reset to starter state for LAB-K8S-03."
+LAB_FILE_EOF_3
+chmod +x scripts/reset.sh
+```
+
+### `scripts/validate.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/validate.sh)"
+cat > scripts/validate.sh <<'LAB_FILE_EOF_4'
+#!/usr/bin/env bash
+set -euo pipefail
+echo "==> Validating LAB-K8S-03: Ingress & PDB..."
+kubectl apply --dry-run=client -f ingress.yaml
+echo "[PASS] Ingress and PodDisruptionBudget manifests validated."
+LAB_FILE_EOF_4
+chmod +x scripts/validate.sh
+```
+
+Başlangıç dosyalarını çalışma dizinine alın:
+
+```bash
+cp -a starter/. .
+```
+
 
 ## 1. Lab Senaryosu
 Üretim ortamındaki Kubernetes iş yüklerinde kontrolsüz kaynak kullanımı, bir uygulamanın aşırı bellek tüketerek aynı düğümdeki diğer tüm podları (Noisy Neighbor etkisi) çökertmesine yol açabilir. Ayrıca sağlık probları (Liveness ve Readiness) tanımlanmamış podlar, açılış esnasında hazır olmadan trafik alarak son kullanıcılara HTTP 502/503 hataları döner. Yeni sürümler dağıtılırken kullanıcı trafiğinin kesilmemesi için sıfır kesintili (Zero-Downtime) güncelleme ve acil durum geri alma stratejileri hayati önem taşır. Bu çalışmada kaynak limitleri, Liveness/Readiness probları, RollingUpdate stratejisi ve kalıcı disk alanı (PersistentVolumeClaim - PVC) barındıran dayanıklı bir iş yükü yapılandırılır.
@@ -36,8 +102,8 @@ Kubernetes üzerinde üretim kalitesinde (production-grade) iş yükü tasarlama
 Aşağıdaki komutlarla başlangıç durumunu kontrol edin:
 ```bash
 kubectl get nodes
-mkdir -p ~/devops-workspace/labs/LAB-K8S-03/manifests
-cd ~/devops-workspace/labs/LAB-K8S-03
+mkdir -p ~/labs/LAB-K8S-03/manifests
+cd ~/labs/LAB-K8S-03
 ```
 
 ## 5. Adım Adım Uygulama
@@ -220,7 +286,7 @@ kubectl rollout status deployment/robust-web-service
 Dağıtımı, servisi ve PVC nesnesini silin:
 ```bash
 kubectl delete -f manifests/ 2>/dev/null || true
-rm -rf ~/devops-workspace/labs/LAB-K8S-03
+rm -rf ~/labs/LAB-K8S-03
 ```
 
 ## 10. Production Notu

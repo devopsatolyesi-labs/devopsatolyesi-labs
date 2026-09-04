@@ -79,6 +79,7 @@ nav:
       - LAB-DOC-01 - İlk Docker Konteyneri: day1/LAB-DOC-01-docker-first-container.md
       - LAB-DOC-02 - Volumes ve Ortam Değişkenleri: day1/LAB-DOC-02-docker-volumes-env.md
       - LAB-DOC-03 - Dockerfile Optimizasyonu: day2/LAB-DOC-03-dockerfile-optimization.md
+      - LAB-DOC-09 - Docker Network ve DNS: day2/LAB-DOC-09-docker-networks-dns.md
       - LAB-DOC-04 - Multi-Stage Build: day2/LAB-DOC-04-docker-multistage-hardening.md
       - LAB-DOC-05 - Docker Compose Çok Katmanlı Mimari: day2/LAB-DOC-05-docker-compose-multitier.md
       - LAB-DOC-06 - Trivy ve Harbor Entegrasyonu: day2/LAB-DOC-06-trivy-harbor-integration.md

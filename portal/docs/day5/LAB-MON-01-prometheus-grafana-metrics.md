@@ -1,14 +1,81 @@
 # LAB-MON-01 — Prometheus Architecture, Scrape Targets & PromQL Basics
 
-## Metadata
-- **Seviye:** PRACTITIONER
-- **Önerilen Gün:** Gün 5
-- **Tahmini Süre:** 45 dk
-- **Gerekli Profil:** `monitoring`
-- **Host Portları:** `9090:9090` (Prometheus), `3000:3000` (Grafana), `9100:9100` (Node Exporter), `8000:8000` (Order API)
-- **Çalışma Dizini:** `~/devops-workspace/labs/LAB-MON-01`
+> [Bu labın başlangıç dosyalarını indir (ZIP)](/downloads/LAB-MON-01.zip) — paket README, starter ve doğrulama scriptlerini içerir; çözüm içermez.
 
----
+
+İndirdikten sonra terminalde: `unzip LAB-MON-01.zip && cd LAB-MON-01`
+
+## ZIP İndirmeden Dosyaları Oluşturma
+
+Aşağıdaki bloklar ZIP paketiyle birebir aynı dosyaları oluşturur.
+
+```bash
+mkdir -p ~/labs/LAB-MON-01
+cd ~/labs/LAB-MON-01
+```
+
+### `starter/prometheus.yml`
+
+```bash
+mkdir -p "$(dirname -- starter/prometheus.yml)"
+cat > starter/prometheus.yml <<'LAB_FILE_EOF_1'
+# TODO: Configure Prometheus scrape job
+global:
+  scrape_interval: 15s
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+LAB_FILE_EOF_1
+```
+
+### `scripts/cleanup.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/cleanup.sh)"
+cat > scripts/cleanup.sh <<'LAB_FILE_EOF_2'
+#!/usr/bin/env bash
+echo "Cleanup completed for LAB-MON-01."
+LAB_FILE_EOF_2
+chmod +x scripts/cleanup.sh
+```
+
+### `scripts/reset.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/reset.sh)"
+cat > scripts/reset.sh <<'LAB_FILE_EOF_3'
+#!/usr/bin/env bash
+set -euo pipefail
+lab_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+echo "Resetting workspace for LAB-MON-01..."
+bash "$lab_dir/scripts/cleanup.sh"
+cp -r "$lab_dir/starter"/. .
+echo "Workspace reset to starter state for LAB-MON-01."
+LAB_FILE_EOF_3
+chmod +x scripts/reset.sh
+```
+
+### `scripts/validate.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/validate.sh)"
+cat > scripts/validate.sh <<'LAB_FILE_EOF_4'
+#!/usr/bin/env bash
+set -euo pipefail
+echo "==> Validating LAB-MON-01: Prometheus configuration..."
+docker run --rm -v "$(pwd)/prometheus.yml:/etc/prometheus/prometheus.yml" prom/prometheus:v3.13.2 check config /etc/prometheus/prometheus.yml
+echo "[PASS] Prometheus configuration syntax verified."
+LAB_FILE_EOF_4
+chmod +x scripts/validate.sh
+```
+
+Başlangıç dosyalarını çalışma dizinine alın:
+
+```bash
+cp -a starter/. .
+```
+
 
 ## 1. Lab Senaryosu
 Mikroservis mimarilerinde sistemlerin sağlıklı çalıştığını yalnızca sunucunun ayakta olmasına bakarak anlamak mümkün değildir. Uygulamaların saniye başına işlediği istek sayısı (RPS), HTTP 5xx hata oranları ve 95. yüzdelik (p95) yanıt gecikmeleri gibi "Golden Signals" metriklerinin sürekli toplanması ve görselleştirilmesi gerekir. Prometheus, çekme (pull) mimarisiyle çalışan endüstri standardı zaman serisi veritabanıdır. Bu çalışmada Python FastAPI mikroservisine metrik enstrümantasyonu eklenir; Prometheus 3.x LTS ile metrik kazıma hedefleri tanımlanır ve Grafana 13 panellerinde PromQL sorguları ile görselleştirilir.
@@ -27,7 +94,41 @@ Prometheus 3.x LTS çekme (pull) mimarisini kurmak, `prometheus.yml` ile uygulam
   [ Grafana 13.1.5 Paneli (Port: 3000) ] <--- (PromQL Sorgulaması)
 ```
 
-![LAB-MON-01 Prometheus ve Grafana Mimarisi](images/lab-mon-01-metrics.svg)
+```mermaid
+flowchart LR
+    subgraph TARGETS [Metrik Kaynakları (Targets)]
+        APP["order-api (:8000/metrics)\nHTTP İstek & Gecikme"]
+        NODE["Node Exporter (:9100/metrics)\nCPU, RAM, Disk, Ağ"]
+        PROM_SELF["Prometheus (:9090/metrics)\nTSDB Durumu"]
+    end
+
+    subgraph PROM [Prometheus 3.13.2 LTS Engine]
+        SCRAPER[Periyodik Kazıma / Pull Engine]
+        TSDB[(Zaman Serisi Veritabanı - TSDB)]
+        PROMQL[PromQL Sorgu Motoru]
+        SCRAPER --> TSDB
+        TSDB --> PROMQL
+    end
+
+    subgraph VIZ [Görselleştirme]
+        GRAF[Grafana 13.1.5 Paneli :3000]
+        USER((Operatör / SRE))
+        PROMQL -->|PromQL HTTP API| GRAF
+        GRAF --> USER
+    end
+
+    APP -->|Pull 5s| SCRAPER
+    NODE -->|Pull 5s| SCRAPER
+    PROM_SELF -->|Pull 5s| SCRAPER
+
+    classDef target fill:#1e1b4b,stroke:#818cf8,color:#fff;
+    classDef prom fill:#431407,stroke:#f97316,color:#fff;
+    classDef viz fill:#422006,stroke:#f59e0b,color:#fff;
+
+    class TARGETS target;
+    class PROM prom;
+    class VIZ viz;
+```
 
 > [!NOTE]
 > **Çekme (Pull) vs İtme (Push) Modeli:** Prometheus, metrikleri uygulamaların kendisine göndermesini (push) beklemez; konfigürasyonundaki hedeflerin `/metrics` uç noktalarını periyodik olarak (burada her 5 saniyede bir) yoklayarak (pull) zaman serisi veritabanına kaydeder.
@@ -42,8 +143,8 @@ Prometheus 3.x LTS çekme (pull) mimarisini kurmak, `prometheus.yml` ile uygulam
 Aşağıdaki komutlarla çalışma ortamını hazırlayın:
 ```bash
 docker compose version
-mkdir -p ~/devops-workspace/labs/LAB-MON-01/app ~/devops-workspace/labs/LAB-MON-01/prometheus ~/devops-workspace/labs/LAB-MON-01/grafana/provisioning/datasources
-cd ~/devops-workspace/labs/LAB-MON-01
+mkdir -p ~/labs/LAB-MON-01/app ~/labs/LAB-MON-01/prometheus ~/labs/LAB-MON-01/grafana/provisioning/datasources
+cd ~/labs/LAB-MON-01
 ```
 
 ## 5. Adım Adım Uygulama
@@ -261,7 +362,7 @@ curl -s http://localhost:9090/api/v1/targets | jq '.data.activeTargets[] | selec
 Konteynerleri, ağları ve oluşturulan dizini temizleyin:
 ```bash
 docker compose down -v
-rm -rf ~/devops-workspace/labs/LAB-MON-01
+rm -rf ~/labs/LAB-MON-01
 ```
 
 ## 10. Production Notu

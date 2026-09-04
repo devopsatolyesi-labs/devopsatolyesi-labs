@@ -1,22 +1,29 @@
-# DevOps Atölyesi Eğitim Lab Planı
+# DevOps Atölyesi Eğitim Lab ve Proje Master Planı
 
-Bu belge Labs portalındaki içerik çalışmalarının tek yol haritasıdır. Öğrenci
-navigasyonu konu bazlıdır; lablar günlere göre gösterilmez.
+Bu belge Labs portalındaki tüm içerik çalışmalarının tek yol haritasıdır. Tüm
+kaynaklar **Hakan Bayraktar GitHub ve Medium portföyünden** seçilmiş, güncel
+sürümlere yükseltilmiş ve eğitim standartlarımıza uyarlanmıştır.
 
-## 1. Lab İçerik Standardı
+Öğrenci navigasyonu konu ve seviye bazlıdır; lablar günlere göre gösterilmez.
+
+---
+
+## 1. Lab ve Proje İçerik Standartları
 
 Her yayınlanmış lab aşağıdaki kuralları sağlamadan **hazır** sayılmaz:
 
-1. Başka bir labın dosyasına veya tamamlanmış olmasına bağımlı olmaz.
-2. Standart çalışma dizini `~/labs/<LAB-ID>` olur.
-3. Amaç kısa yazılır; uzun senaryo ve eğitim planlama metadatası öğrenciye gösterilmez.
-4. Gerekli araçlar ve ön kontrol komutları labın içinde bulunur.
-5. Gerekli tüm kaynak dosyaları web sayfasında `cat <<EOF` ile oluşturulabilir.
-6. Web sayfası ve ZIP aynı kanonik `starter/` ve `scripts/` dosyalarından üretilir.
-7. ZIP yalnız `README.md`, `starter/`, `scripts/` ve `images/` içerir; `solution/` içermez.
-8. Scriptin adı yazılıyorsa içeriği web sayfasında da gösterilir.
-9. Beklenen çıktı, doğrulama, kısa ipucu ve güvenli temizlik komutu bulunur.
-10. Teknik diyagram portalda render edilir; gerektiğinde kaynak kontrollü SVG/PNG kullanılır.
+1. **Bağımsızlık:** Başka bir labın dosyasına veya tamamlanmış olmasına bağımlı olmaz.
+2. **Standart Dizin:** Standart çalışma dizini `~/labs/<LAB-ID>` olur. Repo içi geliştirme dizinleri öğrenci dokümanında yer almaz.
+3. **Öğrenci Sayfası Sadeliği:** Amaç kısa yazılır; `## Metadata` (Seviye, Gün, Süre, Profil vb.) öğrenci lab sayfasından bütünüyle kaldırılır; bu bilgiler yalnız `catalog.json` dosyasında tutulur.
+4. **Ön Koşul Kontrolü:** Gerekli araçlar ve ön kontrol komutları labın başında yer alır.
+5. **Web/ZIP Birebir Eşitliği:** Web sayfasındaki kopyalanabilir `cat <<EOF` blokları ile indirilebilir ZIP paketi aynı kanonik `starter/` ve `scripts/` kaynaklarından üretilir.
+6. **Çözüm Güvenliği:** ZIP paketleri yalnız `README.md`, `starter/`, `scripts/` ve `images/` içerir; `solution/` içermez.
+7. **Gerçek Doğrulama:** `scripts/validate.sh` basit grep yerine temiz ortamda gerçek çalışan konteyner/servis durumunu ve HTTP yanıtlarını test eder.
+8. **Güvenli Temizlik:** `scripts/cleanup.sh` ve `scripts/reset.sh` yalnız o laba ait kaynakları temizler.
+9. **UI ve Manuel Adımlar:** Jenkins, Argo CD, SonarQube, Grafana, Kibana ve AWS gibi görsel/UI arayüzü gerektiren bölümlerde adım adım tıklama adımları ve mimari diyagramlar yer alır.
+10. **Kaynak Referansı:** Uyarlanan her labın en altında orijinal Hakan Bayraktar kaynak bağlantısı belirtilir.
+
+---
 
 ## 2. Kalite Kapıları
 
@@ -27,154 +34,119 @@ Bir labın durumu yalnız şu sırayla ilerler:
 - `runtime-tested`: temiz Ubuntu lab makinesinde kurulum, uygulama, doğrulama ve temizlik geçti.
 - `published`: doğru eğitim grubuyla canlı portal testi geçti.
 
-“Dosya var” veya “script syntax geçti” sonucu runtime testi yerine kullanılmaz.
+---
 
-## 3. DevOps Practitioner Lab Kataloğu
+## 3. Kategorilere ve Seviyelere Göre Lab Kataloğu
 
-### Temeller
+### 🐧 Temeller (Linux & Git & Güvenlik)
 
-| Lab | Konu | İşlem |
-|---|---|---|
-| `LAB-LNX-01` | Linux preflight, süreç, servis, port ve log inceleme | Mevcut lab sadeleştirilecek |
-| `LAB-GIT-01` | Repo, branch, merge, conflict ve tag | Mevcut lab bağımsızlaştırılacak |
+| Lab ID | Seviye | Konu & Kapsam | Kaynak Makale / Proje | Paketler |
+|---|---|---|---|---|
+| `LAB-LNX-01` | 100 | Linux preflight, systemd servisleri, süreçler, portlar, log inceleme ve cgroups | [`shellscript-example`](https://github.com/hakanbayraktar/shellscript-example) | `devops-practitioner-5-day` |
+| `LAB-LNX-02` | 200 | Nginx üzerinde Let's Encrypt SSL/TLS Sertifikası Kurulumu ve Otomatik Yenileme | [Let's Encrypt SSL on Nginx](https://hbayraktar.medium.com/step-by-step-guide-install-lets-encrypt-ssl-on-nginx-amazon-linux-2023-91138089c5a9) | `devops-practitioner-5-day` |
+| `LAB-LNX-03` | 200 | SSH Tunneling (Local/Remote Port Forwarding) ile Güvenli Veritabanı Erişimi | [Secure Access via SSH Tunnel](https://hbayraktar.medium.com/secure-access-to-mysql-port-via-ssh-tunnel-fc1d01feffb9) | `devops-practitioner-5-day` |
+| `LAB-GIT-01` | 100 | Git branch, commit, merge, conflict resolution, rebase ve tag yönetimi | Temel Git Standardı | `devops-practitioner-5-day` |
 
-### Docker ve Container
+---
 
-| Lab | Konu | İşlem |
-|---|---|---|
-| `LAB-DOC-01` | Container lifecycle: run, ps, logs, inspect, exec, stop, start, rm | Mevcut lab yeniden düzenlenecek |
-| `LAB-DOC-02` | Environment, bind mount, named volume ve veri kalıcılığı | Mevcut lab yeniden düzenlenecek |
-| `LAB-DOC-03` | Python API için Dockerfile, build, tag ve run | Mevcut lab Python odaklı düzeltilecek |
-| `LAB-DOC-04` | Node.js API, layer cache, multi-stage ve non-root | Mevcut lab Node.js uygulamasına uyarlanacak |
-| `LAB-DOC-05` | Bağımsız Compose: frontend, API, PostgreSQL, Redis | Mevcut lab tamamlanacak |
-| `LAB-DOC-06` | Trivy taraması ve private Harbor push/pull | Mevcut lab tamamlanacak |
-| `LAB-DOC-07` | Java Spring Boot uygulamasını multi-stage dockerize etme | Yeni lab |
-| `LAB-DOC-08` | Statik frontend build ve Nginx runtime imajı | Yeni lab |
-| `LAB-DOC-09` | User-defined network, DNS ve servisler arası iletişim | Yeni lab |
-| `LAB-DOC-10` | Image katmanları, cache, tag, save/load ve temizlik | Yeni lab |
-| `LAB-DOC-13` | Production Compose: healthcheck, profile, override ve resource limit | Mevcut ileri lab sadeleştirilecek |
+### 🐳 Docker & Containerization (Eksiksiz Çekirdek ve İleri Düzey Set)
 
-### CI/CD ve Güvenlik
+> **İnteraktif Alıştırma Formatı:** Docker temel komutları için lab sayfalarında **Soru / Senaryo** verilir; çözümler `??? tip "💡 Çözümü Göster"` gizli bloğu içinde yer alır, öğrenci tıklayınca açılır.
 
-| Lab | Konu | İşlem |
-|---|---|---|
-| `LAB-JNK-01` | Bağımsız Python uygulamasıyla Jenkins Declarative Pipeline | Mevcut lab tamamlanacak |
-| `LAB-JNK-02` | Jenkins, test, SonarQube, Trivy ve Harbor kalite kapıları | Mevcut lab bağımsızlaştırılacak |
-| `LAB-GLB-01` | Bağımsız uygulamayla GitLab CI pipeline | Mevcut lab tamamlanacak |
-| `LAB-GHA-01` | GitHub Actions test, image build ve registry publish | Yeni lab |
+| Lab ID | Seviye | Konu & Kapsam | Kaynak Makale / Proje | Paketler |
+|---|---|---|---|---|
+| `LAB-DOC-01` | 100 | Container lifecycle: `run`, `ps`, `logs`, `inspect`, `exec`, `stop/start`, `rm` (İnteraktif gizli çözümlü alıştırmalar) | [Docker Commands Cheat Sheet](https://hbayraktar.medium.com/docker-commands-cheat-sheet-with-examples-d9a26396cb6f) | `devops-5-day`, `docker-k8s-2-day` |
+| `LAB-DOC-02` | 100 | Environment variables, bind mount, named volume ve veri kalıcılığı | Docker Storage Standardı | `devops-5-day`, `docker-k8s-2-day` |
+| `LAB-DOC-03` | 100 | Python API için Dockerfile, build, tag, port mapping ve run | [`flask-monitoring`](https://github.com/hakanbayraktar/flask-monitoring) | `devops-5-day`, `docker-k8s-2-day` |
+| `LAB-DOC-04` | 200 | Node.js API, layer cache optimizasyonu, multi-stage build ve non-root güvenliği | [`ci-cd-docker`](https://github.com/hakanbayraktar/ci-cd-docker), [`jenkins-node`](https://github.com/hakanbayraktar/jenkins-node) | `devops-5-day` |
+| `LAB-DOC-05` | 200 | Docker Compose ile Multi-Tier Orchestration (Frontend, API, Postgres, Redis) | [`book-review-app`](https://github.com/hakanbayraktar/book-review-app) | `devops-5-day`, `docker-k8s-2-day` |
+| `LAB-DOC-06` | 200 | Trivy ile imaj güvenlik taraması ve Private Harbor Registry push/pull | DevSecOps Standardı | `devops-5-day` |
+| `LAB-DOC-07` | 200 | Java Spring Boot uygulamasını multi-stage dockerize etme & JVM optimizasyonu | [`spring-boot-course`](https://github.com/hakanbayraktar/spring-boot-course), [`petclinic-java`](https://github.com/hakanbayraktar/petclinic-java) | `devops-5-day` |
+| `LAB-DOC-08` | 200 | Modern React/Static frontend build ve Nginx runtime container | [`s3-landing-page`](https://github.com/hakanbayraktar/s3-landing-page) | `devops-5-day`, `docker-k8s-2-day` |
+| `LAB-DOC-09` | 200 | User-defined Docker Network, Container DNS ve servisler arası iletişim | Container Networking Standardı | `devops-5-day`, `docker-k8s-2-day` |
+| `LAB-DOC-10` | 200 | Docker İmaj ve Konteyner Yedekleme / Geri Yükleme (`save`, `load`, `export`, `import`) | [Docker Backup and Restore](https://hbayraktar.medium.com/backing-up-and-restoring-docker-containers-and-images-8e0b6ef5849b) | `devops-5-day`, `docker-k8s-2-day` |
+| `LAB-DOC-13` | 300 | Production Compose: Healthcheck, restart policies, resource limits ve profile | Production Patterns | `devops-5-day` |
 
-### Infrastructure as Code
+---
 
-| Lab | Konu | İşlem |
-|---|---|---|
-| `LAB-TF-01` | Terraform Docker provider ve state lifecycle | Mevcut lab bağımsızlaştırılacak |
-| `LAB-TF-04` | Terraform ile Helm release ve monitoring kurulumu | Mevcut lab bağımsızlaştırılacak |
-| `LAB-TF-08` | AWS VPC mimarisi; maliyetsiz plan/local test | Mevcut lab güvenli hale getirilecek |
+### 🚀 CI/CD & DevSecOps (Jenkins, GitLab, GitHub Actions)
+*(Jenkins & GitLab Web UI arayüzünden görsel adımlar ve adım adım boru hattı yönetimi)*
 
-### Kubernetes ve GitOps
+| Lab ID | Seviye | Konu & Kapsam | Kaynak Makale / Proje | Paketler |
+|---|---|---|---|---|
+| `LAB-JNK-01` | 100 | Jenkins Declarative Pipeline ile Python/Flask Test, Lint & Build | [`jenkins-ci-cd-lab`](https://github.com/hakanbayraktar/jenkins-ci-cd-lab) | `devops-practitioner-5-day` |
+| `LAB-JNK-02` | 200 | Jenkins ile Flask Uygulamasının Kubernetes Kümesine Otomatik Dağıtımı | [Flask App to K8s with Jenkins](https://hbayraktar.medium.com/deploying-a-flask-application-with-jenkins-to-a-kubernetes-cluster-4aa7b78d5817) | `devops-practitioner-5-day` |
+| `LAB-GLB-01` | 200 | GitLab CI/CD Pipeline (Multi-Stage, Artifacts, Runner & Caching) | GitLab Standardı | `devops-practitioner-5-day` |
+| `LAB-GHA-01` | 200 | GitHub Actions CI/CD (Matrix Builds, Secrets, Image Build & Push) | [`github-actions-demo`](https://github.com/hakanbayraktar/github-actions-demo), [`github-action-simple`](https://github.com/hakanbayraktar/github-action-simple) | `devops-practitioner-5-day` |
 
-| Lab | Konu | İşlem |
-|---|---|---|
-| `LAB-K8S-01` | kind cluster, Pod ve Deployment | Mevcut lab bağımsızlaştırılacak |
-| `LAB-K8S-02` | Service, ConfigMap ve Secret | Mevcut lab bağımsızlaştırılacak |
-| `LAB-K8S-03` | Probe, rollout, resource ve PVC | Mevcut lab bağımsızlaştırılacak |
-| `LAB-HLM-01` | Uygulamayı Helm chart olarak paketleme | Mevcut lab bağımsızlaştırılacak |
-| `LAB-ARG-01` | Argo CD sync, drift ve self-heal | Mevcut lab bağımsızlaştırılacak |
+---
 
-### Gözlemlenebilirlik ve Olay Yönetimi
+### ☁️ Infrastructure as Code & AWS Bulut
 
-| Lab | Konu | İşlem |
-|---|---|---|
-| `LAB-MON-01` | Uygulama metrikleri, Prometheus ve Grafana | Mevcut lab tamamlanacak |
-| `LAB-MON-02` | Alert rule ve Alertmanager | Mevcut lab bağımsızlaştırılacak |
-| `LAB-LOG-01` | Elasticsearch, Logstash, Kibana ve uygulama logu | Mevcut lab bağımsızlaştırılacak |
-| `LAB-LOG-02` | İleri log toplama ve dashboard | Mevcut lab sadeleştirilecek |
-| `LAB-OTEL-01` | OpenTelemetry trace, metric ve log temeli | Yeni lab |
-| `LAB-INC-01` | Kubernetes olay müdahalesi ve kısa postmortem | Mevcut lab bağımsızlaştırılacak |
+| Lab ID | Seviye | Konu & Kapsam | Kaynak Makale / Proje | Paketler |
+|---|---|---|---|---|
+| `LAB-TF-01` | 100 | Terraform Docker Provider, Resource Declarations ve State Lifecycle | Terraform Standardı | `devops-practitioner-5-day` |
+| `LAB-TF-04` | 300 | Terraform ile Helm Provider Üzerinden Kubernetes İzleme Kurulumu | IaC Monitoring | `devops-practitioner-5-day` |
+| `LAB-TF-08` | 300 | Terraform ile Production AWS VPC Mimarisi (Subnets, IGW, NAT, Route Tables) | [`aws-vpc-terraform`](https://github.com/hakanbayraktar/aws-vpc-terraform) | `devops-practitioner-5-day` |
+| `LAB-AWS-01` | 200 | AWS Custom VPC, Bastion Host, Security Groups ve Apache Web Server | [Custom VPC & Bastion Host](https://hbayraktar.medium.com/custom-vpc-bastion-host-apache-web-server-aws-3bea50e82280) | İleri Katalog |
 
-### Capstone ve Mini Projeler
+---
 
-| Proje | Kapsam | İşlem |
-|---|---|---|
-| `LAB-CAP-01` | Koddan CI, Harbor, kind, GitOps ve gözlemlenebilirliğe uçtan uca akış | Yeniden hazırlanacak |
-| `devops-capstone-starter` | Öğrencinin fork/clone edeceği GitHub başlangıç reposu | Yeni public template repo |
-| `MP-RETAIL-01` | AWS Retail Store Sample App | Yeni mini proje |
-| `MP-BOUTIQUE-01` | Google Online Boutique | Yeni mini proje |
-| `MP-HOTEL-01` | Hotel Reservation | Yeni mini proje |
+### ☸️ Kubernetes & GitOps
+*(Argo CD Web UI, Kubeconfig birleştirme, Private Registry ve Dinamik StorageClass adımları)*
 
-## 4. Docker and Kubernetes Eğitim Paketi
+| Lab ID | Seviye | Konu & Kapsam | Kaynak Makale / Proje | Paketler |
+|---|---|---|---|---|
+| `LAB-K8S-01` | 100 | kind Cluster Kurulumu, Pods, Deployments & ReplicaSets | [`kubestarter`](https://github.com/hakanbayraktar/kubestarter), [`kubernetes-lab`](https://github.com/hakanbayraktar/kubernetes-lab) | `devops-5-day`, `docker-k8s-2-day` |
+| `LAB-K8S-02` | 100 | Kubernetes Services (ClusterIP, NodePort), ConfigMaps & Secrets | [`CKA-PREP-2025-v2`](https://github.com/hakanbayraktar/CKA-PREP-2025-v2) | `devops-5-day`, `docker-k8s-2-day` |
+| `LAB-K8S-03` | 200 | Production Workloads: Probes (Liveness/Readiness), Resource Limits, Rollout & PVC | [`CKA-Certification-Course-2025`](https://github.com/hakanbayraktar/CKA-Certification-Course-2025) | `devops-5-day`, `docker-k8s-2-day` |
+| `LAB-K8S-04` | 200 | Çoklu Kubeconfig Dosyalarını Tek Dosyada Birleştirme & Context Yönetimi | [Merging Kubeconfig Files](https://hbayraktar.medium.com/merging-multiple-kubeconfig-files-into-one-a-comprehensive-guide-33cb7990edfc) | `devops-5-day`, `docker-k8s-2-day` |
+| `LAB-K8S-05` | 300 | Kubernetes'te Dinamik NFS Provisioning ve StorageClass Yapılandırması | [Dynamic NFS Provisioning in K8s](https://hbayraktar.medium.com/how-to-setup-dynamic-nfs-provisioning-in-a-kubernetes-cluster-cbf433b7de29) | `devops-practitioner-5-day` |
+| `LAB-K8S-06` | 200 | Kubernetes Kümesinde Private Registry (Harbor/Docker Hub) `imagePullSecrets` Kullanımı | [Pull Image from Private Registry](https://hbayraktar.medium.com/how-to-pull-an-image-from-a-private-docker-registry-in-kubernetes-cluster-71239e428490) | `devops-5-day`, `docker-k8s-2-day` |
+| `LAB-K8S-ADMIN-01` | 300 | Ubuntu 22.04 / 24.04 Üzerinde Kubeadm & Containerd ile Sıfırdan K8s Kümesi Kurulumu | [Install K8s Cluster on Ubuntu](https://hbayraktar.medium.com/how-to-install-kubernetes-cluster-on-ubuntu-22-04-step-by-step-guide-7dbf7e8f5f99) | İleri Katalog |
+| `LAB-HLM-01` | 200 | Uygulamayı Helm Chart Olarak Paketleme, Values Yönetimi & Release | Helm Standardı | `devops-5-day`, `docker-k8s-2-day` |
+| `LAB-ARG-01` | 200 | Python Flask Uygulamasının Argo CD ile Kubernetes'e GitOps Dağıtımı & Self-Healing | [Deploy Flask to K8s with ArgoCD](https://hbayraktar.medium.com/deploying-a-flask-python-project-to-kubernetes-with-argocd-1363d1bd9761) | `devops-5-day` |
 
-Bu paket DevOps Practitioner paketinden ayrı tutulur. Öğrenci yalnız aşağıdaki
-konu bazlı labları görür:
+---
 
-- Docker lifecycle ve exec: `LAB-DOC-01`
-- Volume, bind mount ve environment: `LAB-DOC-02`
-- Python uygulaması image build: `LAB-DOC-03`
-- Docker network ve servis keşfi: `LAB-DOC-09`
-- Bağımsız çok servisli Compose: `LAB-DOC-05`
-- kind, Pod ve Deployment: `LAB-K8S-01`
-- Service, ConfigMap ve Secret: `LAB-K8S-02`
-- Probe, rollout, resource ve PVC: `LAB-K8S-03`
+### 📈 Gözlemlenebilirlik (Observability), SRE & Olay Yönetimi
 
-Java, Node.js, frontend, Harbor security ve ileri Compose labları DevOps
-Practitioner paketinde kalır; eğitim ihtiyacına göre admin tarafından ayrıca
-atanabilir.
+| Lab ID | Seviye | Konu & Kapsam | Kaynak Makale / Proje | Paketler |
+|---|---|---|---|---|
+| `LAB-MON-01` | 200 | Uygulama Metrikleri (Prometheus Client), Prometheus Server & Grafana Dashboards | [`flask-monitoring`](https://github.com/hakanbayraktar/flask-monitoring) | `devops-practitioner-5-day` |
+| `LAB-MON-02` | 200 | Prometheus Alertmanager Kuralları, Severity & Bildirimler | Prometheus Alerting | `devops-practitioner-5-day` |
+| `LAB-LOG-01` | 200 | Merkezi Loglama: Nginx Logs -> Vector/Logstash -> Elasticsearch & Kibana | [`devops-projects-techiescamp`](https://github.com/hakanbayraktar/devops-projects-techiescamp) | `devops-practitioner-5-day` |
+| `LAB-LOG-02` | 300 | İleri ELK Stack & Kibana Gözlemlenebilirlik Dashboardları | Enterprise Logging | `devops-practitioner-5-day` |
+| `LAB-OTEL-01` | 300 | OpenTelemetry Collector, Dağıtık İzleme (Distributed Tracing) & Tempo/Jaeger | CNCF OpenTelemetry | `devops-practitioner-5-day` |
+| `LAB-INC-01` | 300 | Kubernetes Olay Müdahalesi (CrashLoopBackOff, OOMKilled) & Root Cause Analysis | [Troubleshooting Guide](https://hbayraktar.medium.com/production-troubleshooting-guide-3-container-runtime-image-troubleshooting-ee5499e3a8c3) | `devops-5-day`, `docker-k8s-2-day` |
+| `LAB-AI-01` | 300 | AI Destekli Kubernetes Troubleshooting & Runbook Analizi | [`ai-assisted-devops-workshop`](https://github.com/hakanbayraktar/ai-assisted-devops-workshop) | İleri Katalog |
+
+---
+
+## 4. Gerçek Dünya Projeleri ve Mini Projeler
+
+> **Önemli Kural:** Öğrenci eğitim paketlerinin (`.zip`) içine devasa GitHub projeleri doğrudan konmaz. Öğrenciler projeleri laboratuvar ortamında temiz ve adım adım (`git clone`, `cat <<EOF`, starter şablonu) uygulayarak inşa ederler.
+
+| Proje Kodu | Seviye | Mimari ve Kapsam | Kaynak Makale / Proje |
+|---|---|---|---|
+| **`LAB-CAP-01`** | 400 (Capstone) | Koddan CI, Harbor, kind, GitOps ve İzlemeye Uçtan Uca Platform | `devops-capstone-starter` public GitHub şablonu |
+| **`MP-PETCLINIC-01`** | 400 (Mini Proje) | Java PetClinic Uygulamasının Jenkins ile AWS EKS Kümesine Dağıtımı | [PetClinic on AWS EKS with Jenkins](https://hbayraktar.medium.com/automating-deployment-of-the-java-petclinic-application-on-aws-eks-with-jenkins-a-step-by-step-1e9593e74c5c) |
+| **`MP-NEWS-01`** | 400 (Mini Proje) | News Summary App: GitHub Actions, Argo CD ve Kubernetes GitOps | [News Summary App with GitHub Actions & ArgoCD](https://hbayraktar.medium.com/news-summary-app-automated-ci-cd-with-github-actions-argocd-gke-c90e5575235b) |
+| **`MP-ECS-01`** | 400 (Mini Proje) | Flask Uygulamasının GitHub Actions ile AWS ECS Fargate'e Dağıtımı | [Flask Deployment to AWS ECS with GHA](https://hbayraktar.medium.com/automating-deployment-of-a-flask-application-to-aws-ecs-with-github-actions-c256192eb8ad) |
+| **`MP-RETAIL-01`** | 400 (Mini Proje) | AWS Retail Store Microservices Platform & ECS Fargate | [`retail-store-sample-app`](https://github.com/hakanbayraktar/retail-store-sample-app), [`ecs-fargate-retail-sample-production`](https://github.com/hakanbayraktar/ecs-fargate-retail-sample-production) |
+| **`MP-BANK-01`** | 400 (Mini Proje) | Java Spring Boot AI Bank App Multi-Tier Microservices | [`AI-BankApp-DevOps`](https://github.com/hakanbayraktar/AI-BankApp-DevOps), [`java-spring-microservices`](https://github.com/hakanbayraktar/java-spring-microservices) |
+| **`MP-MERN-01`** | 400 (Mini Proje) | MERN Stack E-Commerce Platform Containerization & Monitoring | [`MERN-AI-Ecommerce-Platform`](https://github.com/hakanbayraktar/MERN-AI-Ecommerce-Platform) |
+| **`MP-BOUTIQUE-01`** | 400 (Mini Proje) | Google Online Boutique & Traefik v3 Gateway API | Google Online Boutique |
+| **`MP-FINOPS-01`** | 400 (Mini Proje) | AWS FinOps & Kubernetes Cost Optimization Dashboard | [`aws-finops-dashboard`](https://github.com/hakanbayraktar/aws-finops-dashboard), [`opencost`](https://github.com/hakanbayraktar/opencost) |
+
+---
 
 ## 5. Uygulama Sırası
 
-1. **Portal temeli:** rol bazlı menü, kursa özel ortam hazırlığı, güvenli ZIP,
-   web/ZIP eşitliği, `~/labs` standardı ve Mermaid render.
-2. **Docker çekirdeği:** `LAB-DOC-01`, `02`, `03`, `09`, `05`.
-3. **Docker çoklu dil ve güvenlik:** `LAB-DOC-04`, `06`, `07`, `08`, `10`, `13`.
-4. **CI/CD:** Jenkins, GitLab CI ve GitHub Actions.
-5. **IaC, Kubernetes ve GitOps:** Terraform, kind, Helm ve Argo CD.
-6. **Observability:** Prometheus, Grafana, ELK/Kibana ve OpenTelemetry.
-7. **Capstone:** eksiksiz starter repo ve uçtan uca çalışma.
-8. **Mini projeler:** Retail, Online Boutique ve Hotel Reservation.
-9. **Tam kabul testi:** iki ayrı kullanıcıyla menü, indirme, runtime ve temizlik.
-
-Bir faz bitmeden sonraki fazdaki lablar `published` yapılmaz.
-
-## 6. Hakan Bayraktar Kaynak Proje Envanteri
-
-Bu kaynaklar doğrudan kopyalanmaz. Uygulama kodu güncel sürümlere yükseltilir,
-gereksiz bileşenler çıkarılır ve bu belgedeki bağımsız lab standardına uyarlanır.
-Her uyarlamada asıl kaynak bağlantısı labın “Kaynak” bölümünde korunur.
-
-| Kaynak | Eğitimde Kullanım | Hedef |
-|---|---|---|
-| [jenkins-ci-cd-lab](https://github.com/hakanbayraktar/jenkins-ci-cd-lab) | Python uygulaması, Jenkins CI/CD, Nexus ve kind yapısından sade senaryolar | `LAB-JNK-01`, `LAB-JNK-02`, `LAB-CAP-01` |
-| [github-actions-demo](https://github.com/hakanbayraktar/github-actions-demo) | Test, cache, matrix ve deployment workflow örnekleri | `LAB-GHA-01` |
-| [ci-cd-docker](https://github.com/hakanbayraktar/ci-cd-docker) | Küçük Node.js uygulaması ve container CI | `LAB-DOC-04`, `LAB-GHA-01` |
-| [jenkins-node](https://github.com/hakanbayraktar/jenkins-node) | Node.js test, Dockerfile ve Jenkinsfile | `LAB-DOC-04`, `LAB-JNK-01` alternatif uygulaması |
-| [flask-monitoring](https://github.com/hakanbayraktar/flask-monitoring) | Flask, Jenkins, Kubernetes ve monitoring akışı | `LAB-JNK-02`, `LAB-MON-01` |
-| [argocd-python](https://github.com/hakanbayraktar/argocd-python) | Küçük Python uygulaması, image workflow ve Argo CD manifestleri | `LAB-ARG-01` |
-| [ArgoCD-Basics-To-Production](https://github.com/hakanbayraktar/ArgoCD-Basics-To-Production) | Sync, prune, self-heal, project, hook, wave ve Helm örnekleri | `LAB-ARG-01`, ileri GitOps labları |
-| [github-kubernetes](https://github.com/hakanbayraktar/github-kubernetes) | Node.js uygulaması, GitHub Actions ve Kubernetes deployment | `LAB-GHA-01`, `LAB-K8S-01` |
-| [AI-BankApp-DevOps](https://github.com/hakanbayraktar/AI-BankApp-DevOps) | Spring Boot, Compose, CI/CD ve Kubernetes için sadeleştirilecek uygulama | `LAB-DOC-07`, `LAB-CAP-01` |
-| [spring-boot-course](https://github.com/hakanbayraktar/spring-boot-course) | Küçük Spring Boot API başlangıç kodu | `LAB-DOC-07` |
-| [aws-vpc-terraform](https://github.com/hakanbayraktar/aws-vpc-terraform) | VPC modüllerinin maliyetsiz `fmt`, `validate` ve `plan` çalışması | `LAB-TF-08` |
-| [retail-store-sample-app](https://github.com/hakanbayraktar/retail-store-sample-app) | Büyük uygulamayı hazır servis olarak kullanarak container/GitOps/observability mini projesi | `MP-RETAIL-01` |
-
-### Medium İçeriklerinden Uyarlanacak Konular
-
-| Kaynak | Uyarlama |
-|---|---|
-| [Docker Commands Cheat Sheet](https://hbayraktar.medium.com/docker-commands-cheat-sheet-with-examples-d9a26396cb6f) | Komut listesi yerine çalışan lifecycle ve image yönetimi görevleri: `LAB-DOC-01`, `LAB-DOC-10` |
-| [Flask, Jenkins ve Kubernetes](https://hbayraktar.medium.com/deploying-a-flask-application-with-jenkins-to-a-kubernetes-cluster-4aa7b78d5817) | Güncel Jenkins pipeline, immutable image ve kind hedefi: `LAB-JNK-02` |
-| [Modern CI/CD ve Auto-Healing](https://hbayraktar.medium.com/deployment-is-not-enough-how-to-build-a-modern-ci-cd-pipeline-with-auto-healing-infrastructure-8a04d3f737b2) | Cloud maliyeti oluşturmayan yerel Capstone kabul kriterleri: `LAB-CAP-01` |
-| [Container Runtime ve Image Troubleshooting](https://hbayraktar.medium.com/production-troubleshooting-guide-3-container-runtime-image-troubleshooting-ee5499e3a8c3) | Kısa arıza kartları ve kanıt komutları: Docker/Kubernetes troubleshooting labları |
-| [CI/CD, GitOps ve Helm Troubleshooting](https://hbayraktar.medium.com/production-troubleshooting-guide-4-ci-cd-gitops-helm-and-deployment-troubleshooting-c1b582baa313) | Commit → image → Helm → Argo CD iz sürme görevi: `LAB-INC-01` |
-| [ASP.NET Core Dockerization](https://hbayraktar.medium.com/how-to-dockerize-a-net-8-asp-net-core-web-application-b15f63246535) | İsteğe bağlı çoklu dil containerization labı; güncel LTS sürümle yeniden yazılacak |
-| [AI Kubernetes Troubleshooting Lab](https://hbayraktar.medium.com/ai-powered-kubernetes-troubleshooting-a-hands-on-agent-lab-for-junior-devops-engineers-875ae7c8a8a0) | DevOps Practitioner sonrası isteğe bağlı mini proje |
-
-### Kaynak Kabul Kriteri
-
-Bir kaynak yalnız şu kontrollerden sonra kataloğa alınır:
-
-1. Lisans ve kaynak bağlantısı belirtilir.
-2. Bağımlılık ve image sürümleri sabitlenir.
-3. Cloud kaynağı zorunluysa yerel veya `plan-only` alternatif sağlanır.
-4. Secret, gerçek hesap ve kişisel path temizlenir.
-5. Temiz Ubuntu makinesinde setup, validate ve cleanup geçer.
-6. Web sayfası ve öğrenci ZIP’i aynı dosyalardan üretilir.
+1. **Docker Çekirdeği:** `LAB-DOC-01`, `02`, `03`, `09`, `05`
+2. **Docker Çoklu Dil ve Güvenlik:** `LAB-DOC-04`, `06`, `07`, `08`, `10`, `13`
+3. **CI/CD & DevSecOps:** `LAB-JNK-01`, `02`, `LAB-GLB-01`, `LAB-GHA-01`
+4. **IaC, Kubernetes ve GitOps:** `LAB-TF-01`, `04`, `08`, `LAB-K8S-01`, `02`, `03`, `LAB-HLM-01`, `LAB-ARG-01`
+5. **Observability & SRE:** `LAB-MON-01`, `02`, `LAB-LOG-01`, `02`, `LAB-OTEL-01`, `LAB-INC-01`
+6. **Capstone ve Mini Projeler:** `LAB-CAP-01`, `MP-RETAIL-01`, `MP-BANK-01`, `MP-PETCLINIC-01`, `MP-MERN-01`
+7. **Kabul ve Entegrasyon Testi:** Rol bazlı erişim, indirme, runtime ve temizlik doğrulamaları

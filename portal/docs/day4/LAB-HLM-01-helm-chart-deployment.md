@@ -1,14 +1,79 @@
 # LAB-HLM-01 — Helm Fundamentals: Chart Structure, Custom Values & Release Management
 
-## Metadata
-- **Seviye:** PRACTITIONER
-- **Önerilen Gün:** Gün 4
-- **Tahmini Süre:** 45 dk
-- **Gerekli Profil:** `kubernetes`
-- **Host Portları:** - (Küme İçi Helm Release Dağıtımı)
-- **Çalışma Dizini:** `~/devops-workspace/labs/LAB-HLM-01`
+> [Bu labın başlangıç dosyalarını indir (ZIP)](/downloads/LAB-HLM-01.zip) — paket README, starter ve doğrulama scriptlerini içerir; çözüm içermez.
 
----
+
+İndirdikten sonra terminalde: `unzip LAB-HLM-01.zip && cd LAB-HLM-01`
+
+## ZIP İndirmeden Dosyaları Oluşturma
+
+Aşağıdaki bloklar ZIP paketiyle birebir aynı dosyaları oluşturur.
+
+```bash
+mkdir -p ~/labs/LAB-HLM-01
+cd ~/labs/LAB-HLM-01
+```
+
+### `starter/Chart.yaml`
+
+```bash
+mkdir -p "$(dirname -- starter/Chart.yaml)"
+cat > starter/Chart.yaml <<'LAB_FILE_EOF_1'
+apiVersion: v2
+name: demo-app
+description: A Helm chart for Kubernetes training
+version: 0.1.0
+appVersion: "1.0.0"
+LAB_FILE_EOF_1
+```
+
+### `scripts/cleanup.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/cleanup.sh)"
+cat > scripts/cleanup.sh <<'LAB_FILE_EOF_2'
+#!/usr/bin/env bash
+echo "Cleanup completed for LAB-HLM-01."
+LAB_FILE_EOF_2
+chmod +x scripts/cleanup.sh
+```
+
+### `scripts/reset.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/reset.sh)"
+cat > scripts/reset.sh <<'LAB_FILE_EOF_3'
+#!/usr/bin/env bash
+set -euo pipefail
+lab_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+echo "Resetting workspace for LAB-HLM-01..."
+bash "$lab_dir/scripts/cleanup.sh"
+cp -r "$lab_dir/starter"/. .
+echo "Workspace reset to starter state for LAB-HLM-01."
+LAB_FILE_EOF_3
+chmod +x scripts/reset.sh
+```
+
+### `scripts/validate.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/validate.sh)"
+cat > scripts/validate.sh <<'LAB_FILE_EOF_4'
+#!/usr/bin/env bash
+set -euo pipefail
+echo "==> Validating LAB-HLM-01: Helm Chart structure..."
+helm lint .
+echo "[PASS] Helm chart lint completed with zero errors."
+LAB_FILE_EOF_4
+chmod +x scripts/validate.sh
+```
+
+Başlangıç dosyalarını çalışma dizinine alın:
+
+```bash
+cp -a starter/. .
+```
+
 
 ## 1. Lab Senaryosu
 Mikroservis sayısı arttıkça onlarca ham Kubernetes YAML dosyasını farklı ortamlar (geliştirme, test, üretim) için elle kopyalamak ve parametreleri güncellemek ciddi yapılandırma hatalarına yol açar. Helm, Kubernetes için paket yöneticisi olarak görev yaparak manifestoları dinamik Go şablonları (`templates/`) haline getirir ve ortama özel değerleri (`values.yaml`) parametrik olarak enjekte eder. Bu çalışmada sıfırdan kurumsal standartlarda bir Helm Chart hazırlanır; `helm lint` denetimi yapılır; üretim parametreleriyle (`values-prod.yaml`) 4 replikalı bir sürüm dağıtılır; canlı sistem üzerinde sürüm yükseltme (`upgrade`) ve geri alma (`rollback`) yaşam döngüsü doğrulanır.
@@ -40,8 +105,8 @@ Aşağıdaki komutlarla başlangıç durumunu kontrol edin:
 ```bash
 helm version
 kubectl cluster-info
-mkdir -p ~/devops-workspace/labs/LAB-HLM-01
-cd ~/devops-workspace/labs/LAB-HLM-01
+mkdir -p ~/labs/LAB-HLM-01
+cd ~/labs/LAB-HLM-01
 ```
 
 ## 5. Adım Adım Uygulama
@@ -246,7 +311,7 @@ Release'i kaldırın, ad alanını silin ve çalışma dizinini temizleyin:
 ```bash
 helm uninstall prod-release -n production 2>/dev/null || true
 kubectl delete namespace production 2>/dev/null || true
-rm -rf devops-app ~/devops-workspace/labs/LAB-HLM-01
+rm -rf devops-app ~/labs/LAB-HLM-01
 ```
 
 ## 10. Production Notu

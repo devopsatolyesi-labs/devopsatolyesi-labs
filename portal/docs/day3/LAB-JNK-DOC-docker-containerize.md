@@ -1,15 +1,5 @@
 # LAB-JNK-DOC — Jenkins ile Docker Konteynerleştirme
 
-## Metadata
-- **Seviye:** INTERMEDIATE
-- **Önerilen Gün:** Gün 3
-- **Tahmini Süre:** 35 dk
-- **İlişkili Jenkins Klasörü:** `Labs/03-Docker/01-python-containerize`
-- **Jenkins URL:** [https://jenkins.devopsatolyesi.com](https://jenkins.devopsatolyesi.com)
-- **Kullanılan Host / Agent:** `training-ci-01` (Docker Daemon soket entegrasyonu)
-
----
-
 ## 1. Genel Bakış ve Amaç
 
 Modern CI/CD süreçlerinde Jenkins agent'larının doğrudan ana makinede bağımlılık kurması yerine, işlerin izole Docker konteynerleri içinde derlenmesi ve test edilmesi beklenir. Bu laboratuvarda, Jenkins'in `/var/run/docker.sock` üzerinden Docker motoruyla nasıl etkileşime geçtiğini, çok aşamalı (multi-stage) bir Python Flask uygulamasını nasıl test ettiğini ve sertleştirilmiş bir çalışma zamanı (runtime) imajı ürettiğini adım adım deneyimleyeceksiniz.

@@ -1,14 +1,85 @@
 # LAB-TF-01 — Terraform Fundamentals: Docker Provider & State Lifecycle
 
-## Metadata
-- **Seviye:** CORE
-- **Önerilen Gün:** Gün 3
-- **Tahmini Süre:** 45 dk
-- **Gerekli Profil:** `docker`
-- **Host Portları:** `8090:80`
-- **Çalışma Dizini:** `~/devops-workspace/labs/LAB-TF-01`
+> [Bu labın başlangıç dosyalarını indir (ZIP)](/downloads/LAB-TF-01.zip) — paket README, starter ve doğrulama scriptlerini içerir; çözüm içermez.
 
----
+
+İndirdikten sonra terminalde: `unzip LAB-TF-01.zip && cd LAB-TF-01`
+
+## ZIP İndirmeden Dosyaları Oluşturma
+
+Aşağıdaki bloklar ZIP paketiyle birebir aynı dosyaları oluşturur.
+
+```bash
+mkdir -p ~/labs/LAB-TF-01
+cd ~/labs/LAB-TF-01
+```
+
+### `starter/main.tf`
+
+```bash
+mkdir -p "$(dirname -- starter/main.tf)"
+cat > starter/main.tf <<'LAB_FILE_EOF_1'
+# TODO: Configure kreuzwerker/docker provider
+terraform {
+  required_providers {
+    docker = {
+      source  = "kreuzwerker/docker"
+      version = "~> 3.0"
+    }
+  }
+}
+LAB_FILE_EOF_1
+```
+
+### `scripts/cleanup.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/cleanup.sh)"
+cat > scripts/cleanup.sh <<'LAB_FILE_EOF_2'
+#!/usr/bin/env bash
+rm -rf .terraform .terraform.lock.hcl terraform.tfstate* 2>/dev/null || true
+echo "Cleanup completed for LAB-TF-01."
+LAB_FILE_EOF_2
+chmod +x scripts/cleanup.sh
+```
+
+### `scripts/reset.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/reset.sh)"
+cat > scripts/reset.sh <<'LAB_FILE_EOF_3'
+#!/usr/bin/env bash
+set -euo pipefail
+lab_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+echo "Resetting workspace for LAB-TF-01..."
+bash "$lab_dir/scripts/cleanup.sh"
+cp -r "$lab_dir/starter"/. .
+echo "Workspace reset to starter state for LAB-TF-01."
+LAB_FILE_EOF_3
+chmod +x scripts/reset.sh
+```
+
+### `scripts/validate.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/validate.sh)"
+cat > scripts/validate.sh <<'LAB_FILE_EOF_4'
+#!/usr/bin/env bash
+set -euo pipefail
+echo "==> Validating LAB-TF-01: Terraform configuration..."
+terraform init -backend=false -input=false >/dev/null
+terraform validate
+echo "[PASS] Terraform configuration is valid."
+LAB_FILE_EOF_4
+chmod +x scripts/validate.sh
+```
+
+Başlangıç dosyalarını çalışma dizinine alın:
+
+```bash
+cp -a starter/. .
+```
+
 
 ## 1. Lab Senaryosu
 Altyapı kaynaklarının yönetim panellerinden manuel olarak tıklanarak oluşturulması, ortamlar arasında konfigürasyon sapmalarına (drift), denetlenemeyen değişikliklere ve tekrarlanamayan sistemlere yol açar. Altyapı Kod Olarak (Infrastructure as Code - IaC) yaklaşımı, sunucu, ağ ve konteyner kaynaklarının deklaratif metin dosyalarında tanımlanmasını ve versiyonlanmasını sağlar. Bu çalışmada HashiCorp Terraform ve Docker Provider kullanılarak ağ, imaj ve konteyner kaynakları kod olarak tanımlanır; `plan` ve `apply` yaşam döngüsü, state mekanizması ve dışarıdan yapılan bir müdahalede oluşan drift durumu incelenir.
@@ -40,8 +111,8 @@ Aşağıdaki komutlarla başlangıç durumunu kontrol edin:
 ```bash
 terraform version
 docker ps
-mkdir -p ~/devops-workspace/labs/LAB-TF-01
-cd ~/devops-workspace/labs/LAB-TF-01
+mkdir -p ~/labs/LAB-TF-01
+cd ~/labs/LAB-TF-01
 ```
 
 ## 5. Adım Adım Uygulama
@@ -223,7 +294,7 @@ Terraform tarafından yönetilen tüm kaynakları yok edin ve çalışma dizinin
 ```bash
 terraform destroy -auto-approve
 rm -rf .terraform .terraform.lock.hcl terraform.tfstate* tfplan
-rm -rf ~/devops-workspace/labs/LAB-TF-01
+rm -rf ~/labs/LAB-TF-01
 ```
 
 ## 10. Production Notu

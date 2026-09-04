@@ -1,187 +1,313 @@
-# LAB-DOC-02 — Container Lifecycle, Exec, Env Vars & Volume Persistence
+# LAB-DOC-02 — Docker Volumes, Ortam Değişkenleri ve Veri Kalıcılığı
 
-## Metadata
-- **Seviye:** CORE
-- **Önerilen Gün:** Gün 1
-- **Tahmini Süre:** 40 dk
-- **Gerekli Profil:** `docker`
-- **Host Portları:** `5432:5432`
-- **Çalışma Dizini:** `~/devops-workspace/labs/LAB-DOC-02`
+> [Bu labın başlangıç dosyalarını indir (ZIP)](/downloads/LAB-DOC-02.zip) — paket README, starter ve doğrulama scriptlerini içerir; çözüm içermez.
+
+
+İndirdikten sonra terminalde: `unzip LAB-DOC-02.zip && cd LAB-DOC-02`
+
+## ZIP İndirmeden Dosyaları Oluşturma
+
+Aşağıdaki bloklar ZIP paketiyle birebir aynı dosyaları oluşturur.
+
+```bash
+mkdir -p ~/labs/LAB-DOC-02
+cd ~/labs/LAB-DOC-02
+```
+
+### `starter/compose.yaml`
+
+```bash
+mkdir -p "$(dirname -- starter/compose.yaml)"
+cat > starter/compose.yaml <<'LAB_FILE_EOF_1'
+# LAB-DOC-02 Starter
+services:
+  database:
+    image: postgres:16-alpine
+    # TODO: Add environment variables and named volume persistence
+LAB_FILE_EOF_1
+```
+
+### `scripts/cleanup.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/cleanup.sh)"
+cat > scripts/cleanup.sh <<'LAB_FILE_EOF_2'
+#!/usr/bin/env bash
+docker compose -p lab-doc-02 down -v 2>/dev/null || true
+echo "Cleanup completed for LAB-DOC-02."
+LAB_FILE_EOF_2
+chmod +x scripts/cleanup.sh
+```
+
+### `scripts/reset.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/reset.sh)"
+cat > scripts/reset.sh <<'LAB_FILE_EOF_3'
+#!/usr/bin/env bash
+set -euo pipefail
+echo "Resetting workspace for LAB-DOC-02..."
+script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+bash "$script_dir/cleanup.sh"
+cp -a "$script_dir/../starter/." .
+echo "Workspace reset to starter state for LAB-DOC-02."
+LAB_FILE_EOF_3
+chmod +x scripts/reset.sh
+```
+
+### `scripts/validate.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/validate.sh)"
+cat > scripts/validate.sh <<'LAB_FILE_EOF_4'
+#!/usr/bin/env bash
+set -euo pipefail
+echo "==> Validating LAB-DOC-02: Volumes & Environment..."
+export LAB_POSTGRES_PASSWORD=${LAB_POSTGRES_PASSWORD:-training-only-password}
+project=lab-doc-02
+cleanup() {
+    docker compose -p "$project" down -v >/dev/null 2>&1 || true
+}
+trap cleanup EXIT
+
+docker compose -p "$project" config --quiet
+docker compose -p "$project" up -d --wait
+docker compose -p "$project" exec -T database \
+    psql -U devops -d training -v ON_ERROR_STOP=1 -c \
+    "CREATE TABLE IF NOT EXISTS lab_events(name text); TRUNCATE lab_events; INSERT INTO lab_events VALUES ('volume-ok');" \
+    >/dev/null
+
+first_container=$(docker compose -p "$project" ps -q database)
+docker compose -p "$project" rm -sf database >/dev/null
+docker compose -p "$project" up -d --wait
+second_container=$(docker compose -p "$project" ps -q database)
+row_count=$(docker compose -p "$project" exec -T database \
+    psql -U devops -d training -tAc "SELECT count(*) FROM lab_events WHERE name='volume-ok';")
+
+if [[ "$first_container" == "$second_container" || "$row_count" != "1" ]]; then
+    echo "[FAIL] LAB-DOC-02 container recreation or persisted row check failed." >&2
+    exit 1
+fi
+echo "[PASS] LAB-DOC-02 volume persistence verified."
+LAB_FILE_EOF_4
+chmod +x scripts/validate.sh
+```
+
+Başlangıç dosyalarını çalışma dizinine alın:
+
+```bash
+cp -a starter/. .
+```
+
+
+## Amaç
+
+- Docker ortam değişkenlerini (`environment`, `.env`) güvenli biçimde yapılandırmak.
+- Named Volume kullanarak konteyner silinse bile veritabanı verilerinin kalıcılığını (persistence) sağlamak.
+- Bind Mount ile yerel dosya sistemini konteynere bağlamayı kavramak.
+- İnteraktif hacim ve ortam değişkeni alıştırmalarını çözmek.
 
 ---
 
-## 1. Lab Senaryosu
-Durum bilgisi tutan (stateful) uygulamaların ve veritabanlarının konteynerize edilmesi sürecinde veri kalıcılığı kritik bir gereksinimdir. Konteynerler varsayılan olarak geçicidir (ephemeral); konteyner yok edildiğinde kök dosya sistemindeki tüm veriler kaybolur. Bu çalışmada PostgreSQL veritabanı örneği üzerinden ortam değişkenleri yönetimi (`.env` dosyası enjeksiyonu), konteyner içerisine komut gönderme (`docker exec`) ve Named Volume kullanarak konteyner tamamen silinse dahi verinin korunması pratik edilir.
+## Ön Koşullar
 
-## 2. Amaç
-Konteyner içine interaktif erişim sağlamak (`docker exec`), ortam değişkenlerini dosyadan enjekte etmek (`--env-file`), Docker Named Volume ile veri kalıcılığı sağlamak ve konteyner silinip yeniden oluşturulduğunda veri bütünlüğünü doğrulamak.
+Çalışma ortamınızda Docker ve Docker Compose servislerinin çalıştığından emin olun:
 
-## 3. Mimari / Akış
-```text
-  [ Named Volume: pg_persistence_vol ]
-                 |
-                 v (Mounted to /var/lib/postgresql/data)
-  [ Container: postgres-lifecycle-test (postgres:16-alpine) ]
-        ^
-        |-- Env: POSTGRES_DB=devops_db, POSTGRES_USER=devops_user
-        |-- Mount (:ro): init.sql -> /docker-entrypoint-initdb.d/init.sql
-```
-
-## 4. Ön Koşullar
-- Docker Engine çalışır durumda olmalıdır
-- Host üzerinde 5432 portu boş olmalıdır
-- Önceden tamamlanması önerilen lab: `LAB-DOC-01`
-
-Aşağıdaki komutlarla başlangıç durumunu kontrol edin:
 ```bash
-docker ps
-docker volume ls
+docker version
+docker compose version
 ```
 
-## 5. Adım Adım Uygulama
+> Komutlar hata vermeden tamamlanmalıdır. `5432` portunun boş olduğundan emin olun.
 
-### Adım 1 — Çalışma Dizinini Hazırlama
-Laboratuvar dizinini oluşturun:
+---
+
+## Adımlar
+
+### 1. Çalışma Dizinini ve Başlangıç Dosyalarını Hazırlayın
+
+Standart laboratuvar çalışma dizininizi oluşturun ve içine geçin:
+
 ```bash
-mkdir -p ~/devops-workspace/labs/LAB-DOC-02
-cd ~/devops-workspace/labs/LAB-DOC-02
+mkdir -p ~/labs/LAB-DOC-02
+cd ~/labs/LAB-DOC-02
 ```
 
-### Adım 2 — Ortam Değişkenleri ve Başlangıç SQL Dosyasını Oluşturma
-Yapılandırma dosyalarını oluşturun:
+Eğer laboratuvar paketini indirdiyseniz başlangıç dosyalarını kopyalayabilirsiniz:
+
 ```bash
-cat <<'EOF' > db.env
-POSTGRES_DB=devops_db
-POSTGRES_USER=devops_user
-POSTGRES_PASSWORD=SuperSecretPassword123!
-PGDATA=/var/lib/postgresql/data/pgdata
-EOF
-
-cat <<'EOF' > init.sql
-CREATE TABLE IF NOT EXISTS audit_logs (
-    id SERIAL PRIMARY KEY,
-    event_name VARCHAR(100) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-INSERT INTO audit_logs (event_name) VALUES ('CONTAINER_LIFECYCLE_STARTED');
-INSERT INTO audit_logs (event_name) VALUES ('VOLUME_PERSISTENCE_TEST');
-EOF
+cp -a starter/. . 2>/dev/null || true
 ```
 
-### Adım 3 — Named Volume Oluşturma ve Konteyneri Başlatma
-Kalıcı depolama alanını oluşturun ve konteyneri çalıştırın:
+Veya başlangıç `compose.yaml` dosyasını oluşturun:
+
 ```bash
-# Named Volume oluştur
-docker volume create pg_persistence_vol
-
-# Konteyneri başlat
-docker run -d \
-  --name postgres-lifecycle-test \
-  --env-file db.env \
-  -v pg_persistence_vol:/var/lib/postgresql/data \
-  -v $(pwd)/init.sql:/docker-entrypoint-initdb.d/init.sql:ro \
-  -p 5432:5432 \
-  postgres:16-alpine
-
-# Veritabanının hazır olmasını bekle
-sleep 5
+cat <<'YAML' > compose.yaml
+services:
+  database:
+    image: postgres:16-alpine
+    # TODO: environment, volume, port ve healthcheck alanlarını ekleyin.
+YAML
 ```
 
-### Adım 4 — Konteyner İçinde Komut Çalıştırma ve Veriyi Sorgulama
-`docker exec` ile konteyner içerisindeki `psql` aracını çalıştırarak başlangıç kayıtlarını kontrol edin:
+---
+
+### 2. Compose Tanımını Tamamlayın
+
+`compose.yaml` dosyasını düzenleyerek PostgreSQL veritabanını, named volume ve healthcheck tanımlarını ekleyin:
+
 ```bash
-docker exec -i postgres-lifecycle-test psql -U devops_user -d devops_db -c "SELECT * FROM audit_logs;"
+cat <<'YAML' > compose.yaml
+services:
+  database:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: devops
+      POSTGRES_PASSWORD: ${LAB_POSTGRES_PASSWORD:?LAB_POSTGRES_PASSWORD is required}
+      POSTGRES_DB: training
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U devops -d training"]
+      interval: 2s
+      timeout: 2s
+      retries: 15
+
+volumes:
+  pgdata:
+YAML
 ```
 
-### Adım 5 — Kalıcılık Testi: Konteyneri Silme ve Yeni Konteyner Bağlama
-Mevcut konteyneri silin ve aynı verileri içeren yeni bir konteyneri aynı volume ile başlatın:
+---
+
+### 3. Ortam Değişkenini Tanımlayın ve Yapılandırmayı Doğrulayın
+
+Parolayı doğrudan YAML dosyasına yazmak yerine terminal ortam değişkeni üzerinden sağlayın:
+
 ```bash
-# Konteyneri sil
-docker rm -f postgres-lifecycle-test
-
-# Aynı Named Volume ile yeni konteyneri başlat (init.sql bağlanmaz)
-docker run -d \
-  --name postgres-reborn \
-  --env-file db.env \
-  -v pg_persistence_vol:/var/lib/postgresql/data \
-  -p 5432:5432 \
-  postgres:16-alpine
-
-sleep 5
-
-# Verilerin korunduğunu sorgula
-docker exec -i postgres-reborn psql -U devops_user -d devops_db -c "SELECT count(*) FROM audit_logs;"
+export LAB_POSTGRES_PASSWORD='training-only-password'
+docker compose -p lab-doc-02 config --quiet
 ```
 
-## 6. Beklenen Sonuç
-Adım 4'teki SQL sorgu çıktısı:
-```text
- id |         event_name          |         created_at         
-----+-----------------------------+----------------------------
-  1 | CONTAINER_LIFECYCLE_STARTED | ...
-  2 | VOLUME_PERSISTENCE_TEST     | ...
-(2 rows)
-```
+---
 
-Adım 5'te yeni konteyner üzerinden yapılan sorgu çıktısı:
-```text
- count 
--------
-     2
-(1 row)
-```
+### 4. Veritabanını Başlatın
 
-## 7. Doğrulama
-Yeni konteyner üzerinde 2 adet kaydın eksiksiz korunduğunu doğrulayın:
 ```bash
-ROW_COUNT=$(docker exec -i postgres-reborn psql -U devops_user -d devops_db -t -A -c "SELECT count(*) FROM audit_logs;")
-if [ "$ROW_COUNT" -eq 2 ]; then
-  echo "VALIDATION SUCCESS: Volume persistence verified. Data survived container recreation."
-else
-  echo "VALIDATION FAILED: Expected 2 rows, found $ROW_COUNT." && exit 1
-fi
+docker compose -p lab-doc-02 up -d --wait
+docker compose -p lab-doc-02 ps
 ```
 
-## 8. Sorun Giderme
+---
 
-### Belirti
-PostgreSQL konteyneri sürekli yeniden başlar veya `Exited (1)` durumuna geçer.
+### 5. Veritabanına Test Verisi Ekleyin
 
-### Kanıt
-`docker logs postgres-lifecycle-test` çıktısında `FATAL: password cannot be empty` veya izin hatası görülür.
+Konteyner içinde çalışan PostgreSQL'e bağlanarak bir tablo oluşturun ve veri ekleyin:
 
-### Kontrol Komutu
 ```bash
-docker logs postgres-lifecycle-test | tail -n 20
+docker compose -p lab-doc-02 exec -T database \
+  psql -U devops -d training -c \
+  "CREATE TABLE IF NOT EXISTS lab_events(name text); INSERT INTO lab_events VALUES ('volume-ok');"
 ```
 
-### Muhtemel Neden
-`POSTGRES_PASSWORD` ortam değişkeni sağlanmamıştır veya `db.env` dosyası okunurken sözdizimi hatası oluşmuştur.
+Eklenen veriyi kontrol edin:
 
-### Çözüm
-`db.env` dosyasındaki değişkenleri kontrol edin ve konteyneri `--env-file db.env` parametresiyle tekrar başlatın:
 ```bash
-docker rm -f postgres-lifecycle-test 2>/dev/null || true
-docker run -d --name postgres-lifecycle-test --env-file db.env -v pg_persistence_vol:/var/lib/postgresql/data -p 5432:5432 postgres:16-alpine
+docker compose -p lab-doc-02 exec -T database \
+  psql -U devops -d training -c "SELECT * FROM lab_events;"
 ```
 
-### Tekrar Doğrulama
+---
+
+### 6. Konteyneri Silip Yeniden Oluşturun (Veri Kalıcılığı Testi)
+
+Mevcut konteyneri tamamen kaldırıp sıfırdan yeni bir konteyner başlatın:
+
 ```bash
-docker ps --filter "name=postgres-lifecycle-test"
-# Konteyner Up durumunda olmalıdır.
+docker compose -p lab-doc-02 rm -sf database
+docker compose -p lab-doc-02 up -d --wait
 ```
 
-## 9. Temizlik / Sıfırlama
-Çalışan konteynerleri ve oluşturulan Named Volume'ü silin:
+Yeni konteyner üzerinden veritabanını sorgulayın:
+
 ```bash
-docker rm -f postgres-lifecycle-test postgres-reborn 2>/dev/null || true
-docker volume rm pg_persistence_vol 2>/dev/null || true
-rm -rf ~/devops-workspace/labs/LAB-DOC-02
+docker compose -p lab-doc-02 exec -T database \
+  psql -U devops -d training -c "SELECT * FROM lab_events;"
 ```
 
-## 10. Production Notu
-Üretim veritabanlarında gizli anahtarlar ve şifreler düz metin `.env` dosyalarında tutulmaz; HashiCorp Vault veya Kubernetes Secret mekanizmalarıyla çalışma zamanında enjekte edilir. Ayrıca veritabanı volume'leri için periyodik snapshot (yedekleme) stratejileri uygulanmalı, host dosya sistemine doğrudan bağlanan yapılandırma dosyaları salt-okunur (`:ro`) olarak eklenmelidir.
+---
 
-## 11. Challenge
-`docker volume inspect pg_persistence_vol` komutunu kullanarak host dosya sistemindeki gerçek depolama dizinini (`Mountpoint`) tespit edin ve bu dizin altındaki PostgreSQL binary veri dosyalarını listeleyin.
+## 💡 Hacimler ve Ortam Değişkenleri İnteraktif Pratik Alıştırmaları
+
+#### Soru 1: Docker CLI ile Named Volume Oluşturma ve İnceleme
+> **Görev:** `my-db-data` adında bir named volume oluşturun ve disk üzerindeki mount noktasını `docker volume inspect` ile görüntüleyin.
+
+??? tip "💡 Çözümü Göster"
+    ```bash
+    docker volume create my-db-data
+    docker volume inspect my-db-data
+    ```
+
+---
+
+#### Soru 2: Bind Mount ile Yerel Klasörü Konteynere Bağlama
+> **Görev:** `~/labs/html` adında bir klasör açıp içine `index.html` oluşturun. Bu klasörü `nginx:alpine` konteynerinin `/usr/share/nginx/html` dizinine bind mount (`-v`) ederek çalıştırın.
+
+??? tip "💡 Çözümü Göster"
+    ```bash
+    mkdir -p ~/labs/html && echo "<h1>Bind Mount Test</h1>" > ~/labs/html/index.html
+    docker run -d --name nginx-mount -p 8086:80 -v ~/labs/html:/usr/share/nginx/html:ro nginx:alpine
+    curl http://localhost:8086
+    docker rm -f nginx-mount
+    ```
+
+---
+
+#### Soru 3: Ortam Değişkenini `docker run -e` ile Geçme
+> **Görev:** `APP_ENV=production` ve `APP_PORT=9000` ortam değişkenlerini `alpine` konteynerine aktarıp `env` çıktısında görüntüleyin.
+
+??? tip "💡 Çözümü Göster"
+    ```bash
+    docker run --rm -e APP_ENV=production -e APP_PORT=9000 alpine env
+    ```
+
+---
+
+## Beklenen Sonuç
+
+Sorgu sonucunda `volume-ok` kaydı görünmelidir. Konteyner silinip yeniden üretilse dahi named volume içindeki veri korunur.
+
+---
+
+## Doğrulama
+
+```bash
+bash scripts/validate.sh
+```
+
+Başarılı sonuç: `[PASS] LAB-DOC-02 volume persistence verified.`
+
+---
+
+## Sorun Giderme
+
+- **`password is required` Hatası:** `LAB_POSTGRES_PASSWORD` değişkenini `export LAB_POSTGRES_PASSWORD='training-only-password'` ile terminal oturumunuza verin.
+- **Port Çakışması:** `5432` portunu kullanan başka bir PostgreSQL veya servis varsa `docker ps --filter publish=5432` ile tespit edip durdurun.
+- **PostgreSQL Ready Değilse:** `docker compose -p lab-doc-02 logs database` çıktısını inceleyin.
+
+---
+
+## Temizlik
+
+```bash
+bash scripts/cleanup.sh
+```
+
+---
+
+## Kaynak
+
+- [Hakan Bayraktar — Docker Commands Cheat Sheet with Examples](https://hbayraktar.medium.com/docker-commands-cheat-sheet-with-examples-d9a26396cb6f)
+

@@ -1,15 +1,5 @@
 # LAB-GLB-03 — GitLab CI Directed Acyclic Graph (DAG) Pipeline
 
-## Metadata
-- **Seviye:** ADVANCED PRACTITIONER
-- **Önerilen Gün:** Gün 3
-- **Tahmini Süre:** 35 dk
-- **Gerekli Ortam:** Öğrenci Ubuntu Sunucusu (`Docker`, `Git` kurulu)
-- **GitLab URL:** `https://gitlab.devopsatolyesi.com/devops-atolyesi/labs/lab-glb-03-dag-pipeline`
-- **Çalışma Deposu:** `devops-atolyesi/labs/lab-glb-03-dag-pipeline`
-
----
-
 ## 1. Lab Senaryosu
 Geleneksel CI/CD hatlarında aşamalar katı bir sıralama ile (`linear stage execution`) çalışır: Bir Stage'deki tüm Job'lar bitmeden sonraki Stage başlayamaz. Örneğin monorepo veya birden fazla servisin bulunduğu projelerde, Frontend testleri Frontend build biter bitmez başlayabilecekken, Backend'in uzun süren derleme işlemini beklemek zorunda kalır.
 

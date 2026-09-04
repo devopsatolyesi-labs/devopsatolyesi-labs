@@ -1,14 +1,78 @@
 # LAB-LNX-01 — Linux Preflight & Systemd Service Inspection
 
-## Metadata
-- **Seviye:** CORE
-- **Önerilen Gün:** Gün 1
-- **Tahmini Süre:** 30 dk
-- **Gerekli Profil:** `docker`
-- **Host Portları:** 22 (SSH)
-- **Çalışma Dizini:** `~/devops-workspace/labs/LAB-LNX-01`
+> [Bu labın başlangıç dosyalarını indir (ZIP)](/downloads/LAB-LNX-01.zip) — paket README, starter ve doğrulama scriptlerini içerir; çözüm içermez.
 
----
+
+İndirdikten sonra terminalde: `unzip LAB-LNX-01.zip && cd LAB-LNX-01`
+
+## ZIP İndirmeden Dosyaları Oluşturma
+
+Aşağıdaki bloklar ZIP paketiyle birebir aynı dosyaları oluşturur.
+
+```bash
+mkdir -p ~/labs/LAB-LNX-01
+cd ~/labs/LAB-LNX-01
+```
+
+### `starter/preflight_check.sh`
+
+```bash
+mkdir -p "$(dirname -- starter/preflight_check.sh)"
+cat > starter/preflight_check.sh <<'LAB_FILE_EOF_1'
+#!/usr/bin/env bash
+set -euo pipefail
+# TODO: Implement Linux preflight report for CPU, RAM, Disk, and Docker
+echo "Running preflight..."
+LAB_FILE_EOF_1
+```
+
+### `scripts/cleanup.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/cleanup.sh)"
+cat > scripts/cleanup.sh <<'LAB_FILE_EOF_2'
+#!/usr/bin/env bash
+echo "Cleanup completed for LAB-LNX-01."
+LAB_FILE_EOF_2
+chmod +x scripts/cleanup.sh
+```
+
+### `scripts/reset.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/reset.sh)"
+cat > scripts/reset.sh <<'LAB_FILE_EOF_3'
+#!/usr/bin/env bash
+set -euo pipefail
+lab_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+echo "Resetting workspace for LAB-LNX-01..."
+bash "$lab_dir/scripts/cleanup.sh"
+cp -r "$lab_dir/starter"/. .
+echo "Workspace reset to starter state for LAB-LNX-01."
+LAB_FILE_EOF_3
+chmod +x scripts/reset.sh
+```
+
+### `scripts/validate.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/validate.sh)"
+cat > scripts/validate.sh <<'LAB_FILE_EOF_4'
+#!/usr/bin/env bash
+set -euo pipefail
+echo "==> Validating LAB-LNX-01: Linux Preflight..."
+bash preflight_check.sh >/dev/null
+echo "[PASS] LAB-LNX-01 Preflight check executed with exit code 0."
+LAB_FILE_EOF_4
+chmod +x scripts/validate.sh
+```
+
+Başlangıç dosyalarını çalışma dizinine alın:
+
+```bash
+cp -a starter/. .
+```
+
 
 ## 1. Lab Senaryosu
 Yeni sağlanan bir Ubuntu sunucu üzerine konteyner ve Kubernetes platformu kurulmadan önce sistem kaynaklarının ve çalışan servislerin doğrulanması gerekmektedir. Yetersiz disk alanı, bellek yetersizliği veya port çakışmaları (özellikle 80, 443 veya 53 portlarının dolu olması) dağıtım aşamasında beklenmedik kesintilere yol açar. Bu çalışmada Linux çekirdek araçları kullanılarak CPU, bellek, disk ve dinleyen ağ soketleri denetlenir; preflight durumunu raporlayan çalıştırılabilir bir script hazırlanır.
@@ -44,8 +108,8 @@ hostnamectl
 ### Adım 1 — Çalışma Dizinini Hazırlama
 Çalışma dizinini ve script klasörünü oluşturun:
 ```bash
-mkdir -p ~/devops-workspace/labs/LAB-LNX-01/scripts
-cd ~/devops-workspace/labs/LAB-LNX-01
+mkdir -p ~/labs/LAB-LNX-01/scripts
+cd ~/labs/LAB-LNX-01
 ```
 
 ### Adım 2 — Sistem Kaynaklarını İnceleme
@@ -71,7 +135,7 @@ sudo ss -tulpn
 Sistem durumunu tek seferde raporlayan otomatik denetim scriptini oluşturun:
 
 ```bash
-cat <<'EOF' > ~/devops-workspace/labs/LAB-LNX-01/scripts/preflight_check.sh
+cat <<'EOF' > ~/labs/LAB-LNX-01/scripts/preflight_check.sh
 #!/usr/bin/env bash
 set -euo pipefail
 
@@ -109,13 +173,13 @@ echo -e "\n========================================="
 echo "  PREFLIGHT REPORT COMPLETED SUCCESSFUL  "
 echo "========================================="
 EOF
-chmod +x ~/devops-workspace/labs/LAB-LNX-01/scripts/preflight_check.sh
+chmod +x ~/labs/LAB-LNX-01/scripts/preflight_check.sh
 ```
 
 ## 6. Beklenen Sonuç
 Script çalıştırıldığında sistem donanımını, disk durumunu ve açık portları içeren şu çıktı üretilmelidir:
 ```bash
-~/devops-workspace/labs/LAB-LNX-01/scripts/preflight_check.sh
+~/labs/LAB-LNX-01/scripts/preflight_check.sh
 ```
 Çıktı:
 ```text
@@ -154,7 +218,7 @@ Filesystem      Size  Used Avail Use% Mounted on
 ## 7. Doğrulama
 Preflight scriptinin sıfır hata kodu ile sonlandığını teyit edin:
 ```bash
-if ~/devops-workspace/labs/LAB-LNX-01/scripts/preflight_check.sh > /dev/null; then
+if ~/labs/LAB-LNX-01/scripts/preflight_check.sh > /dev/null; then
     echo "VALIDATION SUCCESS: Preflight check completed with exit code 0."
 else
     echo "VALIDATION FAILED: Preflight script returned non-zero exit code." && exit 1
@@ -195,7 +259,7 @@ sudo ss -tulpn | grep :80
 ## 9. Temizlik / Sıfırlama
 Oluşturulan çalışma dizinini sıfırlamak için:
 ```bash
-rm -rf ~/devops-workspace/labs/LAB-LNX-01
+rm -rf ~/labs/LAB-LNX-01
 ```
 
 ## 10. Production Notu

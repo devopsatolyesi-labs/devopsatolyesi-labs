@@ -1,14 +1,80 @@
 # LAB-K8S-01 — kind Multi-Node Cluster Setup & kubectl Preflight
 
-## Metadata
-- **Seviye:** CORE
-- **Önerilen Gün:** Gün 4
-- **Tahmini Süre:** 45 dk
-- **Gerekli Profil:** `kubernetes`
-- **Host Portları:** `80:80`, `443:443` (Ingress ExtraPortMappings)
-- **Çalışma Dizini:** `~/devops-workspace/labs/LAB-K8S-01`
+> [Bu labın başlangıç dosyalarını indir (ZIP)](/downloads/LAB-K8S-01.zip) — paket README, starter ve doğrulama scriptlerini içerir; çözüm içermez.
 
----
+
+İndirdikten sonra terminalde: `unzip LAB-K8S-01.zip && cd LAB-K8S-01`
+
+## ZIP İndirmeden Dosyaları Oluşturma
+
+Aşağıdaki bloklar ZIP paketiyle birebir aynı dosyaları oluşturur.
+
+```bash
+mkdir -p ~/labs/LAB-K8S-01
+cd ~/labs/LAB-K8S-01
+```
+
+### `starter/deployment.yaml`
+
+```bash
+mkdir -p "$(dirname -- starter/deployment.yaml)"
+cat > starter/deployment.yaml <<'LAB_FILE_EOF_1'
+# TODO: Write Kubernetes Deployment with 3 replicas
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-app
+LAB_FILE_EOF_1
+```
+
+### `scripts/cleanup.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/cleanup.sh)"
+cat > scripts/cleanup.sh <<'LAB_FILE_EOF_2'
+#!/usr/bin/env bash
+kubectl delete -f deployment.yaml --ignore-not-found=true 2>/dev/null || true
+echo "Cleanup completed for LAB-K8S-01."
+LAB_FILE_EOF_2
+chmod +x scripts/cleanup.sh
+```
+
+### `scripts/reset.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/reset.sh)"
+cat > scripts/reset.sh <<'LAB_FILE_EOF_3'
+#!/usr/bin/env bash
+set -euo pipefail
+lab_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+echo "Resetting workspace for LAB-K8S-01..."
+bash "$lab_dir/scripts/cleanup.sh"
+cp -r "$lab_dir/starter"/. .
+echo "Workspace reset to starter state for LAB-K8S-01."
+LAB_FILE_EOF_3
+chmod +x scripts/reset.sh
+```
+
+### `scripts/validate.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/validate.sh)"
+cat > scripts/validate.sh <<'LAB_FILE_EOF_4'
+#!/usr/bin/env bash
+set -euo pipefail
+echo "==> Validating LAB-K8S-01: Deployment manifest..."
+kubectl apply --dry-run=client -f deployment.yaml
+echo "[PASS] Kubernetes Deployment manifest syntax is valid."
+LAB_FILE_EOF_4
+chmod +x scripts/validate.sh
+```
+
+Başlangıç dosyalarını çalışma dizinine alın:
+
+```bash
+cp -a starter/. .
+```
+
 
 ## 1. Lab Senaryosu
 Modern mikroservis mimarilerinde konteynerlerin ölçeklenmesi, yüksek erişilebilirliği ve otomatik kendini onarma (self-healing) yetenekleri bir orkestratör gerektirir. Kubernetes, bulut yerel dünyanın fiili standardıdır. Geliştirme ve test süreçlerinde harici bir bulut sağlayıcıya (EKS/GKE) bağımlı olmadan çok düğümlü üretim benzeri bir küme kurmak için `kind` (Kubernetes in Docker) kullanılır. Bu çalışmada 1 Control-Plane ve 2 Worker düğümünden oluşan Kubernetes v1.31 kümesi kurulur; kubeadm v1beta4 yamaları uygulanır; bağımsız Pod ile deklaratif Deployment arasındaki farklar ve self-healing mekanizması canlı olarak test edilir.
@@ -34,7 +100,45 @@ Modern mikroservis mimarilerinde konteynerlerin ölçeklenmesi, yüksek erişile
   +-----------------------------------------------------------+
 ```
 
-![LAB-K8S-01 Kubernetes Mimarisi](images/lab-k8s-01-deployments.svg)
+```mermaid
+flowchart TD
+    subgraph HOST [Ubuntu 24.04 Host - Docker Daemon]
+        P80[Port: 80 / 443 HTTP/S]
+        P8088[Port: 8088 Dashboard]
+        
+        subgraph CLUSTER [kind: devops-cluster (v1.31.9)]
+            subgraph CP [Control-Plane Node Container]
+                API[API Server :6443]
+                ETCD[etcd]
+                SCHED[Kube-Scheduler]
+            end
+
+            subgraph W1 [Worker Node 1 Container]
+                POD1[Pod: payment-api #1]
+                POD2[Pod: payment-api #2]
+            end
+
+            subgraph W2 [Worker Node 2 Container]
+                POD3[Pod: payment-api #3]
+            end
+        end
+
+        HEADLAMP[Headlamp Web UI :8088]
+    end
+
+    P80 -->|Ingress Port Map| CP
+    P8088 --> HEADLAMP
+    HEADLAMP -.->|kubeconfig| API
+    API --> W1
+    API --> W2
+
+    classDef host fill:#0f172a,stroke:#334155,color:#fff;
+    classDef cp fill:#1e1b4b,stroke:#818cf8,color:#fff;
+    classDef worker fill:#064e3b,stroke:#34d399,color:#fff;
+
+    class CP cp;
+    class W1,W2 worker;
+```
 
 > [!NOTE]
 > `kind` (Kubernetes in Docker), her bir küme düğümünü (Control Plane ve Worker) bağımsız bir Docker konteyneri içinde çalıştırır. `extraPortMappings` direktifi ile hostun 80 ve 443 portları doğrudan control-plane düğümüne köprülenerek Ingress trafiğine hazır hale getirilir.
@@ -51,8 +155,8 @@ Aşağıdaki komutlarla başlangıç durumunu kontrol edin:
 kind version
 kubectl version --client --output=yaml
 docker ps
-mkdir -p ~/devops-workspace/labs/LAB-K8S-01/manifests
-cd ~/devops-workspace/labs/LAB-K8S-01
+mkdir -p ~/labs/LAB-K8S-01/manifests
+cd ~/labs/LAB-K8S-01
 ```
 
 ## 5. Adım Adım Uygulama
@@ -229,7 +333,7 @@ Oluşturulan Kubernetes kaynaklarını ve kind kümesini silin:
 ```bash
 kubectl delete -f manifests/deployment-resilient.yaml manifests/pod-basic.yaml 2>/dev/null || true
 kind delete cluster --name devops-cluster 2>/dev/null || true
-rm -rf ~/devops-workspace/labs/LAB-K8S-01
+rm -rf ~/labs/LAB-K8S-01
 ```
 
 ## 10. Production Notu

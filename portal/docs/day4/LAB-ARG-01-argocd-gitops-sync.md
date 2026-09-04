@@ -1,14 +1,80 @@
 # LAB-ARG-01 — GitOps with Argo CD: Setup, Declarative Sync & Self-Healing
 
-## Metadata
-- **Seviye:** PRACTITIONER
-- **Önerilen Gün:** Gün 4
-- **Tahmini Süre:** 45 dk
-- **Gerekli Profil:** `kubernetes`
-- **Host Portları:** `8085:443` (Argo CD API & Web UI)
-- **Çalışma Dizini:** `~/devops-workspace/labs/LAB-ARG-01`
+> [Bu labın başlangıç dosyalarını indir (ZIP)](/downloads/LAB-ARG-01.zip) — paket README, starter ve doğrulama scriptlerini içerir; çözüm içermez.
 
----
+
+İndirdikten sonra terminalde: `unzip LAB-ARG-01.zip && cd LAB-ARG-01`
+
+## ZIP İndirmeden Dosyaları Oluşturma
+
+Aşağıdaki bloklar ZIP paketiyle birebir aynı dosyaları oluşturur.
+
+```bash
+mkdir -p ~/labs/LAB-ARG-01
+cd ~/labs/LAB-ARG-01
+```
+
+### `starter/application.yaml`
+
+```bash
+mkdir -p "$(dirname -- starter/application.yaml)"
+cat > starter/application.yaml <<'LAB_FILE_EOF_1'
+# TODO: Argo CD Application CRD
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: demo-gitops-app
+LAB_FILE_EOF_1
+```
+
+### `scripts/cleanup.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/cleanup.sh)"
+cat > scripts/cleanup.sh <<'LAB_FILE_EOF_2'
+#!/usr/bin/env bash
+kubectl delete -f application.yaml --ignore-not-found=true 2>/dev/null || true
+echo "Cleanup completed for LAB-ARG-01."
+LAB_FILE_EOF_2
+chmod +x scripts/cleanup.sh
+```
+
+### `scripts/reset.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/reset.sh)"
+cat > scripts/reset.sh <<'LAB_FILE_EOF_3'
+#!/usr/bin/env bash
+set -euo pipefail
+lab_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+echo "Resetting workspace for LAB-ARG-01..."
+bash "$lab_dir/scripts/cleanup.sh"
+cp -r "$lab_dir/starter"/. .
+echo "Workspace reset to starter state for LAB-ARG-01."
+LAB_FILE_EOF_3
+chmod +x scripts/reset.sh
+```
+
+### `scripts/validate.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/validate.sh)"
+cat > scripts/validate.sh <<'LAB_FILE_EOF_4'
+#!/usr/bin/env bash
+set -euo pipefail
+echo "==> Validating LAB-ARG-01: Argo CD Application manifest..."
+kubectl apply --dry-run=client -f application.yaml
+echo "[PASS] Argo CD Application manifest syntax verified."
+LAB_FILE_EOF_4
+chmod +x scripts/validate.sh
+```
+
+Başlangıç dosyalarını çalışma dizinine alın:
+
+```bash
+cp -a starter/. .
+```
+
 
 ## 1. Lab Senaryosu
 Klasik CI/CD araçlarının dışarıdan Kubernetes kümesine doğrudan tam yönetici (admin) erişimiyle bağlanması (Push modeli), güvenlik açıklarında tüm kümenin ele geçirilme riskini doğurur. GitOps (Pull modeli), Git deposunu altyapı ve uygulamaların tek doğruluk kaynağı (Single Source of Truth) kabul eder. Küme içinde çalışan Argo CD kontrolcüsü, Git deposundaki deklaratif manifestoları düzenli olarak izler ve küme durumunda oluşan sapmaları (drift) tespit ederek sistemi otomatik olarak Git'teki haline eşitler (Self-Healing). Bu çalışmada kind kümesi üzerine Argo CD v3.4 kurulur; deklaratif Application nesnesi tanımlanır ve manuel müdahalelerin otomatik düzeltilmesi test edilir.
@@ -34,7 +100,39 @@ Kubernetes v1.31 üzerinde Argo CD v3.4 kurulumunu gerçekleştirmek, CLI ve Web
   +-----------------------------------------------------------+
 ```
 
-![LAB-ARG-01 Argo CD GitOps Mimarisi](images/lab-arg-01-gitops.svg)
+```mermaid
+flowchart TD
+    subgraph SCM [Git Repository - Tek Doğruluk Kaynağı]
+        GIT["manifests/ (Branch: main)\n[DESIRED STATE]"]
+    end
+
+    subgraph ARGO [Argo CD v3.4.2 - Namespace: argocd]
+        CTRL[Argo CD Application Controller]
+        REPO_SRV[Repo Server]
+        API_SRV[Argo CD Server & UI :8085]
+        CTRL <--> REPO_SRV
+    end
+
+    subgraph K8S [Kubernetes Hedef Küme - Namespace: gitops-prod]
+        DEP[Deployment: gitops-demo-app]
+        SVC[Service: gitops-demo-svc]
+        ACTUAL["Çalışan Podlar & Servisler\n[ACTUAL STATE]"]
+        DEP --> ACTUAL
+        SVC --> ACTUAL
+    end
+
+    GIT -->|1. Polling / Webhook| REPO_SRV
+    CTRL -->|2. Drift Tespiti (Desired vs Actual)| ACTUAL
+    CTRL ==>|3. Automated Sync & Self-Heal| DEP
+
+    classDef git fill:#1e1b4b,stroke:#818cf8,color:#fff;
+    classDef argo fill:#431407,stroke:#f97316,color:#fff;
+    classDef k8s fill:#0f172a,stroke:#38bdf8,color:#fff;
+
+    class SCM git;
+    class ARGO argo;
+    class K8S k8s;
+```
 
 > [!NOTE]
 > **GitOps Mutabakat Döngüsü (Reconciliation Loop):** Argo CD, Git deposundaki deklaratif YAML dosyalarını **İstenen Durum (Desired State)**, Kubernetes kümesindeki canlı kaynakları ise **Mevcut Durum (Actual State)** olarak takip eder. Biri cluster üzerinde elle bir pod silse veya yamasa bile (Configuration Drift), `selfHeal: true` kuralı sayesinde Argo CD saniyeler içinde Git'teki tanımı zorlayarak sistemi eski sağlıklı haline döndürür.
@@ -50,8 +148,8 @@ Kubernetes v1.31 üzerinde Argo CD v3.4 kurulumunu gerçekleştirmek, CLI ve Web
 Aşağıdaki komutlarla başlangıç durumunu kontrol edin:
 ```bash
 kubectl get nodes
-mkdir -p ~/devops-workspace/labs/LAB-ARG-01/gitops-repo
-cd ~/devops-workspace/labs/LAB-ARG-01
+mkdir -p ~/labs/LAB-ARG-01/gitops-repo
+cd ~/labs/LAB-ARG-01
 ```
 
 ## 5. Adım Adım Uygulama
@@ -240,11 +338,11 @@ Argo CD uygulamasını ve oluşturulan ad alanlarını silin:
 ```bash
 argocd app delete gitops-demo-app --cascade 2>/dev/null || true
 kubectl delete namespace gitops-prod argocd 2>/dev/null || true
-rm -rf ~/devops-workspace/labs/LAB-ARG-01
+rm -rf ~/labs/LAB-ARG-01
 ```
 
 ## 10. Production Notu
-Üretim ortamlarında yüzlerce mikroservis tek tek `Application` nesnesi olarak tanımlanmaz; "App of Apps" veya "ApplicationSet" mimarisi kullanılarak tek bir ana manifestodan hiyerarşik olarak yönetilir. Ayrıca CI pipeline'ı üretim kümesine doğrudan bağlanmaz; yalnızca GitOps manifest reposundaki imaj etiketini commit eder.
+Üretim ortamlarında yüzlerce mikroservis tek tek `Application` nesnesi olarak tanımlanmaz; "App of Apps" veya "ApplicationSet" mimarisi kullanılarak tek bir ana manifestodan hiyerarşik olarak yönetilir. Ayrıca CI boru hattı üretim kümesine doğrudan bağlanmaz; yalnızca GitOps manifest reposundaki imaj etiketini commit eder.
 
 ## 11. Challenge
 `application.yaml` içine `spec.syncWindows` bloğu ekleyerek belirli saatler arasında otomatik deploy yapılmasını engelleyen bir dağıtım penceresi kuralı tanımlayın.

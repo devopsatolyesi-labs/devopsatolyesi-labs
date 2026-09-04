@@ -1,17 +1,146 @@
 # LAB-CAP-01 — Final Integrated DevOps Delivery Pipeline: Code to Observability
 
-## Metadata
-- **Seviye:** PRACTITIONER / CAPSTONE
-- **Önerilen Gün:** Gün 5
-- **Tahmini Süre:** 90 dk
-- **Gerekli Profil:** `phased` (Aşamalı Profil: CI -> K8s/GitOps -> Observability)
-- **Host Portları:** `8000:8000` (Order API), `8082:8082` (Harbor), `8085:443` (Argo CD), `9090:9090` (Prometheus), `3000:3000` (Grafana)
-- **Çalışma Dizini:** `~/devops-workspace/labs/LAB-CAP-01`
+> [Bu labın başlangıç dosyalarını indir (ZIP)](/downloads/LAB-CAP-01.zip) — paket README, starter ve doğrulama scriptlerini içerir; çözüm içermez.
 
----
+
+İndirdikten sonra terminalde: `unzip LAB-CAP-01.zip && cd LAB-CAP-01`
+
+## ZIP İndirmeden Dosyaları Oluşturma
+
+Aşağıdaki bloklar ZIP paketiyle birebir aynı dosyaları oluşturur.
+
+```bash
+mkdir -p ~/labs/LAB-CAP-01
+cd ~/labs/LAB-CAP-01
+```
+
+### `starter/app/main.py`
+
+```bash
+mkdir -p "$(dirname -- starter/app/main.py)"
+cat > starter/app/main.py <<'LAB_FILE_EOF_1'
+from http.server import HTTPServer, BaseHTTPRequestHandler
+import json
+
+class CapstoneHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        if self.path == '/healthz':
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.end_headers()
+            self.wfile.write(b'{"status":"HEALTHY"}')
+        elif self.path == '/metrics':
+            self.send_response(200)
+            self.send_header('Content-Type', 'text/plain')
+            self.end_headers()
+            self.wfile.write(b'# HELP requests_total Total requests\nrequests_total 1\n')
+        else:
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.end_headers()
+            self.wfile.write(b'{"message":"Capstone Order Service v2.0.0"}')
+
+if __name__ == '__main__':
+    server = HTTPServer(('0.0.0.0', 8000), CapstoneHandler)
+    server.serve_forever()
+LAB_FILE_EOF_1
+```
+
+### `starter/gitops-manifests/deployment.yaml`
+
+```bash
+mkdir -p "$(dirname -- starter/gitops-manifests/deployment.yaml)"
+cat > starter/gitops-manifests/deployment.yaml <<'LAB_FILE_EOF_2'
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: capstone-order-service
+  namespace: capstone-prod
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: capstone-order-service
+  template:
+    metadata:
+      labels:
+        app: capstone-order-service
+    spec:
+      containers:
+        - name: order-api
+          image: order-service:v2.0.0
+          ports:
+            - containerPort: 8000
+LAB_FILE_EOF_2
+```
+
+### `starter/scripts/ci_pipeline_runner.sh`
+
+```bash
+mkdir -p "$(dirname -- starter/scripts/ci_pipeline_runner.sh)"
+cat > starter/scripts/ci_pipeline_runner.sh <<'LAB_FILE_EOF_3'
+#!/usr/bin/env bash
+set -euo pipefail
+echo "==> Running Capstone Integrated Delivery Pipeline..."
+echo "[1/5] Running Unit Tests..."
+echo "[2/5] Hardened Multi-stage Container Build..."
+echo "[3/5] Shift-Left Trivy Security Gate (0 CRITICAL)..."
+echo "[4/5] Kubernetes GitOps RollingUpdate Deployment..."
+echo "[5/5] Observability & Prometheus Metrics Ingestion..."
+echo "==> Capstone Pipeline Execution Completed: SUCCESS"
+LAB_FILE_EOF_3
+```
+
+### `scripts/cleanup.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/cleanup.sh)"
+cat > scripts/cleanup.sh <<'LAB_FILE_EOF_4'
+#!/usr/bin/env bash
+echo "Cleanup completed for LAB-CAP-01."
+LAB_FILE_EOF_4
+chmod +x scripts/cleanup.sh
+```
+
+### `scripts/reset.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/reset.sh)"
+cat > scripts/reset.sh <<'LAB_FILE_EOF_5'
+#!/usr/bin/env bash
+set -euo pipefail
+lab_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+echo "Resetting workspace for LAB-CAP-01..."
+bash "$lab_dir/scripts/cleanup.sh"
+cp -r "$lab_dir/starter"/. .
+echo "Workspace reset to starter state for LAB-CAP-01."
+LAB_FILE_EOF_5
+chmod +x scripts/reset.sh
+```
+
+### `scripts/validate.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/validate.sh)"
+cat > scripts/validate.sh <<'LAB_FILE_EOF_6'
+#!/usr/bin/env bash
+set -euo pipefail
+echo "==> Validating LAB-CAP-01: Capstone Pipeline..."
+bash scripts/ci_pipeline_runner.sh
+echo "[PASS] LAB-CAP-01 End-to-End pipeline runner validated."
+LAB_FILE_EOF_6
+chmod +x scripts/validate.sh
+```
+
+Başlangıç dosyalarını çalışma dizinine alın:
+
+```bash
+cp -a starter/. .
+```
+
 
 ## 1. Lab Senaryosu
-Modern yazılım mühendisliği organizasyonlarında DevOps ve SRE ekipleri, geliştiricinin yazdığı kaynak kodun test edilmesinden üretim ortamında canlı izlenmesine kadar uzanan zincirin tamamını otomatik ve güvenli hale getirmekle yükümlüdür. Parçalı çalışan araçlar yerine uçtan uca birbirine entegre bir teslimat pipeline'ı (Continuous Delivery Chain) kurulmalıdır. Bu bitirme çalışmasında (Capstone) Python FastAPI sipariş servisi için tam teşekküllü bir üretim döngüsü icra edilir: Birim testler (pytest/JUnit), multi-stage non-root OCI derlemesi, Trivy güvenlik tarama kapısı, GitOps deklaratif dağıtımı (Argo CD ve kind K8s), Prometheus Golden Signals metrikleri ve Vector ile Elasticsearch'e yapılandırılmış JSON log akışı tek bir orkestrasyonda birleştirilir.
+Modern yazılım mühendisliği organizasyonlarında DevOps ve SRE ekipleri, geliştiricinin yazdığı kaynak kodun test edilmesinden üretim ortamında canlı izlenmesine kadar uzanan zincirin tamamını otomatik ve güvenli hale getirmekle yükümlüdür. Parçalı çalışan araçlar yerine uçtan uca birbirine entegre bir teslimat boru hattı (Continuous Delivery Chain) kurulmalıdır. Bu bitirme çalışmasında (Capstone) Python FastAPI sipariş servisi için tam teşekküllü bir üretim döngüsü icra edilir: Birim testler (pytest/JUnit), multi-stage non-root OCI derlemesi, Trivy güvenlik tarama kapısı, GitOps deklaratif dağıtımı (Argo CD ve kind K8s), Prometheus Golden Signals metrikleri ve Vector ile Elasticsearch'e yapılandırılmış JSON log akışı tek bir orkestrasyonda birleştirilir.
 
 ## 2. Amaç
 Eğitim boyunca öğrenilen tüm pratikleri tek bir uçtan uca teslimat hattında (`scripts/ci_pipeline_runner.sh`) birleştirmek; otomatik test, multi-stage derleme, Trivy güvenlik kapısı (`0 CRITICAL CVE`), Kubernetes sıfır kesintili dağıtım (Zero-Downtime RollingUpdate), canlı sağlık kontrolleri ve gözlemlenebilirlik entegrasyonunu doğrulamak.
@@ -38,7 +167,46 @@ Eğitim boyunca öğrenilen tüm pratikleri tek bir uçtan uca teslimat hattınd
     └── 5. Prometheus /metrics Kazıma & Canlı HTTP Yanıt Doğrulaması
 ```
 
-![LAB-CAP-01 Capstone Mimarisi](images/lab-cap-01-capstone.svg)
+```mermaid
+flowchart TD
+    subgraph STAGE1 [1. TEST]
+        SRC[FastAPI Kaynak Kodu] --> PYTEST[pytest unit tests]
+        PYTEST -->|3/3 PASS| S1_OK[JUnit XML Raporu]
+    end
+
+    subgraph STAGE2 [2. BUILD]
+        S1_OK --> DOCKER_BUILD[Multi-Stage Dockerfile]
+        DOCKER_BUILD --> NONROOT[Non-Root UID 10001 İmaj]
+    end
+
+    subgraph STAGE3 [3. SECURITY GATE]
+        NONROOT --> TRIVY[Trivy Vulnerability Scan]
+        TRIVY -->|0 CRITICAL CVE| GATE_PASS[Shift-Left Gate: Onaylandı]
+    end
+
+    subgraph STAGE4 [4. K8S DEPLOYMENT]
+        GATE_PASS --> K8S[kubectl apply -n capstone-prod]
+        K8S --> ROLLOUT[Zero-Downtime RollingUpdate\nmaxSurge: 1, maxUnavailable: 0]
+        ROLLOUT --> PROBES[Liveness & Readiness Probları OK]
+    end
+
+    subgraph STAGE5 [5. OBSERVABILITY]
+        PROBES --> METRICS[Prometheus /metrics Endpoint]
+        METRICS --> TELEMETRY[Canlı HTTP 200 & İstek Sayacı]
+    end
+
+    classDef s1 fill:#1e1b4b,stroke:#818cf8,color:#fff;
+    classDef s2 fill:#0f172a,stroke:#38bdf8,color:#fff;
+    classDef s3 fill:#7f1d1d,stroke:#f87171,color:#fff;
+    classDef s4 fill:#064e3b,stroke:#34d399,color:#fff;
+    classDef s5 fill:#431407,stroke:#f97316,color:#fff;
+
+    class STAGE1 s1;
+    class STAGE2 s2;
+    class STAGE3 s3;
+    class STAGE4 s4;
+    class STAGE5 s5;
+```
 
 > [!NOTE]
 > **Uçtan Uca Bütünlük:** Capstone çalışmasında her bir aşama bir sonrakinin önkoşuludur. Testler başarısız olursa derleme yapılmaz; Trivy kritik bir zafiyet yakalarsa Kubernetes kümesine rollout başlatılmaz. Bu mekanizma modern GitOps ve DevSecOps boru hatlarının omurgasıdır.
@@ -54,8 +222,8 @@ Aşağıdaki komutlarla başlangıç ortamını hazırlayın:
 ```bash
 docker ps
 kubectl get nodes
-mkdir -p ~/devops-workspace/labs/LAB-CAP-01/app ~/devops-workspace/labs/LAB-CAP-01/gitops-manifests ~/devops-workspace/labs/LAB-CAP-01/scripts ~/devops-workspace/labs/LAB-CAP-01/tests
-cd ~/devops-workspace/labs/LAB-CAP-01
+mkdir -p ~/labs/LAB-CAP-01/app ~/labs/LAB-CAP-01/gitops-manifests ~/labs/LAB-CAP-01/scripts ~/labs/LAB-CAP-01/tests
+cd ~/labs/LAB-CAP-01
 ```
 
 ## 5. Adım Adım Uygulama
@@ -312,14 +480,14 @@ EOF
 chmod +x scripts/ci_pipeline_runner.sh
 ```
 
-### Adım 4 — Capstone Pipeline Betiğini Çalıştırma
+### Adım 4 — Bitirme Boru Hattını Çalıştırma
 Tüm aşamaları tek seferde tetikleyin:
 ```bash
 ./scripts/ci_pipeline_runner.sh
 ```
 
 ## 6. Beklenen Sonuç
-Adım 4'teki pipeline çıktısı:
+Adım 4'teki boru hattı çıktısı:
 ```text
 ==========================================================
   [ASAMA 1] CI: Birim Testler ve Kod Dogrulamasi          
@@ -363,7 +531,7 @@ fi
 ## 8. Sorun Giderme
 
 ### Belirti
-Pipeline Aşama 4'te `ImagePullBackOff` hatası vererek zaman aşımına uğrar.
+Boru hattı Aşama 4'te `ImagePullBackOff` hatası vererek zaman aşımına uğrar.
 
 ### Kanıt
 `kubectl get pods -n capstone-prod` çıktısında imajın çekilemediği görülür.
@@ -393,11 +561,11 @@ Capstone ad alanını ve yerel derleme dosyalarını temizleyin:
 ```bash
 kubectl delete namespace capstone-prod 2>/dev/null || true
 docker rmi localhost:8082/devops/capstone-order-api:v2.0.0 2>/dev/null || true
-rm -rf .venv reports ~/devops-workspace/labs/LAB-CAP-01
+rm -rf .venv reports ~/labs/LAB-CAP-01
 ```
 
 ## 10. Production Notu
-Kurumsal DevOps mimarilerinde imajlar doğrudan küme düğümlerine elle yüklenmez; CI pipeline'ı tarafından Harbor veya bulut OCI deposuna push edilir; Kubernetes ise `imagePullSecrets` ile güvenli kimlik doğrulayarak imajı çeker. Üretim dağıtımlarında `maxUnavailable: 0` ve `maxSurge: 1` kuralı korunarak sıfır kesintili dağıtım garantilenmelidir.
+Kurumsal DevOps mimarilerinde imajlar doğrudan küme düğümlerine elle yüklenmez; CI boru hattı tarafından Harbor veya bulut OCI deposuna push edilir; Kubernetes ise `imagePullSecrets` ile güvenli kimlik doğrulayarak imajı çeker. Üretim dağıtımlarında `maxUnavailable: 0` ve `maxSurge: 1` kuralı korunarak sıfır kesintili dağıtım garantilenmelidir.
 
 ## 11. Challenge
 `gitops-manifests/deployment.yaml` dosyasındaki replika sayısını 2'den 5'e çıkarın ve `kubectl rollout status` komutuyla podların kademeli ve kesintisiz ölçeklenmesini canlı olarak gözlemleyin.

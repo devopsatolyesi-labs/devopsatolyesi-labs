@@ -1,14 +1,88 @@
 # LAB-GIT-01 — Git Workflow, Branching & Conflict Resolution
 
-## Metadata
-- **Seviye:** CORE
-- **Önerilen Gün:** Gün 1
-- **Tahmini Süre:** 45 dk
-- **Gerekli Profil:** `docker`
-- **Host Portları:** -
-- **Çalışma Dizini:** `~/devops-workspace/labs/LAB-GIT-01`
+> [Bu labın başlangıç dosyalarını indir (ZIP)](/downloads/LAB-GIT-01.zip) — paket README, starter ve doğrulama scriptlerini içerir; çözüm içermez.
 
----
+
+İndirdikten sonra terminalde: `unzip LAB-GIT-01.zip && cd LAB-GIT-01`
+
+## ZIP İndirmeden Dosyaları Oluşturma
+
+Aşağıdaki bloklar ZIP paketiyle birebir aynı dosyaları oluşturur.
+
+```bash
+mkdir -p ~/labs/LAB-GIT-01
+cd ~/labs/LAB-GIT-01
+```
+
+### `starter/app-config.json`
+
+```bash
+mkdir -p "$(dirname -- starter/app-config.json)"
+cat > starter/app-config.json <<'LAB_FILE_EOF_1'
+{
+  "appName": "payment-service",
+  "version": "1.0.0",
+  "port": 8080,
+  "features": {
+    "logging": "INFO",
+    "auth": "BASIC"
+  }
+}
+LAB_FILE_EOF_1
+```
+
+### `scripts/cleanup.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/cleanup.sh)"
+cat > scripts/cleanup.sh <<'LAB_FILE_EOF_2'
+#!/usr/bin/env bash
+echo "Cleanup completed for LAB-GIT-01."
+LAB_FILE_EOF_2
+chmod +x scripts/cleanup.sh
+```
+
+### `scripts/reset.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/reset.sh)"
+cat > scripts/reset.sh <<'LAB_FILE_EOF_3'
+#!/usr/bin/env bash
+set -euo pipefail
+lab_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+echo "Resetting workspace for LAB-GIT-01..."
+bash "$lab_dir/scripts/cleanup.sh"
+cp -r "$lab_dir/starter"/. .
+echo "Workspace reset to starter state for LAB-GIT-01."
+LAB_FILE_EOF_3
+chmod +x scripts/reset.sh
+```
+
+### `scripts/validate.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/validate.sh)"
+cat > scripts/validate.sh <<'LAB_FILE_EOF_4'
+#!/usr/bin/env bash
+set -euo pipefail
+echo "==> Validating LAB-GIT-01: Git Config Resolution..."
+if grep -q '"auth": "JWT_OAUTH2"' app-config.json && grep -q '"port": 9090' app-config.json; then
+    echo "[PASS] LAB-GIT-01 Conflict resolved with required parameters."
+    exit 0
+else
+    echo "[FAIL] LAB-GIT-01 app-config.json missing expected configuration."
+    exit 1
+fi
+LAB_FILE_EOF_4
+chmod +x scripts/validate.sh
+```
+
+Başlangıç dosyalarını çalışma dizinine alın:
+
+```bash
+cp -a starter/. .
+```
+
 
 ## 1. Lab Senaryosu
 Çok paydaşlı bir yazılım geliştirme ortamında birden fazla mühendis aynı mikroservis yapılandırması üzerinde paralel geliştirmeler yapmaktadır. Bir geliştirici kimlik doğrulama altyapısını JWT standardına taşırken, operasyon ekibi ana dalda port ve log seviyesi güncellemesi uygulamıştır. Bu iki dal birleştirilmek istendiğinde dosya düzeyinde çakışma (merge conflict) meydana gelir. Bu çalışmada Trunk-Based ve Feature-Branch yaklaşımları uygulanır; çakışan JSON yapılandırması çözümlenerek temiz bir commit geçmişi elde edilir.
@@ -27,7 +101,7 @@ Git ortamında branch oluşturma, çakışan commitleri birleştirme (`git merge
 ## 4. Ön Koşullar
 - Git CLI (v2.40+) kurulu olmalıdır
 - `jq` komut satırı JSON ayrıştırıcısı kurulu olmalıdır
-- Çalışma dizini: `~/devops-workspace/labs/LAB-GIT-01`
+- Çalışma dizini: `~/labs/LAB-GIT-01`
 
 Aşağıdaki komutlarla Git kullanıcı yapılandırmasını doğrulayın:
 ```bash
@@ -41,8 +115,8 @@ git config --global user.email "engineer@devops.local"
 ### Adım 1 — Çalışma Ortamı ve Git Reposu Oluşturma
 Temiz bir Git deposu başlatın:
 ```bash
-mkdir -p ~/devops-workspace/labs/LAB-GIT-01/repo
-cd ~/devops-workspace/labs/LAB-GIT-01/repo
+mkdir -p ~/labs/LAB-GIT-01/repo
+cd ~/labs/LAB-GIT-01/repo
 git init -b main
 ```
 
@@ -161,7 +235,7 @@ Automatic merge failed; fix conflicts and then commit the result.
 ## 7. Doğrulama
 Yapılandırma dosyasının geçerli bir JSON olduğunu ve her iki değişikliğin birleştiğini doğrulayın:
 ```bash
-cd ~/devops-workspace/labs/LAB-GIT-01/repo
+cd ~/labs/LAB-GIT-01/repo
 PORT=$(jq -r .port app-config.json)
 AUTH=$(jq -r .features.auth app-config.json)
 
@@ -203,7 +277,7 @@ git branch --show-current
 ## 9. Temizlik / Sıfırlama
 Laboratuvar ortamını temizlemek ve sıfırlamak için:
 ```bash
-rm -rf ~/devops-workspace/labs/LAB-GIT-01
+rm -rf ~/labs/LAB-GIT-01
 ```
 
 ## 10. Production Notu

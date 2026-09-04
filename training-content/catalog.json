@@ -26,7 +26,7 @@
       "status": "published",
       "modules": [
         {"id":"foundation","labs":["LAB-LNX-01","LAB-GIT-01"]},
-        {"id":"docker","labs":["LAB-DOC-01","LAB-DOC-02","LAB-DOC-03","LAB-DOC-04","LAB-DOC-06","LAB-DOC-05","LAB-DOC-13"]},
+        {"id":"docker","labs":["LAB-DOC-01","LAB-DOC-02","LAB-DOC-03","LAB-DOC-09","LAB-DOC-04","LAB-DOC-06","LAB-DOC-05","LAB-DOC-13"]},
         {"id":"ci-cd","labs":["LAB-JNK-01","LAB-JNK-02","LAB-GLB-01"]},
         {"id":"infrastructure-as-code","labs":["LAB-TF-01","LAB-TF-08","LAB-TF-04"]},
         {"id":"kubernetes-gitops","labs":["LAB-K8S-01","LAB-K8S-02","LAB-K8S-03","LAB-HLM-01","LAB-ARG-01"]},
@@ -42,7 +42,7 @@
       "curriculum": "training-content/curriculum/02_2_DAY_DOCKER_KUBERNETES.md",
       "status": "published",
       "modules": [
-        {"id":"docker","labs":["LAB-DOC-01","LAB-DOC-02","LAB-DOC-03","LAB-DOC-05"]},
+        {"id":"docker","labs":["LAB-DOC-01","LAB-DOC-02","LAB-DOC-03","LAB-DOC-09","LAB-DOC-05"]},
         {"id":"kubernetes","labs":["LAB-K8S-01","LAB-K8S-02","LAB-K8S-03"]}
       ]
     }
@@ -54,6 +54,7 @@
     {"id":"LAB-DOC-01","title":"İlk Docker Konteyneri ve Port Mapping","topic":"docker","difficulty":100,"estimated_minutes":30,"profiles":["docker"],"ports":[8080],"prerequisites":["LAB-ENV-00"],"courses":["devops-practitioner-5-day","docker-kubernetes-2-day"],"guide":"training-content/labs/docker/LAB-DOC-01-docker-first-container.md","assets":"training-content/lab-assets/LAB-DOC-01","status":"published","package_contract":"standard"},
     {"id":"LAB-DOC-02","title":"Container Lifecycle, Env ve Volume Persistence","topic":"docker","difficulty":100,"estimated_minutes":40,"profiles":["docker"],"ports":[5432],"prerequisites":["LAB-DOC-01"],"courses":["devops-practitioner-5-day","docker-kubernetes-2-day"],"guide":"training-content/labs/docker/LAB-DOC-02-docker-volumes-env.md","assets":"training-content/lab-assets/LAB-DOC-02","status":"published","package_contract":"standard"},
     {"id":"LAB-DOC-03","title":"Docker İmaj Optimizasyonu ve Registry Dağıtımı","topic":"docker","difficulty":200,"estimated_minutes":60,"profiles":["docker","harbor"],"ports":[8000,8082],"prerequisites":[],"courses":["devops-practitioner-5-day","docker-kubernetes-2-day"],"guide":"training-content/labs/docker/LAB-DOC-03-dockerfile-optimization.md","assets":"training-content/lab-assets/LAB-DOC-03","status":"published","package_contract":"standard"},
+    {"id":"LAB-DOC-09","title":"User-Defined Docker Network ve Container DNS","topic":"docker","difficulty":200,"estimated_minutes":45,"profiles":["docker"],"ports":[8080],"prerequisites":["LAB-DOC-01"],"courses":["devops-practitioner-5-day","docker-kubernetes-2-day"],"guide":"training-content/labs/docker/LAB-DOC-09-docker-networks-dns.md","assets":"training-content/lab-assets/LAB-DOC-09","status":"published","package_contract":"standard"},
     {"id":"LAB-DOC-04","title":"Multi-Stage Build, Non-Root ve Image Hardening","topic":"docker","difficulty":200,"estimated_minutes":45,"profiles":["docker"],"ports":[],"prerequisites":["LAB-DOC-03"],"courses":["devops-practitioner-5-day"],"guide":"training-content/labs/docker/LAB-DOC-04-docker-multistage-hardening.md","assets":"training-content/lab-assets/LAB-DOC-04","status":"published","package_contract":"standard"},
     {"id":"LAB-DOC-05","title":"Docker Compose Multi-Tier Orchestration","topic":"docker","difficulty":200,"estimated_minutes":60,"profiles":["docker"],"ports":[8080],"prerequisites":["LAB-DOC-02"],"courses":["devops-practitioner-5-day","docker-kubernetes-2-day"],"guide":"training-content/labs/docker/LAB-DOC-05-docker-compose-multitier.md","assets":"training-content/lab-assets/LAB-DOC-05","status":"published","package_contract":"standard"},
     {"id":"LAB-DOC-06","title":"Trivy Container Security Gate","topic":"container-security","difficulty":200,"estimated_minutes":30,"profiles":["docker"],"ports":[],"prerequisites":["LAB-DOC-03"],"courses":["devops-practitioner-5-day"],"guide":"training-content/labs/docker/LAB-DOC-06-trivy-harbor-integration.md","assets":"training-content/lab-assets/LAB-DOC-06","status":"published","package_contract":"standard"},

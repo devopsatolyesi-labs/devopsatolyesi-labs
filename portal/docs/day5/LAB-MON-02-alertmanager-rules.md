@@ -1,14 +1,78 @@
 # LAB-MON-02 — Prometheus Alertmanager: High Latency & Pod Crash Alerts
 
-## Metadata
-- **Seviye:** PRACTITIONER
-- **Önerilen Gün:** Gün 5
-- **Tahmini Süre:** 45 dk
-- **Gerekli Profil:** `monitoring`
-- **Host Portları:** `9090:9090` (Prometheus), `9093:9093` (Alertmanager)
-- **Çalışma Dizini:** `~/devops-workspace/labs/LAB-MON-02`
+> [Bu labın başlangıç dosyalarını indir (ZIP)](/downloads/LAB-MON-02.zip) — paket README, starter ve doğrulama scriptlerini içerir; çözüm içermez.
 
----
+
+İndirdikten sonra terminalde: `unzip LAB-MON-02.zip && cd LAB-MON-02`
+
+## ZIP İndirmeden Dosyaları Oluşturma
+
+Aşağıdaki bloklar ZIP paketiyle birebir aynı dosyaları oluşturur.
+
+```bash
+mkdir -p ~/labs/LAB-MON-02
+cd ~/labs/LAB-MON-02
+```
+
+### `starter/alert.rules.yml`
+
+```bash
+mkdir -p "$(dirname -- starter/alert.rules.yml)"
+cat > starter/alert.rules.yml <<'LAB_FILE_EOF_1'
+# TODO: Write Prometheus alert rule
+groups:
+  - name: training-alerts
+    rules: []
+LAB_FILE_EOF_1
+```
+
+### `scripts/cleanup.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/cleanup.sh)"
+cat > scripts/cleanup.sh <<'LAB_FILE_EOF_2'
+#!/usr/bin/env bash
+echo "Cleanup completed for LAB-MON-02."
+LAB_FILE_EOF_2
+chmod +x scripts/cleanup.sh
+```
+
+### `scripts/reset.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/reset.sh)"
+cat > scripts/reset.sh <<'LAB_FILE_EOF_3'
+#!/usr/bin/env bash
+set -euo pipefail
+lab_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+echo "Resetting workspace for LAB-MON-02..."
+bash "$lab_dir/scripts/cleanup.sh"
+cp -r "$lab_dir/starter"/. .
+echo "Workspace reset to starter state for LAB-MON-02."
+LAB_FILE_EOF_3
+chmod +x scripts/reset.sh
+```
+
+### `scripts/validate.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/validate.sh)"
+cat > scripts/validate.sh <<'LAB_FILE_EOF_4'
+#!/usr/bin/env bash
+set -euo pipefail
+echo "==> Validating LAB-MON-02: Alert rules syntax..."
+docker run --rm -v "$(pwd)/alert.rules.yml:/rules.yml" prom/prometheus:v3.13.2 check rules /rules.yml
+echo "[PASS] Prometheus alert rules validated successfully."
+LAB_FILE_EOF_4
+chmod +x scripts/validate.sh
+```
+
+Başlangıç dosyalarını çalışma dizinine alın:
+
+```bash
+cp -a starter/. .
+```
+
 
 ## 1. Lab Senaryosu
 Metrikleri grafik panellerinde izlemek pasif bir operasyon yöntemidir; kesinti veya performans düşüşü yaşandığında mühendislerin anında haberdar edilmesi gerekir. Ancak anlık dalgalanmalarda yüzlerce gereksiz bildirim göndermek "Alert Fatigue" (alarm yorgunluğu) oluşturur. Prometheus kuralları (`for:` süresi) ile alarmları doğrular ve bildirimi Alertmanager bileşenine iletir. Alertmanager alarmları gruplar, tekilleştirir (deduplication) ve ilgili kanallara yönlendirir. Bu çalışmada kapalı bir servis üzerinden kasıtlı kesinti simülasyonu yapılır; `ServiceDown` alarmının `Pending` aşamasından `Firing` durumuna geçişi ve Alertmanager API v2 üzerindeki alarm kaydı doğrulanır.
@@ -38,8 +102,8 @@ Prometheus üzerinde `alert.rules.yml` dosyasıyla alarm eşikleri tanımlamak, 
 
 Aşağıdaki komutlarla çalışma ortamını hazırlayın:
 ```bash
-mkdir -p ~/devops-workspace/labs/LAB-MON-02/prometheus ~/devops-workspace/labs/LAB-MON-02/alertmanager
-cd ~/devops-workspace/labs/LAB-MON-02
+mkdir -p ~/labs/LAB-MON-02/prometheus ~/labs/LAB-MON-02/alertmanager
+cd ~/labs/LAB-MON-02
 ```
 
 ## 5. Adım Adım Uygulama
@@ -218,7 +282,7 @@ curl -s http://localhost:9090/api/v1/rules | jq '.data.groups[0].name'
 Konteynerleri kaldırın ve çalışma dizinini temizleyin:
 ```bash
 docker compose down -v
-rm -rf ~/devops-workspace/labs/LAB-MON-02
+rm -rf ~/labs/LAB-MON-02
 ```
 
 ## 10. Production Notu

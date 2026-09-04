@@ -102,8 +102,7 @@ Bu müfredat, farklı seviyelerdeki (başlangıç, orta, ileri) öğrencilerin 5
 | **11:00 - 12:15** | Lab & Proje | Prometheus & Grafana ile Metrik Toplama ve Dashboard Oluşturma (`LAB-MON-01` & `PROJECT-07`) | PRACTITIONER | Node Exporter + App `/metrics`, PromQL sorguları (`rate()`, `histogram_quantile`), Grafana panelleri |
 | **12:15 - 13:00** | Lab | Prometheus Alertmanager: Kritik Alarm Tanımları & Bildirim Mekanizması (`LAB-MON-02`) | PRACTITIONER | Alerting rules (High Latency, High CPU, Pod Crash), Alertmanager yönlendirme |
 | **13:00 - 14:00** | Ara | Öğle Yemeği | - | - |
-| **14:00 - 15:15** | Lab & Proje | Temel Merkezi Loglama: Nginx → Filebeat → Logstash → Elasticsearch → Kibana (`LAB-LOG-01` & `PROJECT-08`) | PRACTITIONER | Manuel Nginx pipeline, Grok, mapping, ILM, Persistent Queue, Kibana Data View ve KQL |
-| **Opsiyonel 150 dk** | Challenge Lab | İleri ELK2 gözlemlenebilirliği (`LAB-LOG-02`) | CHALLENGE | Manuel Vector, Metricbeat ve Filebeat; Linux/Docker/Kubernetes telemetrisi, GeoMap, birleşik dashboard ve Canvas |
+| **14:00 - 15:15** | Lab & Proje | Merkezi Loglama: FluentBit/Vector ile Elasticsearch & Kibana Entegrasyonu (`LAB-LOG-01` & `PROJECT-08`) | PRACTITIONER | Yapılandırılmış JSON loglar, log toplama boru hattı, Kibana Data View, log filtreleme |
 | **15:15 - 16:15** | Lab & Proje | War Room Simülasyonu: K8s Arıza Teşhisi, Hata Ayıklama ve Postmortem (`LAB-INC-01` & `PROJECT-09`) | PRACTITIONER | CrashLoopBackOff, ImagePullBackOff, OOMKilled, NetworkPolicy engeli, Root Cause Analizi |
 | **16:15 - 16:30** | Ara | Kahve Molası | - | - |
 | **16:30 - 17:45** | Final Capstone | BÜYÜK FİNAL: Git → CI → Sonar → Trivy → Harbor → GitOps → Argo CD → K8s → Monitoring (`PROJECT-10`) | CAPSTONE | 5 günün tüm parçalarını birleştiren tam otomatik DevOps boru hattı teslimi |

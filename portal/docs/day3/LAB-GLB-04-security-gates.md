@@ -1,15 +1,5 @@
 # LAB-GLB-04 — GitLab CI DevSecOps Security Gate ve Trivy CVE Taraması
 
-## Metadata
-- **Seviye:** ADVANCED PRACTITIONER
-- **Önerilen Gün:** Gün 3
-- **Tahmini Süre:** 35 dk
-- **Gerekli Ortam:** Öğrenci Ubuntu Sunucusu (`Docker`, `Git` kurulu)
-- **GitLab URL:** `https://gitlab.devopsatolyesi.com/devops-atolyesi/labs/lab-glb-04-security-gate`
-- **Çalışma Deposu:** `devops-atolyesi/labs/lab-glb-04-security-gate`
-
----
-
 ## 1. Lab Senaryosu
 Modern bulut yerel yazılım geliştirme döngülerinde güvenlik kontrollerinin en erken aşamada uygulanması **Shift-Left Security** olarak adlandırılır. Bir zafiyetin canlı ortama çıktıktan sonra tespit edilmesi yüksek maliyet ve itibar kaybına neden olurken, CI Pipeline aşamasında tespit edilip engellenmesi güvenli teslimatın temel şartıdır.
 

@@ -1,15 +1,5 @@
 # LAB-GLB-02 — GitLab CI Variables ve Artifacts Yönetimi
 
-## Metadata
-- **Seviye:** PRACTITIONER
-- **Önerilen Gün:** Gün 3
-- **Tahmini Süre:** 30 dk
-- **Gerekli Ortam:** Öğrenci Ubuntu Sunucusu (`Docker`, `Git`, `Node.js / npm` kurulu)
-- **GitLab URL:** `https://gitlab.devopsatolyesi.com/devops-atolyesi/labs/lab-glb-02-variables-artifacts`
-- **Çalışma Deposu:** `devops-atolyesi/labs/lab-glb-02-variables-artifacts`
-
----
-
 ## 1. Lab Senaryosu
 Modern CI/CD süreçlerinde Pipeline aşamaları (`stages`) arasında veri ve derleme çıktısı aktarımı (`build outputs`, `binaries`, `test reports`) kritik bir gereksinimdir. GitLab CI mimarisinde her bir `job` varsayılan olarak izole bir konteyner ortamında çalışır ve iş bittiğinde konteyner silinir.
 

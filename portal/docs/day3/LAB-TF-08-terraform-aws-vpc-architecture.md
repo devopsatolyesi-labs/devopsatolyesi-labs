@@ -1,17 +1,287 @@
 # LAB-TF-08 / PROJECT-TF-VPC — Terraform ile Üretim Standartlarında AWS VPC: Public & Private Subnet Mimarisi
 
-## Metadata
-- **Teknoloji:** Terraform 1.10.x+, AWS Provider v5.80.x (veya LocalStack 3.x), AWS VPC, Subnets, Internet Gateway, NAT Gateway, Elastic IP, Route Tables, Security Groups, EC2 Bastion
-- **Seviye:** PRACTITIONER / CLOUD INFRASTRUCTURE AS CODE
-- **Önerilen Gün:** Gün 4 (Terraform & Bulut Ağ Mimarisi)
-- **Tahmini Süre:** 60–75 dk
-- **Gerekli Profil:** `docker` (LocalStack yerel modu) veya Geçerli AWS Hesabı (`aws configure`)
-- **Host Portları:** `4566` (LocalStack modu durumunda), SSH Bastion (22)
-- **Çalışma Dizini:** `~/devops-workspace/labs/LAB-TF-08`
-- **Hedef Repo Yolu:** `~/devops-workspace/projects/PROJECT-TF-VPC`
-- **Referans:** [Bryant Son — How to Build an AWS VPC with Public and Private Subnets using Terraform](https://bryantson.medium.com/how-to-build-an-aws-vpc-with-public-and-private-subnets-using-terraform-5eac1dc69b83)
+> [Bu labın başlangıç dosyalarını indir (ZIP)](/downloads/LAB-TF-08.zip) — paket README, starter ve doğrulama scriptlerini içerir; çözüm içermez.
 
----
+
+İndirdikten sonra terminalde: `unzip LAB-TF-08.zip && cd LAB-TF-08`
+
+## ZIP İndirmeden Dosyaları Oluşturma
+
+Aşağıdaki bloklar ZIP paketiyle birebir aynı dosyaları oluşturur.
+
+```bash
+mkdir -p ~/labs/LAB-TF-08
+cd ~/labs/LAB-TF-08
+```
+
+### `starter/main.tf`
+
+```bash
+mkdir -p "$(dirname -- starter/main.tf)"
+cat > starter/main.tf <<'LAB_FILE_EOF_1'
+# TODO: Adım Adım Rehberi (LAB-TF-08) takip ederek aşağıdaki bileşenleri tanımlayınız:
+# 1. aws_vpc.main
+# 2. aws_subnet.public & aws_subnet.private
+# 3. aws_internet_gateway.igw, aws_eip.nat & aws_nat_gateway.nat
+# 4. aws_route_table.public & aws_route_table.private ve route table associations
+# 5. aws_security_group.bastion_sg & aws_security_group.private_app_sg
+# 6. aws_instance.bastion & aws_instance.private_app
+LAB_FILE_EOF_1
+```
+
+### `starter/providers.tf`
+
+```bash
+mkdir -p "$(dirname -- starter/providers.tf)"
+cat > starter/providers.tf <<'LAB_FILE_EOF_2'
+terraform {
+  required_version = ">= 1.5.0"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.80.0"
+    }
+  }
+}
+
+provider "aws" {
+  region = var.aws_region
+}
+LAB_FILE_EOF_2
+```
+
+### `starter/variables.tf`
+
+```bash
+mkdir -p "$(dirname -- starter/variables.tf)"
+cat > starter/variables.tf <<'LAB_FILE_EOF_3'
+variable "aws_region" {
+  type        = string
+  description = "AWS hedef bölgesi"
+  default     = "us-east-1"
+}
+
+variable "environment" {
+  type        = string
+  description = "Ortam adı"
+  default     = "dev"
+}
+
+variable "vpc_cidr" {
+  type        = string
+  description = "VPC CIDR bloğu"
+  default     = "10.0.0.0/16"
+}
+
+variable "availability_zones" {
+  type        = list(string)
+  default     = ["us-east-1a", "us-east-1b"]
+}
+
+variable "public_subnet_cidrs" {
+  type        = list(string)
+  default     = ["10.0.1.0/24", "10.0.2.0/24"]
+}
+
+variable "private_subnet_cidrs" {
+  type        = list(string)
+  default     = ["10.0.11.0/24", "10.0.12.0/24"]
+}
+LAB_FILE_EOF_3
+```
+
+### `scripts/cleanup.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/cleanup.sh)"
+cat > scripts/cleanup.sh <<'LAB_FILE_EOF_4'
+#!/usr/bin/env bash
+# ==============================================================================
+# Script: cleanup.sh
+# Purpose: Safe cleanup of all AWS infrastructure to avoid incurring cloud costs
+# ==============================================================================
+set -euo pipefail
+
+echo "=========================================================="
+echo "    AWS INFRASTRUCTURE COST-SAVING CLEANUP (LAB-TF-08)    "
+echo "=========================================================="
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+LAB_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+cd "${LAB_DIR}/solution" 2>/dev/null || cd "${LAB_DIR}"
+
+if [ -f "terraform.tfstate" ]; then
+  echo "==> Running 'terraform destroy' to release NAT Gateway, EIP and EC2 instances..."
+  terraform destroy -auto-approve
+  echo "==> Removing generated private key file..."
+  rm -f lab_key.pem
+  echo "==> All AWS cloud resources have been successfully destroyed. Zero ongoing costs."
+else
+  echo "==> No active terraform.tfstate found. Nothing to destroy."
+fi
+LAB_FILE_EOF_4
+chmod +x scripts/cleanup.sh
+```
+
+### `scripts/reset.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/reset.sh)"
+cat > scripts/reset.sh <<'LAB_FILE_EOF_5'
+#!/usr/bin/env bash
+# ==============================================================================
+# Script: reset.sh
+# Purpose: Completely destroys AWS VPC resources and resets the workspace
+# ==============================================================================
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+LAB_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+echo "==> [RESET] Destroying Terraform managed AWS resources for LAB-TF-08..."
+cd "${LAB_DIR}/solution" 2>/dev/null || cd "${LAB_DIR}"
+
+if [ -f "terraform.tfstate" ]; then
+  terraform destroy -auto-approve || true
+fi
+
+echo "==> [RESET] Cleaning up local state and keys..."
+rm -f terraform.tfstate* lab_key.pem .terraform.lock.hcl
+rm -rf .terraform/
+
+echo "==> [RESET] Re-initializing Terraform clean state..."
+terraform init -backend=false || true
+
+echo "==> [RESET] Workspace reset complete. You can now restart LAB-TF-08 from Step 1."
+LAB_FILE_EOF_5
+chmod +x scripts/reset.sh
+```
+
+### `scripts/validate.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/validate.sh)"
+cat > scripts/validate.sh <<'LAB_FILE_EOF_6'
+#!/usr/bin/env bash
+# ==============================================================================
+# Script: validate.sh
+# Purpose: Validates AWS VPC Multi-AZ Public/Private Subnet Terraform Deployment (LAB-TF-08)
+# ==============================================================================
+set -euo pipefail
+
+echo "=========================================================="
+echo "   VALIDATING AWS MULTI-AZ VPC TERRAFORM DEPLOYMENT       "
+echo "                   (LAB-TF-08)                            "
+echo "=========================================================="
+
+PASS=0
+FAIL=0
+
+log_pass() { echo -e "[\033[32mPASS\033[0m] $1"; PASS=$((PASS+1)); }
+log_fail() { echo -e "[\033[31mFAIL\033[0m] $1"; FAIL=$((FAIL+1)); }
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+LAB_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+cd "${LAB_DIR}/solution" 2>/dev/null || cd "${LAB_DIR}"
+
+# 1. Terraform Binary & Syntax Validation
+if command -v terraform &>/dev/null; then
+  log_pass "Terraform CLI is installed ($(terraform version -json 2>/dev/null | jq -r '.terraform_version // "unknown"'))"
+else
+  log_fail "Terraform CLI not found in PATH."
+fi
+
+if terraform validate &>/dev/null; then
+  log_pass "Terraform configuration is syntactically valid (terraform validate)."
+else
+  log_fail "Terraform validation failed. Check syntax and required variables."
+fi
+
+# 2. State Check
+if [ -f "terraform.tfstate" ]; then
+  log_pass "terraform.tfstate file exists."
+  
+  # 3. Resource Output Verification
+  VPC_ID=$(terraform output -raw vpc_id 2>/dev/null || echo "")
+  if [ -n "$VPC_ID" ] && [[ "$VPC_ID" =~ ^vpc- ]]; then
+    log_pass "VPC created successfully with ID: $VPC_ID"
+  else
+    log_fail "VPC ID not found or invalid in Terraform outputs."
+  fi
+
+  PUB_COUNT=$(terraform output -json public_subnet_ids 2>/dev/null | jq '. | length' 2>/dev/null || echo 0)
+  if [ "$PUB_COUNT" -eq 2 ]; then
+    log_pass "Public subnets verified: 2 subnets provisioned across Multi-AZ."
+  else
+    log_fail "Public subnets count mismatch: expected 2, found $PUB_COUNT."
+  fi
+
+  PRIV_COUNT=$(terraform output -json private_subnet_ids 2>/dev/null | jq '. | length' 2>/dev/null || echo 0)
+  if [ "$PRIV_COUNT" -eq 2 ]; then
+    log_pass "Private subnets verified: 2 subnets provisioned across Multi-AZ."
+  else
+    log_fail "Private subnets count mismatch: expected 2, found $PRIV_COUNT."
+  fi
+
+  NAT_EIP=$(terraform output -raw nat_gateway_public_ip 2>/dev/null || echo "")
+  if [ -n "$NAT_EIP" ]; then
+    log_pass "NAT Gateway Elastic IP allocated: $NAT_EIP"
+  else
+    log_fail "NAT Gateway Elastic IP missing."
+  fi
+
+  BASTION_IP=$(terraform output -raw bastion_public_ip 2>/dev/null || echo "")
+  if [ -n "$BASTION_IP" ]; then
+    log_pass "Bastion Jump Host deployed with Public IP: $BASTION_IP"
+  else
+    log_fail "Bastion Public IP missing."
+  fi
+
+  PRIV_IP=$(terraform output -raw private_app_ip 2>/dev/null || echo "")
+  if [ -n "$PRIV_IP" ] && [[ "$PRIV_IP" =~ ^10\.0\.11\. ]]; then
+    log_pass "Private App instance deployed with Isolated IP: $PRIV_IP"
+  else
+    log_fail "Private instance IP missing or not in 10.0.11.0/24 CIDR."
+  fi
+
+  # 4. Live Reachability Test (Optional if credentials and key exist)
+  if [ -f "lab_key.pem" ] && [ -n "$BASTION_IP" ]; then
+    echo "Testing Bastion SSH Port 22 connectivity..."
+    if nc -z -w 5 "$BASTION_IP" 22 2>/dev/null; then
+      log_pass "Bastion Host SSH port 22 is reachable from the internet."
+    else
+      echo "  (Note: SSH port unreachable or security group restricted - check allowed_ssh_cidr)"
+    fi
+  fi
+
+else
+  echo "  (terraform.tfstate not found locally. Run 'terraform apply' first to test live state.)"
+fi
+
+echo "----------------------------------------------------------"
+echo "  SUMMARY: PASS=$PASS | FAIL=$FAIL"
+echo "=========================================================="
+
+if [ "$FAIL" -eq 0 ]; then
+  echo -e "\033[32m>>> LAB-TF-08 VALIDATION SUCCESSFUL! <<<\033[0m"
+  exit 0
+else
+  echo -e "\033[31m>>> LAB-TF-08 VALIDATION HAS WARNINGS/FAILURES! <<<\033[0m"
+  exit 1
+fi
+LAB_FILE_EOF_6
+chmod +x scripts/validate.sh
+```
+
+Başlangıç dosyalarını çalışma dizinine alın:
+
+```bash
+cp -a starter/. .
+```
+
 
 ## 1. Lab / Proje Senaryosu
 
@@ -46,8 +316,114 @@ Bu lab ve projeyi tamamladığınızda aşağıdaki yetkinlikleri kazanacaksın�
 
 ![Tech Stack Banner](../lab-assets/LAB-TF-08/images/tech_stack_banner.svg)
 
-#### 3.1. AWS Ağ Topolojisi Şeması
+### 3.1. AWS Ağ Topolojisi Şeması
 ![AWS Multi-AZ VPC Architecture](../lab-assets/LAB-TF-08/images/architecture.svg)
+
+### 3.2. Detaylı Mermaid Mimari Diyagramı
+
+```mermaid
+flowchart TB
+    subgraph Internet [Genel İnternet / Dış Ağ]
+        WORLD((Kullanıcılar & Dış API'ler
+0.0.0.0/0))
+        ADMIN[DevOps / Sistem Yöneticisi
+SSH Port: 22]
+    end
+
+    subgraph AWSCloud [AWS Bulut Platformu - Bölge: us-east-1]
+        IGW[Internet Gateway
+aws_internet_gateway.igw]
+
+        subgraph VPC [AWS VPC: 10.0.0.0/16]
+            
+            subgraph AZA [Kullanılabilirlik Alanı: us-east-1a]
+                subgraph PubSubA [Public Subnet 1: 10.0.1.0/24]
+                    BASTION[Bastion Jump Host
+EC2: t3.micro
+Public IP + Private IP]
+                    NAT[NAT Gateway
+aws_nat_gateway.nat
+Sabit Elastic IP: EIP]
+                end
+
+                subgraph PrivSubA [Private Subnet 1: 10.0.11.0/24]
+                    APP[İç Uygulama Sunucusu
+EC2: 10.0.11.x
+Doğrudan Genel IP Yok]
+                end
+            end
+
+            subgraph AZB [Kullanılabilirlik Alanı: us-east-1b]
+                subgraph PubSubB [Public Subnet 2: 10.0.2.0/24]
+                    ALB_STANDBY[Yedek Ingress / Standby
+Public Route Table]
+                end
+
+                subgraph PrivSubB [Private Subnet 2: 10.0.12.0/24]
+                    DB_STANDBY[(Veritabanı / RDS Standby
+Private Route Table)]
+                end
+            end
+
+            subgraph RouteTables [VPC Yönlendirme Tabloları]
+                RT_PUB[Public Route Table
+0.0.0.0/0 ---> Internet Gateway]
+                RT_PRIV[Private Route Table
+0.0.0.0/0 ---> NAT Gateway]
+            end
+
+        end
+    end
+
+    %% Dış Ağ Bağlantıları
+    WORLD <===>|Kuzey-Güney Çift Yönlü Trafik| IGW
+    ADMIN ==>|1. SSH Bağlantısı| IGW
+    IGW ==>|2. Port 22| BASTION
+
+    %% Yönlendirme İlişkileri
+    PubSubA -.->|Assoc| RT_PUB
+    PubSubB -.->|Assoc| RT_PUB
+    PrivSubA -.->|Assoc| RT_PRIV
+    PrivSubB -.->|Assoc| RT_PRIV
+
+    RT_PUB ===>|Default Route| IGW
+    RT_PRIV ===>|Default Route| NAT
+    NAT ===>|Egress Forward| IGW
+
+    %% İç Ağ Atlama ve Çıkış
+    BASTION ==>|3. ProxyJump SSH / Port 22| APP
+    APP ==>|4. Paket Güncelleme & Dış API İsteği| NAT
+```
+
+### 3.3. Ağ Trafiği ve Paket Yönlendirme Akışı (Sequence Flow)
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Admin as DevOps Mühendisi
+    participant IGW as Internet Gateway (IGW)
+    participant Bastion as Bastion Host (Public Subnet)
+    participant App as Private App (Private Subnet)
+    participant NAT as NAT Gateway (Public Subnet)
+    participant Ext as Dış Paket Deposu (Ubuntu / GitHub)
+
+    Note over Admin,App: Senaryo A: Yönetimsel Erişim (Inbound Jump)
+    Admin->>IGW: SSH (TCP 22) - Hedef: Bastion Public IP
+    IGW->>Bastion: Paketi Bastion'a ilet (Security Group Onayı)
+    Admin->>Bastion: ProxyJump tüneli aç
+    Bastion->>App: SSH (TCP 22) - Hedef: Private IP 10.0.11.x (Private SG Onayı)
+    App-->>Admin: Güvenli Shell oturumu açıldı!
+
+    Note over App,Ext: Senaryo B: Güvenli Dış Çıkış (Outbound Egress)
+    App->>NAT: apt-get update / curl https://api.github.com
+    Note over NAT: Private IP (10.0.11.x) kaynak adresini Elastic IP'ye çevir (SNAT)
+    NAT->>IGW: Paketi internete gönder
+    IGW->>Ext: Dış sunucuya ulaştır
+    Ext-->>IGW: Yanıt paketleri
+    IGW-->>NAT: Yanıtı NAT Gateway karşılar
+    Note over NAT: Elastic IP hedef adresini tekrar 10.0.11.x'e çevir (DNAT)
+    NAT-->>App: Paket yanıtı güvenle sunucuya ulaştı!
+```
 
 ---
 
@@ -63,8 +439,8 @@ Aşağıdaki komutlarla başlangıç ortamınızı kontrol edin:
 ```bash
 terraform version
 aws --version 2>/dev/null || echo "(AWS CLI kurulu değilse LocalStack veya Terraform yerel provider kullanılabilir)"
-mkdir -p ~/devops-workspace/labs/LAB-TF-08
-cd ~/devops-workspace/labs/LAB-TF-08
+mkdir -p ~/labs/LAB-TF-08
+cd ~/labs/LAB-TF-08
 ```
 
 ---
@@ -96,8 +472,8 @@ Geliştireceğimiz küçük Terraform projesi kurumsal modüler standartlara uyg
 
 Çalışma dizinine geçin:
 ```bash
-mkdir -p ~/devops-workspace/labs/LAB-TF-08
-cd ~/devops-workspace/labs/LAB-TF-08
+mkdir -p ~/labs/LAB-TF-08
+cd ~/labs/LAB-TF-08
 ```
 
 Terraform'un AWS provider, yerel dosya ve anahtar üretim sağlayıcılarını tanımlayan `providers.tf` dosyasını oluşturun:

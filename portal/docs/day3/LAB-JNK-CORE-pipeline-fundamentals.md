@@ -1,18 +1,5 @@
 # LAB-JNK-CORE — Jenkins Pipeline Temelleri (Pipeline as Code)
 
-## Metadata
-- **Seviye:** FOUNDATION
-- **Önerilen Gün:** Gün 3
-- **Tahmini Süre:** 40 dk
-- **İlişkili Jenkins Klasörleri:**
-  - `Labs/01-Jenkins-Core/01-declarative-basics`
-  - `Labs/02-Pipeline-as-Code/02-parameters`
-  - `Labs/02-Pipeline-as-Code/03-when`
-  - `Labs/02-Pipeline-as-Code/04-downstream`
-- **Referans Sunucu:** [https://jenkins.devopsatolyesi.com](https://jenkins.devopsatolyesi.com) (Eğitim başlangıcında size iletilen kullanıcı adı `devops` ve eğitim şifreniz ile hazır referans pipeline işlerini inceleyebilirsiniz)
-
----
-
 ## 1. Genel Bakış ve Amaç
 
 Bu modül, Jenkins üzerinde **Pipeline-as-Code** yaklaşımının en temel yapı taşlarını pratik olarak deneyimlemenizi sağlar. Geleneksel serbest biçimli (freestyle) arayüz ayarları yerine, sürüm kontrol sisteminde (Git) saklanan bildirimsel (Declarative) pipeline betikleri kullanılır.

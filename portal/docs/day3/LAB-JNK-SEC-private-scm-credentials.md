@@ -1,15 +1,5 @@
 # LAB-JNK-SEC — Jenkins Güvenlik ve Özel Depo Kimlik Doğrulama (Kasıtlı Hata Çözümü)
 
-## Metadata
-- **Seviye:** INTERMEDIATE / TROUBLESHOOTING
-- **Önerilen Gün:** Gün 3
-- **Tahmini Süre:** 30 dk
-- **İlişkili Jenkins Klasörü:** `Labs/07-Security/01-private-scm-credentials-MANUAL`
-- **Jenkins URL:** [https://jenkins.devopsatolyesi.com](https://jenkins.devopsatolyesi.com)
-- **Lab Tipi:** Intentional Manual Failure & Recovery (Kasıtlı Hata ve Çözüm Simülasyonu)
-
----
-
 ## 1. Labın Amacı ve Kasıtlı Hata İlkesi
 
 > [!IMPORTANT]

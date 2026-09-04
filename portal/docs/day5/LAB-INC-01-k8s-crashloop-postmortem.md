@@ -1,14 +1,93 @@
 # LAB-INC-01 — War Room: Kubernetes CrashLoopBackOff, ImagePullBackOff & Postmortem
 
-## Metadata
-- **Seviye:** PRACTITIONER / CHALLENGE
-- **Önerilen Gün:** Gün 5
-- **Tahmini Süre:** 45 dk
-- **Gerekli Profil:** `kubernetes`
-- **Host Portları:** - (Küme İçi Kriz Masası Simülasyonu)
-- **Çalışma Dizini:** `~/devops-workspace/labs/LAB-INC-01`
+> [Bu labın başlangıç dosyalarını indir (ZIP)](/downloads/LAB-INC-01.zip) — paket README, starter ve doğrulama scriptlerini içerir; çözüm içermez.
 
----
+
+İndirdikten sonra terminalde: `unzip LAB-INC-01.zip && cd LAB-INC-01`
+
+## ZIP İndirmeden Dosyaları Oluşturma
+
+Aşağıdaki bloklar ZIP paketiyle birebir aynı dosyaları oluşturur.
+
+```bash
+mkdir -p ~/labs/LAB-INC-01
+cd ~/labs/LAB-INC-01
+```
+
+### `starter/faulty-deployment.yaml`
+
+```bash
+mkdir -p "$(dirname -- starter/faulty-deployment.yaml)"
+cat > starter/faulty-deployment.yaml <<'LAB_FILE_EOF_1'
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: incident-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: incident-app
+  template:
+    metadata:
+      labels:
+        app: incident-app
+    spec:
+      containers:
+        - name: app
+          image: busybox:1.37
+          command: ["sh", "-c", "exit 1"]
+LAB_FILE_EOF_1
+```
+
+### `scripts/cleanup.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/cleanup.sh)"
+cat > scripts/cleanup.sh <<'LAB_FILE_EOF_2'
+#!/usr/bin/env bash
+kubectl delete -f fixed-deployment.yaml --ignore-not-found=true 2>/dev/null || true
+echo "Cleanup completed for LAB-INC-01."
+LAB_FILE_EOF_2
+chmod +x scripts/cleanup.sh
+```
+
+### `scripts/reset.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/reset.sh)"
+cat > scripts/reset.sh <<'LAB_FILE_EOF_3'
+#!/usr/bin/env bash
+set -euo pipefail
+lab_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+echo "Resetting workspace for LAB-INC-01..."
+bash "$lab_dir/scripts/cleanup.sh"
+cp -r "$lab_dir/starter"/. .
+echo "Workspace reset to starter state for LAB-INC-01."
+LAB_FILE_EOF_3
+chmod +x scripts/reset.sh
+```
+
+### `scripts/validate.sh`
+
+```bash
+mkdir -p "$(dirname -- scripts/validate.sh)"
+cat > scripts/validate.sh <<'LAB_FILE_EOF_4'
+#!/usr/bin/env bash
+set -euo pipefail
+echo "==> Validating LAB-INC-01: Incident fix deployment..."
+kubectl apply --dry-run=client -f fixed-deployment.yaml
+echo "[PASS] Fixed deployment syntax is valid and ready to resolve CrashLoopBackOff."
+LAB_FILE_EOF_4
+chmod +x scripts/validate.sh
+```
+
+Başlangıç dosyalarını çalışma dizinine alın:
+
+```bash
+cp -a starter/. .
+```
+
 
 ## 1. Lab Senaryosu
 Üretim ortamına yeni bir mikroservis sürümü dağıtıldıktan hemen sonra müşteri sipariş akışı durmuş ve sistem alarmları tetiklenmiştir. Canlı kümede aynı anda üç farklı arıza yaşanmaktadır: Ödeme servisi eksik ortam değişkeni nedeniyle sürekli çökmekte (`CrashLoopBackOff`), sepet servisi yazım hatası içeren bir imaj etiketi nedeniyle başlatılamamakta (`ImagePullBackOff`), katalog servisi ise yanlış port dinleyen bir sağlık probu yüzünden trafik alamamaktadır (`0/1 Ready`). Bu çalışmada SRE ve DevOps kriz masası (War Room) metodolojisi uygulanır; `kubectl describe`, `kubectl logs --previous` ve event kayıtları incelenerek üç arıza teşhis edilir, onarılır ve kurumsal bir Blameless Postmortem raporu düzenlenir.
@@ -33,8 +112,8 @@ Kubernetes kümesinde eşzamanlı ortaya çıkan `CrashLoopBackOff`, `ImagePullB
 Aşağıdaki komutlarla başlangıç durumunu kontrol edin:
 ```bash
 kubectl get nodes
-mkdir -p ~/devops-workspace/labs/LAB-INC-01/broken-manifests ~/devops-workspace/labs/LAB-INC-01/reports
-cd ~/devops-workspace/labs/LAB-INC-01
+mkdir -p ~/labs/LAB-INC-01/broken-manifests ~/labs/LAB-INC-01/reports
+cd ~/labs/LAB-INC-01
 ```
 
 ## 5. Adım Adım Uygulama
@@ -257,7 +336,7 @@ kubectl logs -l app=payment-service -n production-incident --previous
 Olay ad alanını ve çalışma dizinini silin:
 ```bash
 kubectl delete namespace production-incident 2>/dev/null || true
-rm -rf ~/devops-workspace/labs/LAB-INC-01
+rm -rf ~/labs/LAB-INC-01
 ```
 
 ## 10. Production Notu

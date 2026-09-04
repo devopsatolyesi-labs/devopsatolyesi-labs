@@ -1,0 +1,172 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 620" width="100%" height="620">
+  <defs>
+    <linearGradient id="canvasGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#090d16" />
+      <stop offset="100%" stop-color="#111827" />
+    </linearGradient>
+    <linearGradient id="vpcGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e1b4b" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0.9"/>
+    </linearGradient>
+    <linearGradient id="pubSubGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#064e3b" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#022c22" stop-opacity="0.7"/>
+    </linearGradient>
+    <linearGradient id="privSubGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0.8"/>
+    </linearGradient>
+    <filter id="cardShadow" x="-3%" y="-5%" width="106%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#38bdf8"/>
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#34d399"/>
+    </marker>
+    <marker id="arrow-orange" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#fb923c"/>
+    </marker>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="1000" height="620" rx="16" fill="url(#canvasGrad)" stroke="#1e293b" stroke-width="1.5"/>
+
+  <!-- Title Header -->
+  <text x="500" y="38" text-anchor="middle" fill="#f8fafc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="800" font-size="20" letter-spacing="0.5">AWS MULTI-AZ VPC INFRASTRUCTURE WITH TERRAFORM</text>
+  <text x="500" y="60" text-anchor="middle" fill="#94a3b8" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="500" font-size="13">High-Availability Public/Private Subnet Topology, NAT Gateway Egress &amp; Bastion Host</text>
+
+  <!-- Public Internet Node (Top Left) -->
+  <g transform="translate(40, 90)">
+    <rect width="160" height="50" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5" filter="url(#cardShadow)"/>
+    <text x="80" y="25" text-anchor="middle" fill="#38bdf8" font-family="sans-serif" font-weight="700" font-size="12">PUBLIC INTERNET</text>
+    <text x="80" y="40" text-anchor="middle" fill="#94a3b8" font-family="monospace" font-size="10">0.0.0.0/0</text>
+  </g>
+
+  <!-- Internet Gateway (IGW) -->
+  <g transform="translate(260, 90)">
+    <rect width="160" height="50" rx="8" fill="#0f172a" stroke="#0ea5e9" stroke-width="1.5" filter="url(#cardShadow)"/>
+    <text x="80" y="25" text-anchor="middle" fill="#38bdf8" font-family="sans-serif" font-weight="700" font-size="12">Internet Gateway</text>
+    <text x="80" y="40" text-anchor="middle" fill="#7dd3fc" font-family="monospace" font-size="10">aws_internet_gateway</text>
+  </g>
+
+  <!-- Line Internet -> IGW -->
+  <line x1="200" y1="115" x2="258" y2="115" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Public Route Table Box -->
+  <g transform="translate(480, 85)">
+    <rect width="470" height="60" rx="8" fill="#0f172a" stroke="#3b82f6" stroke-width="1.2"/>
+    <text x="15" y="22" fill="#60a5fa" font-family="sans-serif" font-weight="700" font-size="12">Public Route Table (aws_route_table.public)</text>
+    <text x="15" y="42" fill="#94a3b8" font-family="monospace" font-size="11">Destination: 0.0.0.0/0  ---&gt;  Target: igw-xxxxxxxx (Internet Gateway)</text>
+  </g>
+  <path d="M 420 115 L 478 115" stroke="#3b82f6" stroke-width="2" stroke-dasharray="3 3"/>
+
+  <!-- AWS VPC Outer Box -->
+  <g transform="translate(30, 160)">
+    <rect width="940" height="430" rx="14" fill="url(#vpcGrad)" stroke="#f97316" stroke-width="2" filter="url(#cardShadow)"/>
+    <rect x="0" y="0" width="940" height="34" rx="14" fill="#ea580c" fill-opacity="0.2"/>
+    <text x="20" y="22" fill="#fb923c" font-family="sans-serif" font-weight="700" font-size="13">AWS VPC (aws_vpc.main) — CIDR: 10.0.0.0/16 — Region: us-east-1</text>
+
+    <!-- Availability Zone A Box -->
+    <g transform="translate(20, 45)">
+      <rect width="435" height="365" rx="10" fill="#0b0f19" stroke="#475569" stroke-width="1" stroke-dasharray="4 3"/>
+      <text x="15" y="20" fill="#cbd5e1" font-family="sans-serif" font-weight="700" font-size="11">Availability Zone A (us-east-1a)</text>
+
+      <!-- Public Subnet A -->
+      <g transform="translate(15, 30)">
+        <rect width="405" height="150" rx="8" fill="url(#pubSubGrad)" stroke="#10b981" stroke-width="1.5"/>
+        <text x="12" y="20" fill="#34d399" font-family="sans-serif" font-weight="700" font-size="11">Public Subnet A (10.0.1.0/24)</text>
+
+        <!-- Bastion Host Inside Public Subnet A -->
+        <g transform="translate(15, 32)">
+          <rect width="175" height="100" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="1.2"/>
+          <text x="10" y="20" fill="#f8fafc" font-family="sans-serif" font-weight="700" font-size="11">Bastion Host</text>
+          <text x="10" y="38" fill="#38bdf8" font-family="monospace" font-size="10">EC2 (t3.micro)</text>
+          <text x="10" y="55" fill="#94a3b8" font-family="monospace" font-size="9">SG: Inbound SSH (22)</text>
+          <text x="10" y="72" fill="#a7f3d0" font-family="monospace" font-size="9">Public IP: Auto-Assign</text>
+          <text x="10" y="88" fill="#e2e8f0" font-family="sans-serif" font-size="9">SSH Jump Access</text>
+        </g>
+
+        <!-- NAT Gateway Inside Public Subnet A -->
+        <g transform="translate(205, 32)">
+          <rect width="185" height="100" rx="6" fill="#1e293b" stroke="#10b981" stroke-width="1.2"/>
+          <text x="10" y="20" fill="#34d399" font-family="sans-serif" font-weight="700" font-size="11">NAT Gateway</text>
+          <text x="10" y="38" fill="#6ee7b7" font-family="monospace" font-size="10">aws_nat_gateway</text>
+          <text x="10" y="55" fill="#fde047" font-family="monospace" font-size="9">Elastic IP (EIP)</text>
+          <text x="10" y="72" fill="#94a3b8" font-family="monospace" font-size="9">Outbound Internet NAT</text>
+          <text x="10" y="88" fill="#cbd5e1" font-family="sans-serif" font-size="9">Zero Inbound Direct</text>
+        </g>
+      </g>
+
+      <!-- Private Subnet A -->
+      <g transform="translate(15, 195)">
+        <rect width="405" height="150" rx="8" fill="url(#privSubGrad)" stroke="#64748b" stroke-width="1.5"/>
+        <text x="12" y="20" fill="#94a3b8" font-family="sans-serif" font-weight="700" font-size="11">Private Subnet A (10.0.11.0/24)</text>
+
+        <!-- Private App Server -->
+        <g transform="translate(15, 32)">
+          <rect width="375" height="100" rx="6" fill="#0f172a" stroke="#818cf8" stroke-width="1.2"/>
+          <text x="15" y="22" fill="#a5b4fc" font-family="sans-serif" font-weight="700" font-size="12">Internal Application Workload</text>
+          <text x="15" y="42" fill="#cbd5e1" font-family="monospace" font-size="10">EC2 (t3.micro) — Private IP: 10.0.11.x</text>
+          <text x="15" y="60" fill="#f43f5e" font-family="monospace" font-size="9">Security: Inbound only from Bastion SG (22/8080)</text>
+          <text x="15" y="78" fill="#34d399" font-family="monospace" font-size="9">Egress: 0.0.0.0/0 ---&gt; NAT Gateway (Private RT)</text>
+          <text x="15" y="94" fill="#94a3b8" font-family="sans-serif" font-size="9">Completely Isolated from Direct Public Internet</text>
+        </g>
+      </g>
+    </g>
+
+    <!-- Availability Zone B Box -->
+    <g transform="translate(485, 45)">
+      <rect width="435" height="365" rx="10" fill="#0b0f19" stroke="#475569" stroke-width="1" stroke-dasharray="4 3"/>
+      <text x="15" y="20" fill="#cbd5e1" font-family="sans-serif" font-weight="700" font-size="11">Availability Zone B (us-east-1b)</text>
+
+      <!-- Public Subnet B -->
+      <g transform="translate(15, 30)">
+        <rect width="405" height="150" rx="8" fill="url(#pubSubGrad)" stroke="#10b981" stroke-width="1.5"/>
+        <text x="12" y="20" fill="#34d399" font-family="sans-serif" font-weight="700" font-size="11">Public Subnet B (10.0.2.0/24)</text>
+
+        <g transform="translate(15, 32)">
+          <rect width="375" height="100" rx="6" fill="#1e293b" stroke="#10b981" stroke-width="1" stroke-dasharray="3 3"/>
+          <text x="15" y="24" fill="#a7f3d0" font-family="sans-serif" font-weight="700" font-size="11">Standby / Multi-AZ Ingress</text>
+          <text x="15" y="44" fill="#94a3b8" font-family="monospace" font-size="10">Application Load Balancer (ALB) Subnet</text>
+          <text x="15" y="64" fill="#cbd5e1" font-family="sans-serif" font-size="10">Public Routing: Connected to Public Route Table</text>
+          <text x="15" y="84" fill="#64748b" font-family="sans-serif" font-size="9">(High-Availability Multi-AZ redundancy target)</text>
+        </g>
+      </g>
+
+      <!-- Private Subnet B -->
+      <g transform="translate(15, 195)">
+        <rect width="405" height="150" rx="8" fill="url(#privSubGrad)" stroke="#64748b" stroke-width="1.5"/>
+        <text x="12" y="20" fill="#94a3b8" font-family="sans-serif" font-weight="700" font-size="11">Private Subnet B (10.0.12.0/24)</text>
+
+        <g transform="translate(15, 32)">
+          <rect width="375" height="100" rx="6" fill="#0f172a" stroke="#64748b" stroke-width="1" stroke-dasharray="3 3"/>
+          <text x="15" y="24" fill="#94a3b8" font-family="sans-serif" font-weight="700" font-size="11">Database / Persistence Tier</text>
+          <text x="15" y="44" fill="#cbd5e1" font-family="monospace" font-size="10">AWS RDS Multi-AZ Standby / Secondary App</text>
+          <text x="15" y="64" fill="#94a3b8" font-family="sans-serif" font-size="10">Strict Isolation: No Public IP, No Direct Inbound</text>
+          <text x="15" y="84" fill="#64748b" font-family="sans-serif" font-size="9">Egress via NAT Gateway</text>
+        </g>
+      </g>
+    </g>
+  </g>
+
+  <!-- Route / Packet Flow Lines -->
+  <!-- Line from IGW to Public Subnet A -->
+  <path d="M 340 140 L 340 160 L 140 160 L 140 220" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="4 2"/>
+
+  <!-- Inbound SSH Flow Arrow from Internet to Bastion -->
+  <path d="M 120 140 L 120 222" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="125" y="185" fill="#38bdf8" font-family="monospace" font-size="9" font-weight="bold">SSH:22</text>
+
+  <!-- Bastion Jump SSH Flow to Private App -->
+  <path d="M 140 322 L 140 387" stroke="#fb923c" stroke-width="2" marker-end="url(#arrow-orange)"/>
+  <text x="145" y="355" fill="#fb923c" font-family="monospace" font-size="9" font-weight="bold">Jump SSH</text>
+
+  <!-- Outbound Egress from Private App to NAT Gateway -->
+  <path d="M 330 387 L 330 325" stroke="#34d399" stroke-width="2" marker-end="url(#arrow-green)"/>
+  <text x="335" y="355" fill="#34d399" font-family="monospace" font-size="9" font-weight="bold">NAT Egress</text>
+
+  <!-- NAT Gateway to IGW line -->
+  <path d="M 330 220 L 330 145" stroke="#34d399" stroke-width="2" marker-end="url(#arrow-green)"/>
+</svg>
