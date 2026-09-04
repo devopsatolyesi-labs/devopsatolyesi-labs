@@ -1,0 +1,143 @@
+# LAB-JEN-03 — İlk Freestyle Build Job ve Workspace Temelleri
+
+| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
+| :--- | :--- | :--- | :--- |
+| 🟢 **CORE** (Temel Seviye) | ⏱️ 35 dakika | `jenkins`, `bash` | `8080` |
+
+> [!TIP]
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-JEN-03.zip)](/downloads/LAB-JEN-03.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+
+---
+
+## Amaç
+
+Bu laboratuvarın pedagojik amacı, Jenkins'in çekirdek çalışma mekanizmasını kavramaktır. **Freestyle Job**, Jenkins'in en ilkel iş türüdür ve bu lab haricinde tüm eğitim boyunca modern **Pipeline as Code (Jenkinsfile)** kullanılacaktır. Bu lab ile:
+
+- Jenkins çalışma alanı (`workspace`) dosya sistemi mimarisini anlamak.
+- Build adımları (`Execute shell`), ortam değişkenleri (`BUILD_NUMBER`, `WORKSPACE`) ve exit code mekanizmasını incelemek.
+- Konsol çıktısı (Console Output) ve hata analizi (build failure) süreçlerini deneyimlemek.
+- Build artifact'larının saklanması ve indirilmesi mantığını öğrenmek.
+
+---
+
+## Ön Koşullar
+
+- LAB-JEN-01 ve LAB-JEN-02 tamamlanmış olmalıdır.
+- Jenkins Controller çalışır durumda olmalıdır.
+
+---
+
+## Mimari ve Workspace Yaşam Döngüsü
+
+```mermaid
+graph TD
+    Trigger([Job Tetiklendi]) --> CreateWS[Workspace Dizinini Hazırla]
+    CreateWS --> ExecShell[Execute Shell: Komutları Çalıştır]
+    ExecShell --> CheckExit{Exit Code == 0 ?}
+    CheckExit -->|Evet| Success[Build SUCCESS: Mavi / Yeşil]
+    CheckExit -->|Hayır| Fail[Build FAILURE: Kırmızı]
+    Success --> Archive[Artifacts Arşivle]
+```
+
+---
+
+## Adım Adım Uygulama Rehberi
+
+### Adım 1: Yeni Bir Freestyle Proje Oluşturun
+
+1. Jenkins ana sayfasında sol menüden **"New Item"** seçeneğine tıklayın.
+2. Proje adı olarak `01-freestyle-workspace-demo` yazın.
+3. **"Freestyle project"** tipini seçip **OK** butonuna tıklayın.
+
+---
+
+### Adım 2: Build Adımı Ekleyin (Execute Shell)
+
+Yapılandırma sayfasında aşağı kaydırın:
+1. **Build Steps** bölümünde **"Add build step"** butonuna tıklayın ve **"Execute shell"** seçeneğini belirleyin.
+2. Komut alanına aşağıdaki betiği yapıştırın:
+
+```bash
+echo "=== JENKINS WORKSPACE INCELEMESI ==="
+echo "Mevcut Calisma Dizini (PWD): $(pwd)"
+echo "Build Numarasi: ${BUILD_NUMBER}"
+echo "Isim (Job Name): ${JOB_NAME}"
+echo "Jenkins Home: ${JENKINS_HOME}"
+
+echo "=== DOSYA URETME TESTI ==="
+mkdir -p build_output
+date +"%Y-%m-%d %H:%M:%S" > build_output/build_info.txt
+echo "Versiyon: 1.0.${BUILD_NUMBER}" >> build_output/build_info.txt
+ls -la build_output/
+```
+
+---
+
+### Adım 3: Post-Build Action ile Artifact Arşivleme
+
+1. Sayfanın en altındaki **"Post-build Actions"** bölümünde **"Add post-build action"** butonuna tıklayın.
+2. **"Archive the artifacts"** seçeneğini seçin.
+3. **Files to archive** alanına `build_output/**` yazın.
+4. **Save** butonuna tıklayarak yapılandırmayı kaydedin.
+
+---
+
+### Adım 4: Build Başlatın ve Konsol Çıktısını İzleyin
+
+1. Sol menüden **"Build Now"** butonuna tıklayın.
+2. Sol alttaki **Build History** panelinde `#1` numaralı build belirecektir.
+3. `#1` üzerine tıklayın ve **"Console Output"** menüsünü açın.
+4. Çıktıyı satır satır inceleyin. En altta `Finished: SUCCESS` ibaresini doğrulayın.
+
+---
+
+### Adım 5: Hata Durumunu (Exit Code != 0) Simüle Edin
+
+1. Sol menüden **Configure** seçeneğine dönün.
+2. Shell komutunun sonuna bilinçli olarak hata veren bir komut ekleyin:
+   ```bash
+   echo "Hata olusturuluyor..."
+   exit 1
+   ```
+3. Kaydedin ve tekrar **Build Now** deyin.
+4. Build `#2` kırmızı (FAILURE) olacaktır. Konsol çıktısında Jenkins'in `Build step 'Execute shell' marked build as failure` mesajını gözlemleyin.
+
+---
+
+## Doğal Doğrulama
+
+Jenkins container içinden dosya sisteminde workspace dizinini doğrudan kontrol edin:
+
+```bash
+docker exec jenkins-controller ls -la /var/jenkins_home/workspace/01-freestyle-workspace-demo/build_output
+docker exec jenkins-controller cat /var/jenkins_home/workspace/01-freestyle-workspace-demo/build_output/build_info.txt
+```
+
+---
+
+## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
+
+??? question "Soru 1: Jenkins bir shell betiğinin başarısız olduğunu nasıl anlar?"
+    ??? tip "💡 Çözümü Göster"
+        **Cevap:**
+        POSIX standartlarına göre çalışan süreçlerin çıkış koduna (exit status code) bakar. Exit code `0` ise işlem başarılıdır; `1` veya `0` harici herhangi bir değer dönerse Jenkins adımı ve build'i derhal `FAILURE` olarak işaretler.
+
+??? question "Soru 2: Neden modern DevOps dünyasında Freestyle job yerine Pipeline as Code (Jenkinsfile) tercih edilir?"
+    ??? tip "💡 Çözümü Göster"
+        **Cevap:**
+        Freestyle job ayarları Jenkins UI üzerinde XML olarak saklanır; versiyonlanamaz, kod gibi PR/Code Review süreçlerinden geçemez, yedeklenmesi zordur ve projeyle birlikte Git'te yaşayamaz. Jenkinsfile ise kaynak kodla birlikte Git'te saklanan, dallara (branches) göre değişebilen ve taşınabilir bir standarttır.
+
+??? question "Soru 3: Arşivlenen artefaktlar (`build_output/**`) nerede saklanır?"
+    ??? tip "💡 Çözümü Göster"
+        **Cevap:**
+        Jenkins Controller üzerindeki `/var/jenkins_home/jobs/<JOB_NAME>/builds/<BUILD_ID>/archive/` dizininde saklanır ve kullanıcılar bu dosyaları doğrudan web arayüzünden indirebilir.
+
+---
+
+## Beklenen Sonuç & Sorun Giderme
+
+| Durum | Açıklama |
+| :--- | :--- |
+| `SUCCESS` (Mavi/Yeşil) | Tüm shell komutları 0 döndü, artifact başarıyla arşivlendi. |
+| `FAILURE` (Kırmızı) | Shell komutlarından en az biri 0 harici çıkış kodu üretti. |
+| `No artifacts found` | Arşivlenecek dosya yolu workspace ile eşleşmedi (yol yazımını kontrol edin). |

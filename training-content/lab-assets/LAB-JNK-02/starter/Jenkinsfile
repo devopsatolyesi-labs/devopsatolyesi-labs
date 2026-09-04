@@ -1,9 +1,0 @@
-// TODO: DevSecOps pipeline with SonarQube Quality Gate, Trivy scan and Harbor push
-pipeline {
-    agent any
-    stages {
-        stage('Checkout') {
-            steps { echo 'Checkout...' }
-        }
-    }
-}

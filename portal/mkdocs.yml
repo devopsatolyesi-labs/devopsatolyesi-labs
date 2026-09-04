@@ -114,8 +114,21 @@ nav:
       - LAB-DOC-20 - Docker Final Capstone Projesi: day2/LAB-DOC-20-docker-capstone.md
   - CI/CD:
       - Jenkins:
-          - LAB-JNK-01 - Jenkins Declarative Pipeline: day3/LAB-JNK-01-jenkins-declarative-pipeline.md
-          - LAB-JNK-02 - Jenkins Güvenli Pipeline: day3/LAB-JNK-02-jenkins-secure-pipeline.md
+          - LAB-JEN-01 - Docker Compose ile Jenkins Kurulumu: day3/LAB-JEN-01-docker-compose-setup.md
+          - LAB-JEN-02 - İlk Yapılandırma ve Eklenti Yönetimi: day3/LAB-JEN-02-initial-setup-plugins.md
+          - LAB-JEN-03 - İlk Freestyle Job ve Workspace: day3/LAB-JEN-03-first-freestyle-job.md
+          - LAB-JEN-04 - Git Entegrasyonu ve Webhook: day3/LAB-JEN-04-git-scm-webhook.md
+          - LAB-JEN-05 - İlk Declarative Pipeline: day3/LAB-JEN-05-declarative-pipeline.md
+          - LAB-JEN-06 - Environment ve Güvenli Credentials: day3/LAB-JEN-06-environment-credentials.md
+          - LAB-JEN-07 - Derleme, Test ve JUnit Raporlama: day3/LAB-JEN-07-build-unit-test-reports.md
+          - LAB-JEN-08 - Docker İmaj Derleme ve Smoke Test: day3/LAB-JEN-08-docker-build-smoke-test.md
+          - LAB-JEN-09 - SonarQube ve Quality Gate: day3/LAB-JEN-09-sonarqube-quality-gate.md
+          - LAB-JEN-10 - Trivy ile Güvenlik Taraması (DevSecOps): day3/LAB-JEN-10-trivy-security-scan.md
+          - LAB-JEN-11 - Harbor Private Registry Dağıtımı: day3/LAB-JEN-11-harbor-registry-push.md
+          - LAB-JEN-12 - Kubernetes (kind) CD Deployment: day3/LAB-JEN-12-kubernetes-cd-deploy.md
+          - LAB-JEN-13 - Rolling Update ve Otomatik Rollback: day3/LAB-JEN-13-rolling-update-rollback.md
+          - LAB-JEN-14 - Jenkins Troubleshooting ve Teşhis: day3/LAB-JEN-14-jenkins-troubleshooting.md
+          - LAB-JEN-15 - Uçtan Uca DevSecOps Capstone: day3/LAB-JEN-15-devsecops-capstone.md
       - GitLab CE:
           - LAB-GLB-01 - GitLab CI/CD Pipeline: day3/LAB-GLB-01-gitlab-ci-pipeline.md
       - GitHub Actions:

@@ -1,0 +1,18 @@
+pipeline {
+    agent any
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '5'))
+    }
+    stages {
+        stage('Diagnose') {
+            steps {
+                echo 'Diagnosing pipeline health'
+            }
+        }
+    }
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}

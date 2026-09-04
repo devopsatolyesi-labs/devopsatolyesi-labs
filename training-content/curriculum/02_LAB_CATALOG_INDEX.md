@@ -4,7 +4,7 @@ DevOps Atölyesi laboratuvar kütüphanesi, katılımcıların bilgi seviyelerin
 
 Aşağıdaki sekmeleri kullanarak dilediğiniz seviyedeki labları listeleyebilir ve doğrudan çalışmaya başlayabilirsiniz:
 
-=== "Tüm Lablar (52 Lab)"
+=== "Tüm Lablar (65 Lab)"
 
     | Lab ID | Seviye | Lab Başlığı | Konu | Süre | Portlar | İncele |
     | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -31,8 +31,21 @@ Aşağıdaki sekmeleri kullanarak dilediğiniz seviyedeki labları listeleyebili
     | `LAB-DOC-18` | 🔴 ADVANCED | Docker Sorun Giderme ve Teşhis Senaryoları | DOCKER | 55 dk | `8080, 5432` | [Labı Aç →](../day2/LAB-DOC-18-docker-troubleshooting/) |
     | `LAB-DOC-19` | 🔴 ADVANCED | Production Docker Compose Desenleri | DOCKER | 50 dk | `80, 3000` | [Labı Aç →](../day2/LAB-DOC-19-docker-compose-production-patterns/) |
     | `LAB-DOC-20` | 🔴 ADVANCED | Docker Final Capstone Projesi: Üretim Seviyesi Mikroservis Platformu | DOCKER | 90 dk | `80, 3000, 5432, 6379` | [Labı Aç →](../day2/LAB-DOC-20-docker-capstone/) |
-    | `LAB-JNK-01` | 🟢 CORE | Jenkins Declarative Pipeline | JENKINS | 45 dk | `8080` | [Labı Aç →](../day3/LAB-JNK-01-jenkins-declarative-pipeline/) |
-    | `LAB-JNK-02` | 🟡 PRACTITIONER | Jenkins Secure Pipeline, SonarQube, Trivy ve Harbor | JENKINS | 60 dk | `8080, 8082, 9000` | [Labı Aç →](../day3/LAB-JNK-02-jenkins-secure-pipeline/) |
+    | `LAB-JEN-01` | 🟢 CORE | Docker Compose ile Jenkins Kurulumu ve Nginx Reverse Proxy | JENKINS | 40 dk | `8080, 8443` | [Labı Aç →](../day3/LAB-JEN-01-docker-compose-setup/) |
+    | `LAB-JEN-02` | 🟢 CORE | Jenkins İlk Yapılandırma, Yönetici Hesabı ve Eklenti Yönetimi | JENKINS | 35 dk | `8080` | [Labı Aç →](../day3/LAB-JEN-02-initial-setup-plugins/) |
+    | `LAB-JEN-03` | 🟢 CORE | İlk Freestyle Build Job ve Workspace Temelleri | JENKINS | 35 dk | `8080` | [Labı Aç →](../day3/LAB-JEN-03-first-freestyle-job/) |
+    | `LAB-JEN-04` | 🟢 CORE | Git Repository ile Otomatik Build ve Webhook Yapılandırması | JENKINS | 40 dk | `8080` | [Labı Aç →](../day3/LAB-JEN-04-git-scm-webhook/) |
+    | `LAB-JEN-05` | 🟢 CORE | İlk Declarative Jenkins Pipeline ve Jenkinsfile Temelleri | JENKINS | 45 dk | `8080` | [Labı Aç →](../day3/LAB-JEN-05-declarative-pipeline/) |
+    | `LAB-JEN-06` | 🟡 PRACTITIONER | Environment Değişkenleri, Parametreler ve Güvenli Credentials Yönetimi | JENKINS | 45 dk | `8080` | [Labı Aç →](../day3/LAB-JEN-06-environment-credentials/) |
+    | `LAB-JEN-07` | 🟡 PRACTITIONER | Uygulama Derleme, Birim Testleri ve JUnit Test Raporlama | JENKINS | 45 dk | `8080` | [Labı Aç →](../day3/LAB-JEN-07-build-unit-test-reports/) |
+    | `LAB-JEN-08` | 🟡 PRACTITIONER | Pipeline İçinde Docker İmaj Derleme, Tagging ve Smoke Test | JENKINS | 45 dk | `8080, 5001` | [Labı Aç →](../day3/LAB-JEN-08-docker-build-smoke-test/) |
+    | `LAB-JEN-09` | 🟡 PRACTITIONER | SonarQube ile Statik Kod Analizi ve Quality Gate Entegrasyonu | JENKINS | 50 dk | `8080, 9000` | [Labı Aç →](../day3/LAB-JEN-09-sonarqube-quality-gate/) |
+    | `LAB-JEN-10` | 🟡 PRACTITIONER | Trivy ile Dosya Sistemi ve İmaj Güvenlik Taraması (DevSecOps Gate) | JENKINS | 45 dk | `8080` | [Labı Aç →](../day3/LAB-JEN-10-trivy-security-scan/) |
+    | `LAB-JEN-11` | 🟡 PRACTITIONER | Harbor Private Registry Entegrasyonu ve İmaj Dağıtımı | JENKINS | 45 dk | `8080, 8082` | [Labı Aç →](../day3/LAB-JEN-11-harbor-registry-push/) |
+    | `LAB-JEN-12` | 🔴 ADVANCED | Kubernetes (kind) Kümesine Otomatik Deployment (CD) | JENKINS | 45 dk | `8080` | [Labı Aç →](../day3/LAB-JEN-12-kubernetes-cd-deploy/) |
+    | `LAB-JEN-13` | 🔴 ADVANCED | Rolling Update, Canlı Doğrulama ve Otomatik Rollback | JENKINS | 45 dk | `8080` | [Labı Aç →](../day3/LAB-JEN-13-rolling-update-rollback/) |
+    | `LAB-JEN-14` | 🔴 ADVANCED | Jenkins Troubleshooting ve Sorun Giderme Senaryoları | JENKINS | 50 dk | `8080` | [Labı Aç →](../day3/LAB-JEN-14-jenkins-troubleshooting/) |
+    | `LAB-JEN-15` | 🔴 ADVANCED | Uçtan Uca DevSecOps Pipeline Capstone Projesi | JENKINS | 60 dk | `8080, 9000, 8082, 80` | [Labı Aç →](../day3/LAB-JEN-15-devsecops-capstone/) |
     | `LAB-GLB-01` | 🟡 PRACTITIONER | GitLab CI/CD Fundamentals | GITLAB-CI | 45 dk | `8081` | [Labı Aç →](../day3/LAB-GLB-01-gitlab-ci-pipeline/) |
     | `LAB-TF-01` | 🟢 CORE | Terraform Docker Provider ve State Lifecycle | TERRAFORM | 45 dk | `8090` | [Labı Aç →](../day3/LAB-TF-01-terraform-docker-provider/) |
     | `LAB-TF-04` | 🔴 ADVANCED | Terraform ve Helm ile Merkezi Kubernetes İzleme | TERRAFORM | 60 dk | `-` | [Labı Aç →](../day3/LAB-TF-04-terraform-helm-centralized-monitoring/) |
@@ -61,7 +74,7 @@ Aşağıdaki sekmeleri kullanarak dilediğiniz seviyedeki labları listeleyebili
     | `LAB-LNX-03` | 🟡 PRACTITIONER | SSH Tunneling (Port Forwarding) ile Güvenli Veritabanı Erişimi | LINUX | 35 dk | `-` | [Labı Aç →](../day1/LAB-LNX-03-ssh-tunnel-mysql/) |
     | `LAB-GHA-01` | 🟡 PRACTITIONER | GitHub Actions ile Sürekli Entegrasyon (CI) ve Otomatik Test | CI-CD | 45 dk | `-` | [Labı Aç →](../day3/LAB-GHA-01-github-actions-ci/) |
 
-=== "🟢 CORE — Temel Seviye (13 Lab)"
+=== "🟢 CORE — Temel Seviye (17 Lab)"
 
     DevOps kültürüne giriş, Linux yönetimi, Git sürüm kontrolü, Docker ve Kubernetes temelleri gibi çekirdek yetkinlikleri kazandırır.
 
@@ -75,13 +88,17 @@ Aşağıdaki sekmeleri kullanarak dilediğiniz seviyedeki labları listeleyebili
     | `LAB-DOC-03` | Docker İmaj, Etiketleme ve Registry Yönetimi | DOCKER | 45 dk | `5000` | [Labı Aç →](../day2/LAB-DOC-03-docker-image-registry/) |
     | `LAB-DOC-04` | Docker Volumes ve Veri Kalıcılığı | DOCKER | 45 dk | `5432` | [Labı Aç →](../day2/LAB-DOC-04-docker-volumes-persistence/) |
     | `LAB-DOC-05` | Ortam Değişkenleri, .env ve Konfigürasyon Yönetimi | DOCKER | 35 dk | `3000` | [Labı Aç →](../day2/LAB-DOC-05-docker-env-secrets/) |
-    | `LAB-JNK-01` | Jenkins Declarative Pipeline | JENKINS | 45 dk | `8080` | [Labı Aç →](../day3/LAB-JNK-01-jenkins-declarative-pipeline/) |
+    | `LAB-JEN-01` | Docker Compose ile Jenkins Kurulumu ve Nginx Reverse Proxy | JENKINS | 40 dk | `8080, 8443` | [Labı Aç →](../day3/LAB-JEN-01-docker-compose-setup/) |
+    | `LAB-JEN-02` | Jenkins İlk Yapılandırma, Yönetici Hesabı ve Eklenti Yönetimi | JENKINS | 35 dk | `8080` | [Labı Aç →](../day3/LAB-JEN-02-initial-setup-plugins/) |
+    | `LAB-JEN-03` | İlk Freestyle Build Job ve Workspace Temelleri | JENKINS | 35 dk | `8080` | [Labı Aç →](../day3/LAB-JEN-03-first-freestyle-job/) |
+    | `LAB-JEN-04` | Git Repository ile Otomatik Build ve Webhook Yapılandırması | JENKINS | 40 dk | `8080` | [Labı Aç →](../day3/LAB-JEN-04-git-scm-webhook/) |
+    | `LAB-JEN-05` | İlk Declarative Jenkins Pipeline ve Jenkinsfile Temelleri | JENKINS | 45 dk | `8080` | [Labı Aç →](../day3/LAB-JEN-05-declarative-pipeline/) |
     | `LAB-TF-01` | Terraform Docker Provider ve State Lifecycle | TERRAFORM | 45 dk | `8090` | [Labı Aç →](../day3/LAB-TF-01-terraform-docker-provider/) |
     | `LAB-K8S-01` | Kind ile Kubernetes Cluster Kurulumu ve kubectl | KUBERNETES | 30 dk | `80, 443` | [Labı Aç →](../day4/LAB-K8S-01-kind-cluster-kubectl/) |
     | `LAB-K8S-02` | İlk Pod, YAML ve Pod Yaşam Döngüsü | KUBERNETES | 40 dk | `-` | [Labı Aç →](../day4/LAB-K8S-02-pod-yaml-lifecycle/) |
     | `LAB-K8S-03` | Deployment, ReplicaSet ve Self-Healing | KUBERNETES | 45 dk | `-` | [Labı Aç →](../day4/LAB-K8S-03-deployment-self-healing/) |
 
-=== "🟡 PRACTITIONER — Üretim Standartları (27 Lab)"
+=== "🟡 PRACTITIONER — Üretim Standartları (32 Lab)"
 
     Kurumsal ortamlarda kullanılan ileri düzey Docker multi-stage, container networking, Java Spring Boot, Docker Compose, Jenkins, GitLab CI, Terraform, Kubernetes, Helm ve Argo CD GitOps uygulamalarını kapsar.
 
@@ -97,7 +114,12 @@ Aşağıdaki sekmeleri kullanarak dilediğiniz seviyedeki labları listeleyebili
     | `LAB-DOC-15` | Docker Loglama ve Gözlemlenebilirlik | DOCKER | 40 dk | `8080, 8081` | [Labı Aç →](../day2/LAB-DOC-15-docker-logging-observability/) |
     | `LAB-DOC-16` | Trivy Güvenlik Taraması, SBOM ve Harbor Entegrasyonu | DOCKER | 50 dk | `80, 443` | [Labı Aç →](../day2/LAB-DOC-16-trivy-harbor-integration/) |
     | `LAB-DOC-17` | İmaj ve Volume Yedekleme / Geri Yükleme | DOCKER | 45 dk | `5432` | [Labı Aç →](../day2/LAB-DOC-17-docker-backup-restore/) |
-    | `LAB-JNK-02` | Jenkins Secure Pipeline, SonarQube, Trivy ve Harbor | JENKINS | 60 dk | `8080, 8082, 9000` | [Labı Aç →](../day3/LAB-JNK-02-jenkins-secure-pipeline/) |
+    | `LAB-JEN-06` | Environment Değişkenleri, Parametreler ve Güvenli Credentials Yönetimi | JENKINS | 45 dk | `8080` | [Labı Aç →](../day3/LAB-JEN-06-environment-credentials/) |
+    | `LAB-JEN-07` | Uygulama Derleme, Birim Testleri ve JUnit Test Raporlama | JENKINS | 45 dk | `8080` | [Labı Aç →](../day3/LAB-JEN-07-build-unit-test-reports/) |
+    | `LAB-JEN-08` | Pipeline İçinde Docker İmaj Derleme, Tagging ve Smoke Test | JENKINS | 45 dk | `8080, 5001` | [Labı Aç →](../day3/LAB-JEN-08-docker-build-smoke-test/) |
+    | `LAB-JEN-09` | SonarQube ile Statik Kod Analizi ve Quality Gate Entegrasyonu | JENKINS | 50 dk | `8080, 9000` | [Labı Aç →](../day3/LAB-JEN-09-sonarqube-quality-gate/) |
+    | `LAB-JEN-10` | Trivy ile Dosya Sistemi ve İmaj Güvenlik Taraması (DevSecOps Gate) | JENKINS | 45 dk | `8080` | [Labı Aç →](../day3/LAB-JEN-10-trivy-security-scan/) |
+    | `LAB-JEN-11` | Harbor Private Registry Entegrasyonu ve İmaj Dağıtımı | JENKINS | 45 dk | `8080, 8082` | [Labı Aç →](../day3/LAB-JEN-11-harbor-registry-push/) |
     | `LAB-GLB-01` | GitLab CI/CD Fundamentals | GITLAB-CI | 45 dk | `8081` | [Labı Aç →](../day3/LAB-GLB-01-gitlab-ci-pipeline/) |
     | `LAB-K8S-04` | Scaling, Rolling Update ve Rollback | KUBERNETES | 45 dk | `-` | [Labı Aç →](../day4/LAB-K8S-04-scaling-rollout-rollback/) |
     | `LAB-K8S-05` | Service, Port Mapping ve Kubernetes DNS | KUBERNETES | 45 dk | `8080` | [Labı Aç →](../day4/LAB-K8S-05-service-dns/) |
@@ -115,7 +137,7 @@ Aşağıdaki sekmeleri kullanarak dilediğiniz seviyedeki labları listeleyebili
     | `LAB-LNX-03` | SSH Tunneling (Port Forwarding) ile Güvenli Veritabanı Erişimi | LINUX | 35 dk | `-` | [Labı Aç →](../day1/LAB-LNX-03-ssh-tunnel-mysql/) |
     | `LAB-GHA-01` | GitHub Actions ile Sürekli Entegrasyon (CI) ve Otomatik Test | CI-CD | 45 dk | `-` | [Labı Aç →](../day3/LAB-GHA-01-github-actions-ci/) |
 
-=== "🔴 ADVANCED — İleri Seviye ve Capstone (12 Lab)"
+=== "🔴 ADVANCED — İleri Seviye ve Capstone (16 Lab)"
 
     Üretim seviyesinde gözlemlenebilirlik, Kubernetes troubleshooting, yüksek erişilebilirlik ve uçtan uca DevSecOps capstone projelerini içerir.
 
@@ -126,6 +148,10 @@ Aşağıdaki sekmeleri kullanarak dilediğiniz seviyedeki labları listeleyebili
     | `LAB-DOC-18` | Docker Sorun Giderme ve Teşhis Senaryoları | DOCKER | 55 dk | `8080, 5432` | [Labı Aç →](../day2/LAB-DOC-18-docker-troubleshooting/) |
     | `LAB-DOC-19` | Production Docker Compose Desenleri | DOCKER | 50 dk | `80, 3000` | [Labı Aç →](../day2/LAB-DOC-19-docker-compose-production-patterns/) |
     | `LAB-DOC-20` | Docker Final Capstone Projesi: Üretim Seviyesi Mikroservis Platformu | DOCKER | 90 dk | `80, 3000, 5432, 6379` | [Labı Aç →](../day2/LAB-DOC-20-docker-capstone/) |
+    | `LAB-JEN-12` | Kubernetes (kind) Kümesine Otomatik Deployment (CD) | JENKINS | 45 dk | `8080` | [Labı Aç →](../day3/LAB-JEN-12-kubernetes-cd-deploy/) |
+    | `LAB-JEN-13` | Rolling Update, Canlı Doğrulama ve Otomatik Rollback | JENKINS | 45 dk | `8080` | [Labı Aç →](../day3/LAB-JEN-13-rolling-update-rollback/) |
+    | `LAB-JEN-14` | Jenkins Troubleshooting ve Sorun Giderme Senaryoları | JENKINS | 50 dk | `8080` | [Labı Aç →](../day3/LAB-JEN-14-jenkins-troubleshooting/) |
+    | `LAB-JEN-15` | Uçtan Uca DevSecOps Pipeline Capstone Projesi | JENKINS | 60 dk | `8080, 9000, 8082, 80` | [Labı Aç →](../day3/LAB-JEN-15-devsecops-capstone/) |
     | `LAB-TF-04` | Terraform ve Helm ile Merkezi Kubernetes İzleme | TERRAFORM | 60 dk | `-` | [Labı Aç →](../day3/LAB-TF-04-terraform-helm-centralized-monitoring/) |
     | `LAB-TF-08` | Terraform ile Production AWS VPC | TERRAFORM | 75 dk | `4566` | [Labı Aç →](../day3/LAB-TF-08-terraform-aws-vpc-architecture/) |
     | `LAB-K8S-11` | Kubernetes Troubleshooting ve CrashLoopBackOff | KUBERNETES | 50 dk | `-` | [Labı Aç →](../day4/LAB-K8S-11-troubleshooting/) |

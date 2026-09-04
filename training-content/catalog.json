@@ -95,8 +95,21 @@
         {
           "id": "ci-cd",
           "labs": [
-            "LAB-JNK-01",
-            "LAB-JNK-02",
+            "LAB-JEN-01",
+            "LAB-JEN-02",
+            "LAB-JEN-03",
+            "LAB-JEN-04",
+            "LAB-JEN-05",
+            "LAB-JEN-06",
+            "LAB-JEN-07",
+            "LAB-JEN-08",
+            "LAB-JEN-09",
+            "LAB-JEN-10",
+            "LAB-JEN-11",
+            "LAB-JEN-12",
+            "LAB-JEN-13",
+            "LAB-JEN-14",
+            "LAB-JEN-15",
             "LAB-GLB-01",
             "LAB-GHA-01"
           ]
@@ -745,50 +758,368 @@
       "package_contract": "standard"
     },
     {
-      "id": "LAB-JNK-01",
-      "title": "Jenkins Declarative Pipeline",
+      "id": "LAB-JEN-01",
+      "title": "Docker Compose ile Jenkins Kurulumu ve Nginx Reverse Proxy",
       "topic": "jenkins",
       "difficulty": 100,
-      "estimated_minutes": 45,
+      "estimated_minutes": 40,
       "profiles": [
-        "secure-ci"
+        "jenkins",
+        "docker",
+        "nginx"
       ],
       "ports": [
-        8080
+        8080,
+        8443
       ],
-      "prerequisites": [],
+      "prerequisites": [
+        "LAB-DOC-05"
+      ],
       "courses": [
         "devops-practitioner-5-day"
       ],
-      "guide": "training-content/labs/jenkins/LAB-JNK-01-jenkins-declarative-pipeline.md",
-      "assets": "training-content/lab-assets/LAB-JNK-01",
+      "guide": "training-content/labs/jenkins/LAB-JEN-01-docker-compose-setup.md",
+      "assets": "training-content/lab-assets/LAB-JEN-01",
       "status": "published",
       "package_contract": "standard"
     },
     {
-      "id": "LAB-JNK-02",
-      "title": "Jenkins Secure Pipeline, SonarQube, Trivy ve Harbor",
+      "id": "LAB-JEN-02",
+      "title": "Jenkins İlk Yapılandırma, Yönetici Hesabı ve Eklenti Yönetimi",
       "topic": "jenkins",
-      "difficulty": 200,
-      "estimated_minutes": 60,
+      "difficulty": 100,
+      "estimated_minutes": 35,
       "profiles": [
-        "secure-ci",
-        "harbor"
+        "jenkins"
       ],
       "ports": [
-        8080,
-        8082,
-        9000
+        8080
       ],
       "prerequisites": [
-        "LAB-JNK-01",
-        "LAB-DOC-06"
+        "LAB-JEN-01"
       ],
       "courses": [
         "devops-practitioner-5-day"
       ],
-      "guide": "training-content/labs/jenkins/LAB-JNK-02-jenkins-secure-pipeline.md",
-      "assets": "training-content/lab-assets/LAB-JNK-02",
+      "guide": "training-content/labs/jenkins/LAB-JEN-02-initial-setup-plugins.md",
+      "assets": "training-content/lab-assets/LAB-JEN-02",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-JEN-03",
+      "title": "İlk Freestyle Build Job ve Workspace Temelleri",
+      "topic": "jenkins",
+      "difficulty": 100,
+      "estimated_minutes": 35,
+      "profiles": [
+        "jenkins"
+      ],
+      "ports": [
+        8080
+      ],
+      "prerequisites": [
+        "LAB-JEN-02"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/jenkins/LAB-JEN-03-first-freestyle-job.md",
+      "assets": "training-content/lab-assets/LAB-JEN-03",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-JEN-04",
+      "title": "Git Repository ile Otomatik Build ve Webhook Yapılandırması",
+      "topic": "jenkins",
+      "difficulty": 100,
+      "estimated_minutes": 40,
+      "profiles": [
+        "jenkins",
+        "git"
+      ],
+      "ports": [
+        8080
+      ],
+      "prerequisites": [
+        "LAB-JEN-03"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/jenkins/LAB-JEN-04-git-scm-webhook.md",
+      "assets": "training-content/lab-assets/LAB-JEN-04",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-JEN-05",
+      "title": "İlk Declarative Jenkins Pipeline ve Jenkinsfile Temelleri",
+      "topic": "jenkins",
+      "difficulty": 100,
+      "estimated_minutes": 45,
+      "profiles": [
+        "jenkins"
+      ],
+      "ports": [
+        8080
+      ],
+      "prerequisites": [
+        "LAB-JEN-04"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/jenkins/LAB-JEN-05-declarative-pipeline.md",
+      "assets": "training-content/lab-assets/LAB-JEN-05",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-JEN-06",
+      "title": "Environment Değişkenleri, Parametreler ve Güvenli Credentials Yönetimi",
+      "topic": "jenkins",
+      "difficulty": 200,
+      "estimated_minutes": 45,
+      "profiles": [
+        "jenkins"
+      ],
+      "ports": [
+        8080
+      ],
+      "prerequisites": [
+        "LAB-JEN-05"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/jenkins/LAB-JEN-06-environment-credentials.md",
+      "assets": "training-content/lab-assets/LAB-JEN-06",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-JEN-07",
+      "title": "Uygulama Derleme, Birim Testleri ve JUnit Test Raporlama",
+      "topic": "jenkins",
+      "difficulty": 200,
+      "estimated_minutes": 45,
+      "profiles": [
+        "jenkins",
+        "python"
+      ],
+      "ports": [
+        8080
+      ],
+      "prerequisites": [
+        "LAB-JEN-06"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/jenkins/LAB-JEN-07-build-unit-test-reports.md",
+      "assets": "training-content/lab-assets/LAB-JEN-07",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-JEN-08",
+      "title": "Pipeline İçinde Docker İmaj Derleme, Tagging ve Smoke Test",
+      "topic": "jenkins",
+      "difficulty": 200,
+      "estimated_minutes": 45,
+      "profiles": [
+        "jenkins",
+        "docker"
+      ],
+      "ports": [
+        8080,
+        5001
+      ],
+      "prerequisites": [
+        "LAB-JEN-07"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/jenkins/LAB-JEN-08-docker-build-smoke-test.md",
+      "assets": "training-content/lab-assets/LAB-JEN-08",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-JEN-09",
+      "title": "SonarQube ile Statik Kod Analizi ve Quality Gate Entegrasyonu",
+      "topic": "jenkins",
+      "difficulty": 200,
+      "estimated_minutes": 50,
+      "profiles": [
+        "jenkins",
+        "sonarqube"
+      ],
+      "ports": [
+        8080,
+        9000
+      ],
+      "prerequisites": [
+        "LAB-JEN-08"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/jenkins/LAB-JEN-09-sonarqube-quality-gate.md",
+      "assets": "training-content/lab-assets/LAB-JEN-09",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-JEN-10",
+      "title": "Trivy ile Dosya Sistemi ve İmaj Güvenlik Taraması (DevSecOps Gate)",
+      "topic": "jenkins",
+      "difficulty": 200,
+      "estimated_minutes": 45,
+      "profiles": [
+        "jenkins",
+        "trivy"
+      ],
+      "ports": [
+        8080
+      ],
+      "prerequisites": [
+        "LAB-JEN-09"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/jenkins/LAB-JEN-10-trivy-security-scan.md",
+      "assets": "training-content/lab-assets/LAB-JEN-10",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-JEN-11",
+      "title": "Harbor Private Registry Entegrasyonu ve İmaj Dağıtımı",
+      "topic": "jenkins",
+      "difficulty": 200,
+      "estimated_minutes": 45,
+      "profiles": [
+        "jenkins",
+        "harbor"
+      ],
+      "ports": [
+        8080,
+        8082
+      ],
+      "prerequisites": [
+        "LAB-JEN-10"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/jenkins/LAB-JEN-11-harbor-registry-push.md",
+      "assets": "training-content/lab-assets/LAB-JEN-11",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-JEN-12",
+      "title": "Kubernetes (kind) Kümesine Otomatik Deployment (CD)",
+      "topic": "jenkins",
+      "difficulty": 300,
+      "estimated_minutes": 45,
+      "profiles": [
+        "jenkins",
+        "kubernetes"
+      ],
+      "ports": [
+        8080
+      ],
+      "prerequisites": [
+        "LAB-JEN-11"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/jenkins/LAB-JEN-12-kubernetes-cd-deploy.md",
+      "assets": "training-content/lab-assets/LAB-JEN-12",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-JEN-13",
+      "title": "Rolling Update, Canlı Doğrulama ve Otomatik Rollback",
+      "topic": "jenkins",
+      "difficulty": 300,
+      "estimated_minutes": 45,
+      "profiles": [
+        "jenkins",
+        "kubernetes"
+      ],
+      "ports": [
+        8080
+      ],
+      "prerequisites": [
+        "LAB-JEN-12"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/jenkins/LAB-JEN-13-rolling-update-rollback.md",
+      "assets": "training-content/lab-assets/LAB-JEN-13",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-JEN-14",
+      "title": "Jenkins Troubleshooting ve Sorun Giderme Senaryoları",
+      "topic": "jenkins",
+      "difficulty": 300,
+      "estimated_minutes": 50,
+      "profiles": [
+        "jenkins"
+      ],
+      "ports": [
+        8080
+      ],
+      "prerequisites": [
+        "LAB-JEN-13"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/jenkins/LAB-JEN-14-jenkins-troubleshooting.md",
+      "assets": "training-content/lab-assets/LAB-JEN-14",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-JEN-15",
+      "title": "Uçtan Uca DevSecOps Pipeline Capstone Projesi",
+      "topic": "jenkins",
+      "difficulty": 300,
+      "estimated_minutes": 60,
+      "profiles": [
+        "jenkins",
+        "sonarqube",
+        "trivy",
+        "harbor",
+        "kubernetes"
+      ],
+      "ports": [
+        8080,
+        9000,
+        8082,
+        80
+      ],
+      "prerequisites": [
+        "LAB-JEN-14"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/jenkins/LAB-JEN-15-devsecops-capstone.md",
+      "assets": "training-content/lab-assets/LAB-JEN-15",
       "status": "published",
       "package_contract": "standard"
     },
@@ -1342,7 +1673,7 @@
         9090
       ],
       "prerequisites": [
-        "LAB-JNK-02",
+        "LAB-JEN-15",
         "LAB-ARG-01",
         "LAB-MON-01"
       ],

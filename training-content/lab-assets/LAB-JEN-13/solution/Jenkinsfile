@@ -1,0 +1,15 @@
+pipeline {
+    agent any
+    stages {
+        stage('Deploy & Verify') {
+            steps {
+                echo 'Checking deployment health...'
+            }
+        }
+    }
+    post {
+        failure {
+            echo 'Rolling back deployment...'
+        }
+    }
+}
