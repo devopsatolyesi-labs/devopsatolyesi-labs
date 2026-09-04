@@ -35,9 +35,25 @@ spec:
                   "$kcadm" update "users/${user_id}/groups/${group_id}" -r devops-atolyesi -n
                 fi
               }
-              ensure_user admin "$REALM_ADMIN_PASSWORD" admin ""
+              "$kcadm" create groups -r devops-atolyesi -s name=admins 2>/dev/null || true
+              ensure_user admin "$REALM_ADMIN_PASSWORD" admin admins
               ensure_user devops "$DEVOPS_PASSWORD" student devops-practitioner-5-day
               ensure_user kubernetes "$KUBERNETES_PASSWORD" student docker-kubernetes-2-day
+              client_id=$("$kcadm" get clients -r devops-atolyesi -q clientId=labs-portal --fields id --format csv --noquotes)
+              "$kcadm" update "clients/${client_id}" -r devops-atolyesi \
+                -s publicClient=false -s clientAuthenticatorType=client-secret \
+                -s "secret=${OIDC_CLIENT_SECRET}"
+              if ! "$kcadm" get "clients/${client_id}/protocol-mappers/models" -r devops-atolyesi \
+                --fields name --format csv --noquotes | grep -qx groups; then
+                "$kcadm" create "clients/${client_id}/protocol-mappers/models" -r devops-atolyesi \
+                  -s name=groups -s protocol=openid-connect \
+                  -s protocolMapper=oidc-group-membership-mapper \
+                  -s 'config."full.path"=false' \
+                  -s 'config."id.token.claim"=true' \
+                  -s 'config."access.token.claim"=true' \
+                  -s 'config."userinfo.token.claim"=true' \
+                  -s 'config."claim.name"=groups'
+              fi
           env:
             - name: BOOTSTRAP_ADMIN
               value: {{ .Values.admin.username | quote }}
@@ -53,3 +69,6 @@ spec:
             - name: KUBERNETES_PASSWORD
               valueFrom:
                 secretKeyRef: {name: {{ .Values.secret.existingSecret | quote }}, key: kubernetes-password}
+            - name: OIDC_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef: {name: {{ .Values.secret.existingSecret | quote }}, key: labs-oidc-client-secret}

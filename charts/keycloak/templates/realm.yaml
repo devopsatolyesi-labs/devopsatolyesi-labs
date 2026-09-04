@@ -15,6 +15,7 @@ data:
         {"name": "student", "description": "Atandığı eğitim lablarını görür"}
       ]},
       "groups": [
+        {"name": "admins", "attributes": {"portal_role": ["admin"]}},
         {"name": "devops-practitioner-5-day", "attributes": {"course": ["devops-practitioner-5-day"]}},
         {"name": "docker-kubernetes-2-day", "attributes": {"course": ["docker-kubernetes-2-day"]}}
       ],
@@ -22,7 +23,7 @@ data:
         "clientId": "labs-portal",
         "enabled": true,
         "protocol": "openid-connect",
-        "publicClient": true,
+        "publicClient": false,
         "standardFlowEnabled": true,
         "directAccessGrantsEnabled": false,
         "redirectUris": ["https://labs.devopsatolyesi.com/*"],

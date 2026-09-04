@@ -31,6 +31,8 @@ jobs:
           LABS_ADMIN_PASSWORD: ${{ secrets.LABS_ADMIN_PASSWORD }}
           LABS_DEVOPS_PASSWORD: ${{ secrets.LABS_DEVOPS_PASSWORD }}
           LABS_KUBERNETES_PASSWORD: ${{ secrets.LABS_KUBERNETES_PASSWORD }}
+          LABS_OIDC_CLIENT_SECRET: ${{ secrets.LABS_OIDC_CLIENT_SECRET }}
+          LABS_COOKIE_SECRET: ${{ secrets.LABS_COOKIE_SECRET }}
         run: |
           ssh-keygen -q -t ed25519 -N '' -f "$RUNNER_TEMP/deploy_key"
           install -m 700 -d "$RUNNER_TEMP/bootstrap"
@@ -45,10 +47,12 @@ jobs:
             printf 'LABS_ADMIN_PASSWORD=%q\n' "$LABS_ADMIN_PASSWORD"
             printf 'LABS_DEVOPS_PASSWORD=%q\n' "$LABS_DEVOPS_PASSWORD"
             printf 'LABS_KUBERNETES_PASSWORD=%q\n' "$LABS_KUBERNETES_PASSWORD"
+            printf 'LABS_OIDC_CLIENT_SECRET=%q\n' "$LABS_OIDC_CLIENT_SECRET"
+            printf 'LABS_COOKIE_SECRET=%q\n' "$LABS_COOKIE_SECRET"
           } > "$RUNNER_TEMP/bootstrap/secrets.env"
           gcloud compute scp --recurse "$RUNNER_TEMP/bootstrap" "$DEPLOY_USER@$INSTANCE:/tmp/devopsatolyesi-labs-bootstrap" \
             --project "$GCP_PROJECT_ID" --zone "$GCP_ZONE" --tunnel-through-iap --quiet \
             --ssh-key-file "$RUNNER_TEMP/deploy_key"
           gcloud compute ssh "$DEPLOY_USER@$INSTANCE" --project "$GCP_PROJECT_ID" --zone "$GCP_ZONE" \
             --tunnel-through-iap --quiet --ssh-key-file "$RUNNER_TEMP/deploy_key" \
-            --command "set -eu; cd /tmp/devopsatolyesi-labs-bootstrap; . ./secrets.env; export HARBOR_ROBOT_USERNAME HARBOR_ROBOT_PASSWORD KEYCLOAK_DB_PASSWORD PLATFORM_ADMIN_PASSWORD LABS_ADMIN_PASSWORD LABS_DEVOPS_PASSWORD LABS_KUBERNETES_PASSWORD; install -d gitops; mv applications.yaml gitops/applications.yaml; ./bootstrap-argocd.sh; rm -f secrets.env"
+            --command "set -eu; cd /tmp/devopsatolyesi-labs-bootstrap; . ./secrets.env; export HARBOR_ROBOT_USERNAME HARBOR_ROBOT_PASSWORD KEYCLOAK_DB_PASSWORD PLATFORM_ADMIN_PASSWORD LABS_ADMIN_PASSWORD LABS_DEVOPS_PASSWORD LABS_KUBERNETES_PASSWORD LABS_OIDC_CLIENT_SECRET LABS_COOKIE_SECRET; install -d gitops; mv applications.yaml gitops/applications.yaml; ./bootstrap-argocd.sh; rm -f secrets.env"

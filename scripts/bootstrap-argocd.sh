@@ -8,6 +8,8 @@ set -euo pipefail
 : "${LABS_ADMIN_PASSWORD:?LABS_ADMIN_PASSWORD is required}"
 : "${LABS_DEVOPS_PASSWORD:?LABS_DEVOPS_PASSWORD is required}"
 : "${LABS_KUBERNETES_PASSWORD:?LABS_KUBERNETES_PASSWORD is required}"
+: "${LABS_OIDC_CLIENT_SECRET:?LABS_OIDC_CLIENT_SECRET is required}"
+: "${LABS_COOKIE_SECRET:?LABS_COOKIE_SECRET is required}"
 
 registry=harbor.devopsatolyesi.com
 
@@ -32,12 +34,18 @@ kubectl -n labs-system create secret docker-registry harbor-registry \
   --docker-password="$HARBOR_ROBOT_PASSWORD" \
   --dry-run=client -o yaml | kubectl apply -f -
 
+kubectl -n labs-system create secret generic labs-auth-secrets \
+  --from-literal=client-secret="$LABS_OIDC_CLIENT_SECRET" \
+  --from-literal=cookie-secret="$LABS_COOKIE_SECRET" \
+  --dry-run=client -o yaml | kubectl apply -f -
+
 kubectl -n identity-system create secret generic keycloak-secrets \
   --from-literal=postgres-password="$KEYCLOAK_DB_PASSWORD" \
   --from-literal=admin-password="$PLATFORM_ADMIN_PASSWORD" \
   --from-literal=realm-admin-password="$LABS_ADMIN_PASSWORD" \
   --from-literal=devops-password="$LABS_DEVOPS_PASSWORD" \
   --from-literal=kubernetes-password="$LABS_KUBERNETES_PASSWORD" \
+  --from-literal=labs-oidc-client-secret="$LABS_OIDC_CLIENT_SECRET" \
   --dry-run=client -o yaml | kubectl apply -f -
 
 kubectl apply -f gitops/applications.yaml

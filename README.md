@@ -23,3 +23,7 @@ GitHub Actions imajı ve sürümlü Helm paketlerini private Harbor OCI registry
 yollar. Argo CD yalnız pull yetkisiyle Harbor'ı izleyerek chartları otomatik
 uygular. Kubernetes API internete açılmaz. Parolalar repoya yazılmaz;
 GitHub Actions repository secrets ve Kubernetes Secret nesnelerinde tutulur.
+
+Labs erişimi Keycloak OIDC ile korunur. `admin` tüm sayfalara,
+`devops-practitioner-5-day` ve `docker-kubernetes-2-day` grupları yalnız kendi
+lab URL'lerine erişebilir; doğrudan URL denemeleri Nginx katmanında reddedilir.
