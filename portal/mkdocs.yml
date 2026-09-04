@@ -78,6 +78,7 @@ nav:
       - Dynamic NFS StorageClass Kurulumu: setup/nfs-storageclass.md
       - Jenkins Kurulumu (Docker & K8s): setup/jenkins-installation.md
       - Harbor Private Registry ve TLS: setup/harbor-registry.md
+      - Yerel GitLab CE ve Runner: setup/gitlab-ce.md
       - Prometheus & Grafana Monitoring: setup/prometheus-grafana.md
       - ELK Stack Merkezi Loglama: setup/elk-stack.md
       - Argo CD Kurulumu & Web UI: setup/argocd-setup.md
@@ -112,10 +113,13 @@ nav:
       - LAB-DOC-19 - Production Docker Compose Desenleri: day2/LAB-DOC-19-docker-compose-production-patterns.md
       - LAB-DOC-20 - Docker Final Capstone Projesi: day2/LAB-DOC-20-docker-capstone.md
   - CI/CD:
-      - LAB-JNK-01 - Jenkins Declarative Pipeline: day3/LAB-JNK-01-jenkins-declarative-pipeline.md
-      - LAB-JNK-02 - Jenkins Güvenli Pipeline: day3/LAB-JNK-02-jenkins-secure-pipeline.md
-      - LAB-GLB-01 - GitLab CI/CD Pipeline: day3/LAB-GLB-01-gitlab-ci-pipeline.md
-      - LAB-GHA-01 - GitHub Actions CI: day3/LAB-GHA-01-github-actions-ci.md
+      - Jenkins:
+          - LAB-JNK-01 - Jenkins Declarative Pipeline: day3/LAB-JNK-01-jenkins-declarative-pipeline.md
+          - LAB-JNK-02 - Jenkins Güvenli Pipeline: day3/LAB-JNK-02-jenkins-secure-pipeline.md
+      - GitLab CE:
+          - LAB-GLB-01 - GitLab CI/CD Pipeline: day3/LAB-GLB-01-gitlab-ci-pipeline.md
+      - GitHub Actions:
+          - LAB-GHA-01 - GitHub Actions CI: day3/LAB-GHA-01-github-actions-ci.md
   - Infrastructure as Code:
       - LAB-TF-01 - Terraform Docker Provider: day3/LAB-TF-01-terraform-docker-provider.md
       - LAB-TF-04 - Terraform Helm Centralized Monitoring: day3/LAB-TF-04-terraform-helm-centralized-monitoring.md
