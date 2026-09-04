@@ -101,6 +101,8 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: oauth2-proxy
+      annotations:
+        checksum/auth-config: {{ toJson .Values.auth | sha256sum | quote }}
     spec:
       containers:
         - name: oauth2-proxy
