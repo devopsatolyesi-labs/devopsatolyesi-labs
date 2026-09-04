@@ -16,12 +16,6 @@ kind: Deployment
 metadata:
   name: labs-portal
   namespace: labs-system
-  {{- if .Values.auth.enabled }}
-  annotations:
-    nginx.ingress.kubernetes.io/auth-url: "http://oauth2-proxy.labs-system.svc.cluster.local:4180/oauth2/auth"
-    nginx.ingress.kubernetes.io/auth-signin: "https://{{ .Values.hostname }}/oauth2/start?rd=$escaped_request_uri"
-    nginx.ingress.kubernetes.io/auth-response-headers: "X-Auth-Request-User,X-Auth-Request-Email,X-Auth-Request-Groups,X-Auth-Request-Preferred-Username"
-  {{- end }}
 spec:
   replicas: {{ .Values.replicas }}
   selector:
@@ -59,6 +53,12 @@ kind: Ingress
 metadata:
   name: labs-portal
   namespace: labs-system
+  {{- if .Values.auth.enabled }}
+  annotations:
+    nginx.ingress.kubernetes.io/auth-url: "http://oauth2-proxy.labs-system.svc.cluster.local:4180/oauth2/auth"
+    nginx.ingress.kubernetes.io/auth-signin: "https://{{ .Values.hostname }}/oauth2/start?rd=$escaped_request_uri"
+    nginx.ingress.kubernetes.io/auth-response-headers: "X-Auth-Request-User,X-Auth-Request-Email,X-Auth-Request-Groups,X-Auth-Request-Preferred-Username"
+  {{- end }}
 spec:
   ingressClassName: {{ .Values.ingressClassName | quote }}
   rules:
