@@ -5,7 +5,7 @@
 | 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `kubernetes, argocd` | `8085` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-ARG-01.zip)](/downloads/LAB-ARG-01.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-ARG-01.zip)](/downloads/LAB-ARG-01.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
 > 
 > **Terminalde çalışma ortamını hazırlayın:**
 > ```bash
@@ -231,18 +231,6 @@ NAME              READY   UP-TO-DATE   AVAILABLE   AGE
 gitops-demo-app   2/2     2            2           ... (Drift detected; reconciles to 2!)
 ```
 
-## 7. Doğrulama
-`gitops-demo-app` uygulamasının 2/2 sağlıklı replika ile çalıştığını doğrulayın:
-```bash
-READY_REPLICAS=$(kubectl get deployment gitops-demo-app -n gitops-prod -o jsonpath='{.status.readyReplicas}')
-
-if [ "$READY_REPLICAS" -eq 2 ]; then
-  echo "VALIDATION SUCCESS: Argo CD v3.4.2 Application is running with 2/2 healthy replicas and GitOps self-healing verified."
-else
-  echo "VALIDATION FAILED: Expected 2 replicas, found $READY_REPLICAS." && exit 1
-fi
-```
-
 ## 8. Sorun Giderme
 
 ### Belirti
@@ -269,14 +257,6 @@ argocd app sync gitops-demo-app || true
 ### Tekrar Doğrulama
 ```bash
 kubectl get deployment gitops-demo-app -n gitops-prod
-```
-
-## 9. Temizlik / Sıfırlama
-Argo CD uygulamasını ve oluşturulan ad alanlarını silin:
-```bash
-argocd app delete gitops-demo-app --cascade 2>/dev/null || true
-kubectl delete namespace gitops-prod argocd 2>/dev/null || true
-rm -rf ~/labs/LAB-ARG-01
 ```
 
 ## 10. Production Notu

@@ -5,7 +5,7 @@
 | 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `monitoring` | `9090, 9093` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-MON-02.zip)](/downloads/LAB-MON-02.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-MON-02.zip)](/downloads/LAB-MON-02.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
 > 
 > **Terminalde çalışma ortamını hazırlayın:**
 > ```bash
@@ -178,18 +178,6 @@ curl -s http://localhost:9093/api/v2/alerts | jq '.[0].labels.alertname'
 "ServiceDown"
 ```
 
-## 7. Doğrulama
-`ServiceDown` alarmının Prometheus üzerinde `firing` durumunda olduğunu doğrulayın:
-```bash
-ALERT_STATE=$(curl -s http://localhost:9090/api/v1/alerts | jq -r '.data.alerts[] | select(.labels.alertname=="ServiceDown") | .state')
-
-if [ "$ALERT_STATE" = "firing" ]; then
-  echo "VALIDATION SUCCESS: ServiceDown alert successfully transitioned to FIRING on Prometheus 3.x & Alertmanager v0.33."
-else
-  echo "VALIDATION FAILED: Expected state 'firing', got '$ALERT_STATE'." && exit 1
-fi
-```
-
 ## 8. Sorun Giderme
 
 ### Belirti
@@ -216,13 +204,6 @@ docker compose restart prometheus
 ```bash
 curl -s http://localhost:9090/api/v1/rules | jq '.data.groups[0].name'
 # "devops_service_alerts" dönmelidir.
-```
-
-## 9. Temizlik / Sıfırlama
-Konteynerleri kaldırın ve çalışma dizinini temizleyin:
-```bash
-docker compose down -v
-rm -rf ~/labs/LAB-MON-02
 ```
 
 ## 10. Production Notu

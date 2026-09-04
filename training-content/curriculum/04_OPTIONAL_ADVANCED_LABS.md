@@ -85,10 +85,6 @@ Bu doküman; hızlı ilerleyen sınıflar, ileri düzey öğrenciler veya eğitm
   5. `docker compose config` ile DRY anchor çözünürlüğünün testi.
   6. `docker compose up -d` ile temel yığının başlatılması ve sağlık denetimi.
   7. `docker compose --profile worker up -d` ile asenkron kuyruk tüketiminin doğrulanması.
-* **Doğrulama:**
-  ```bash
-  bash outputs/lab-assets/LAB-DOC-13/scripts/validate.sh
-  ```
 
 ---
 
@@ -174,10 +170,6 @@ Bu doküman; hızlı ilerleyen sınıflar, ileri düzey öğrenciler veya eğitm
   5. `kubectl get pods -n monitoring` ile pod sağlık kontrolü.
   6. `ServiceMonitor` CRD ile örnek mikroservis metriklerinin otomatik keşfi.
   7. Grafana UI (`localhost:3000`) erişimi ve Golden Signals panellerinin incelenmesi.
-* **Doğrulama:**
-  ```bash
-  bash outputs/lab-assets/LAB-TF-04/scripts/validate.sh
-  ```
 
 ---
 

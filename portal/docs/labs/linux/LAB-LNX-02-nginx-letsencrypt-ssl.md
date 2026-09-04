@@ -161,22 +161,6 @@ docker rm -f nginx-ssl-test
 
 ---
 
-## Doğrulama
-
-```bash
-bash scripts/validate.sh
-```
-
----
-
-## Temizlik
-
-```bash
-bash scripts/cleanup.sh
-```
-
----
-
 ## Kaynak ve Referanslar
 
 Bu lab, [Step-by-Step Guide: Install Let’s Encrypt SSL on Nginx (Amazon Linux 2023 / Ubuntu) — Hakan Bayraktar](https://hbayraktar.medium.com/step-by-step-guide-install-lets-encrypt-ssl-on-nginx-amazon-linux-2023-91138089c5a9) makalesinden uyarlanmıştır.

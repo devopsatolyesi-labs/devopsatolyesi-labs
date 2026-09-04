@@ -5,7 +5,7 @@
 | 🔴 **ADVANCED** (İleri Seviye) | ⏱️ 90 dakika | `logging, kubernetes` | `Dahili / Küme İçi` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-LOG-02.zip)](/downloads/LAB-LOG-02.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-LOG-02.zip)](/downloads/LAB-LOG-02.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
 > 
 > **Terminalde çalışma ortamını hazırlayın:**
 > ```bash

@@ -74,7 +74,7 @@ def format_lab_header(lab: dict) -> str:
         f"| {difficulty} | ⏱️ {minutes} dakika | `{profiles}` | `{ports}` |",
         "",
         "> [!TIP]",
-        f"> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir ({lab['id']}.zip)](/downloads/{lab['id']}.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.",
+        f"> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir ({lab['id']}.zip)](/downloads/{lab['id']}.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.",
         "> ",
         "> **Terminalde çalışma ortamını hazırlayın:**",
         "> ```bash",
@@ -97,9 +97,24 @@ def studentize_guide(content: str) -> str:
     content = re.sub(
         r"^## Metadata\s*\n.*?(?=^##\s)", "", content, flags=re.MULTILINE | re.DOTALL
     )
-    return re.sub(
+    content = re.sub(
         r"^- \*\*(?:Süre|Tahmini Süre):\*\*.*\n", "", content, flags=re.MULTILINE
     )
+    # Strip any leftover Doğrulama or Temizlik sections
+    content = re.sub(
+        r"(?:---\s*\n\s*)?##\s+(?:\d+\.\s*)?Doğrulama\s*\n.*?(?=(?:---\s*\n\s*)?##|\Z)",
+        "",
+        content,
+        flags=re.DOTALL,
+    )
+    content = re.sub(
+        r"(?:---\s*\n\s*)?##\s+(?:\d+\.\s*)?Temizlik.*?\n.*?(?=(?:---\s*\n\s*)?##|\Z)",
+        "",
+        content,
+        flags=re.DOTALL,
+    )
+    content = re.sub(r"(---\s*\n\s*)+---", "---", content)
+    return content
 
 
 def main() -> None:

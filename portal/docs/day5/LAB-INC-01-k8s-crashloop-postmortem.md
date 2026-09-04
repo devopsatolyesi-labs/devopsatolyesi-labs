@@ -5,7 +5,7 @@
 | 🔴 **ADVANCED** (İleri Seviye) | ⏱️ 45 dakika | `kubernetes` | `Dahili / Küme İçi` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-INC-01.zip)](/downloads/LAB-INC-01.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-INC-01.zip)](/downloads/LAB-INC-01.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
 > 
 > **Terminalde çalışma ortamını hazırlayın:**
 > ```bash
@@ -220,18 +220,6 @@ catalog-service-xxxxxxxx-xxxxx     1/1     Running   0
 payment-service-xxxxxxxx-xxxxx     1/1     Running   0
 ```
 
-## 7. Doğrulama
-`production-incident` ad alanındaki 3 podun da 1/1 Running durumuna ulaştığını ve Postmortem raporunun hazır olduğunu doğrulayın:
-```bash
-READY_PODS=$(kubectl get pods -n production-incident --no-headers | grep -c "1/1")
-
-if [ "$READY_PODS" -eq 3 ] && [ -f reports/postmortem-incident-101.md ]; then
-  echo "VALIDATION SUCCESS: War Room incident resolved. 3/3 pods are 1/1 Running and Postmortem is archived."
-else
-  echo "VALIDATION FAILED: Not all pods ready or report missing." && exit 1
-fi
-```
-
 ## 8. Sorun Giderme
 
 ### Belirti
@@ -255,13 +243,6 @@ Bir önceki çöküşün loglarını almak için mutlaka `--previous` parametres
 ```bash
 kubectl logs -l app=payment-service -n production-incident --previous
 # Hata mesajı ekranda görüntülenmelidir.
-```
-
-## 9. Temizlik / Sıfırlama
-Olay ad alanını ve çalışma dizinini silin:
-```bash
-kubectl delete namespace production-incident 2>/dev/null || true
-rm -rf ~/labs/LAB-INC-01
 ```
 
 ## 10. Production Notu

@@ -5,7 +5,7 @@
 | 🟢 **CORE** (Temel Seviye) | ⏱️ 45 dakika | `kubernetes` | `Dahili / Küme İçi` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-K8S-02.zip)](/downloads/LAB-K8S-02.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-K8S-02.zip)](/downloads/LAB-K8S-02.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
 > 
 > **Terminalde çalışma ortamını hazırlayın:**
 > ```bash
@@ -178,17 +178,6 @@ Adım 4'teki iç DNS isteği çıktısı:
 ORDER API v1.0.0 [ENV: PROD] - Config & Secrets Loaded
 ```
 
-## 7. Doğrulama
-`order-service` nesnesine geçerli bir ClusterIP atandığını ve CoreDNS adının çözümlendiğini doğrulayın:
-```bash
-SVC_IP=$(kubectl get svc order-service -n ecommerce -o jsonpath='{.spec.clusterIP}')
-if [ -n "$SVC_IP" ] && [ "$SVC_IP" != "None" ]; then
-  echo "VALIDATION SUCCESS: Service 'order-service' assigned ClusterIP: $SVC_IP and responded to internal DNS."
-else
-  echo "VALIDATION FAILED: Invalid or missing ClusterIP." && exit 1
-fi
-```
-
 ## 8. Sorun Giderme
 
 ### Belirti
@@ -216,13 +205,6 @@ kubectl apply -f manifests/03-deployment-service.yaml
 ```bash
 kubectl get endpoints order-service -n ecommerce
 # Pod IP adresleri listelenmelidir (örn. 10.244.x.x:8000).
-```
-
-## 9. Temizlik / Sıfırlama
-`ecommerce` ad alanını silerek tüm bağlı servis ve podları temizleyin:
-```bash
-kubectl delete namespace ecommerce 2>/dev/null || true
-rm -rf ~/labs/LAB-K8S-02
 ```
 
 ## 10. Production Notu

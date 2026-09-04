@@ -5,7 +5,7 @@
 | 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 75 dakika | `logging` | `Dahili / Küme İçi` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-LOG-01.zip)](/downloads/LAB-LOG-01.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-LOG-01.zip)](/downloads/LAB-LOG-01.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
 > 
 > **Terminalde çalışma ortamını hazırlayın:**
 > ```bash
@@ -310,26 +310,6 @@ GCP testinde `host-nginx` kaynağından 138, `lab-nginx` kaynağından 37 belge 
 
 Sayılar trafiğe göre değişir; alan yapısı ve sıfır Grok hatası kabul kriteridir.
 
-## 7. Doğrulama
-
-```bash
-cd ~/labs/LAB-LOG-01
-curl -s http://localhost:8088/ >/dev/null
-curl -s http://localhost:8088/test-500 >/dev/null
-sleep 8
-sudo docker compose ps
-curl -s http://localhost:9200/_cluster/health | jq -r .status
-curl -s http://localhost:9200/devops-nginx-*/_count | jq .count
-curl -s -H 'Content-Type: application/json' \
-  http://localhost:9200/devops-nginx-*/_count \
-  -d '{"query":{"term":{"http.response.status_code":500}}}' | jq .count
-curl -s -H 'Content-Type: application/json' \
-  http://localhost:9200/devops-nginx-*/_count \
-  -d '{"query":{"term":{"tags":"_grok_nginx_access_failure"}}}' | jq .count
-```
-
-Kabul kriterleri: dört servis `healthy`, Filebeat `running`, indeks ve parse edilmiş belge sayısı sıfırdan büyük, Grok access hatası sıfır, HTTP 500 aranabilir ve Kibana Data View mevcut.
-
 ## 8. Sorun Giderme
 
 ### Elasticsearch: `vm.max_map_count is too low`
@@ -369,22 +349,6 @@ curl -s http://localhost:5601/api/data_views/data_view/devops-nginx-logs \
 ```
 
 Zaman aralığını genişletin ve `Nginx Logları` Data View'unu seçin.
-
-## 9. Temizlik / Sıfırlama
-
-```bash
-cd ~/labs/LAB-LOG-01
-sudo docker compose down
-```
-
-Yalnız laba ait konteyner, ağ ve volume verileri silinir; host `/var/log/nginx` dosyaları korunur.
-
-Lab volume verilerini de silmek için önce doğru dizinde olduğunuzu doğrulayın:
-
-```bash
-pwd
-sudo docker compose down -v
-```
 
 ## 10. Production Notu
 

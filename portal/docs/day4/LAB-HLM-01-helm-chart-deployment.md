@@ -5,7 +5,7 @@
 | 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `kubernetes` | `Dahili / Küme İçi` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-HLM-01.zip)](/downloads/LAB-HLM-01.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-HLM-01.zip)](/downloads/LAB-HLM-01.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
 > 
 > **Terminalde çalışma ortamını hazırlayın:**
 > ```bash
@@ -207,19 +207,6 @@ REVISION  UPDATED   STATUS      CHART             APP VERSION  DESCRIPTION
 3         ...       deployed    devops-app-1.0.0  1.0.0        Rollback to 1
 ```
 
-## 7. Doğrulama
-Release durumunun deployed olduğunu, revizyon numarasının 3'e ulaştığını ve 4 podun ayakta olduğunu doğrulayın:
-```bash
-REVISION=$(helm status prod-release -n production -o json | jq .version)
-PODS=$(kubectl get pods -n production --no-headers | wc -l)
-
-if [ "$REVISION" -eq 3 ] && [ "$PODS" -eq 4 ]; then
-  echo "VALIDATION SUCCESS: Helm chart deployed, upgraded and rolled back (Rev 3) with 4 replicas."
-else
-  echo "VALIDATION FAILED: Revision: $REVISION, Pods: $PODS" && exit 1
-fi
-```
-
 ## 8. Sorun Giderme
 
 ### Belirti
@@ -243,14 +230,6 @@ helm template test devops-app/
 ```bash
 helm lint devops-app/
 # "0 chart(s) failed" çıktısı alınmalıdır.
-```
-
-## 9. Temizlik / Sıfırlama
-Release'i kaldırın, ad alanını silin ve çalışma dizinini temizleyin:
-```bash
-helm uninstall prod-release -n production 2>/dev/null || true
-kubectl delete namespace production 2>/dev/null || true
-rm -rf devops-app ~/labs/LAB-HLM-01
 ```
 
 ## 10. Production Notu

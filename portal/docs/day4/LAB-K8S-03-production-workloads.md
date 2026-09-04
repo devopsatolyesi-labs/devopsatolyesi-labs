@@ -5,7 +5,7 @@
 | 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 60 dakika | `kubernetes` | `Dahili / Küme İçi` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-K8S-03.zip)](/downloads/LAB-K8S-03.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-K8S-03.zip)](/downloads/LAB-K8S-03.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
 > 
 > **Terminalde çalışma ortamını hazırlayın:**
 > ```bash
@@ -179,19 +179,6 @@ Waiting for deployment "robust-web-service" rollout to finish: 2 out of 3 new re
 deployment "robust-web-service" successfully rolled out
 ```
 
-## 7. Doğrulama
-Tüm podların Ready durumda olduğunu ve Burstable QoS sınıfında çalıştığını doğrulayın:
-```bash
-READY_CNT=$(kubectl get deployment robust-web-service -o jsonpath='{.status.readyReplicas}')
-QOS_CLASS=$(kubectl get pods -l app=robust-web -o jsonpath='{.items[0].status.qosClass}')
-
-if [ "$READY_CNT" -eq 3 ] && [ "$QOS_CLASS" = "Burstable" ]; then
-  echo "VALIDATION SUCCESS: 3/3 pods are Ready with Burstable QoS and probes active."
-else
-  echo "VALIDATION FAILED: Ready: $READY_CNT, QoS: $QOS_CLASS" && exit 1
-fi
-```
-
 ## 8. Sorun Giderme
 
 ### Belirti
@@ -218,13 +205,6 @@ kubectl apply -f manifests/02-production-deployment.yaml
 ```bash
 kubectl rollout status deployment/robust-web-service
 # Podların Ready 1/1 olduğu doğrulanmalıdır.
-```
-
-## 9. Temizlik / Sıfırlama
-Dağıtımı, servisi ve PVC nesnesini silin:
-```bash
-kubectl delete -f manifests/ 2>/dev/null || true
-rm -rf ~/labs/LAB-K8S-03
 ```
 
 ## 10. Production Notu

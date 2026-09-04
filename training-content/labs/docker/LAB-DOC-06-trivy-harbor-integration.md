@@ -140,26 +140,10 @@ Aşağıdaki soruları yanıtlamaya çalışın; ardından çözümü görmek i�
 
 ---
 
-## Doğrulama
-
-```bash
-bash scripts/validate.sh
-```
-
----
-
 ## Sorun Giderme
 
 - **Docker Socket İzni:** `permission denied while trying to connect to the Docker daemon socket` hatasında kullanıcınızın `docker` grubunda olduğunu kontrol edin (`sudo usermod -aG docker $USER`).
 - **Veritabanı İndirme:** Trivy ilk çalışırken GitHub'dan güvenlik veritabanını indirir; internet erişiminizin açık olduğundan emin olun.
-
----
-
-## Temizlik
-
-```bash
-bash scripts/cleanup.sh
-```
 
 ---
 

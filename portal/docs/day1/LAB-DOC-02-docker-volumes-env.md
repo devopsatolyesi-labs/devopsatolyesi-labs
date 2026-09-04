@@ -5,7 +5,7 @@
 | 🟢 **CORE** (Temel Seviye) | ⏱️ 40 dakika | `docker` | `5432` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-02.zip)](/downloads/LAB-DOC-02.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-02.zip)](/downloads/LAB-DOC-02.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
 > 
 > **Terminalde çalışma ortamını hazırlayın:**
 > ```bash
@@ -195,16 +195,6 @@ Sorgu sonucunda `volume-ok` kaydı görünmelidir. Konteyner silinip yeniden ür
 
 ---
 
-## Doğrulama
-
-```bash
-bash scripts/validate.sh
-```
-
-Başarılı sonuç: `[PASS] LAB-DOC-02 volume persistence verified.`
-
----
-
 ## Sorun Giderme
 
 - **`password is required` Hatası:** `LAB_POSTGRES_PASSWORD` değişkenini `export LAB_POSTGRES_PASSWORD='training-only-password'` ile terminal oturumunuza verin.
@@ -213,15 +203,6 @@ Başarılı sonuç: `[PASS] LAB-DOC-02 volume persistence verified.`
 
 ---
 
-## Temizlik
-
-```bash
-bash scripts/cleanup.sh
-```
-
----
-
 ## Kaynak
 
 - [Hakan Bayraktar — Docker Commands Cheat Sheet with Examples](https://hbayraktar.medium.com/docker-commands-cheat-sheet-with-examples-d9a26396cb6f)
-

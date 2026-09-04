@@ -5,7 +5,7 @@
 | 🟢 **CORE** (Temel Seviye) | ⏱️ 45 dakika | `docker` | `Dahili / Küme İçi` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-GIT-01.zip)](/downloads/LAB-GIT-01.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-GIT-01.zip)](/downloads/LAB-GIT-01.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
 > 
 > **Terminalde çalışma ortamını hazırlayın:**
 > ```bash
@@ -162,20 +162,6 @@ Automatic merge failed; fix conflicts and then commit the result.
 * ... feat: initial app config for payment service
 ```
 
-## 7. Doğrulama
-Yapılandırma dosyasının geçerli bir JSON olduğunu ve her iki değişikliğin birleştiğini doğrulayın:
-```bash
-cd ~/labs/LAB-GIT-01/repo
-PORT=$(jq -r .port app-config.json)
-AUTH=$(jq -r .features.auth app-config.json)
-
-if [ "$PORT" = "9090" ] && [ "$AUTH" = "JWT_OAUTH2" ]; then
-    echo "VALIDATION SUCCESS: Merge conflict resolved. Port=9090, Auth=JWT_OAUTH2."
-else
-    echo "VALIDATION FAILED: Unexpected values in app-config.json" && exit 1
-fi
-```
-
 ## 8. Sorun Giderme
 
 ### Belirti
@@ -202,12 +188,6 @@ git checkout main
 ```bash
 git branch --show-current
 # Çıktı "main" olmalıdır.
-```
-
-## 9. Temizlik / Sıfırlama
-Laboratuvar ortamını temizlemek ve sıfırlamak için:
-```bash
-rm -rf ~/labs/LAB-GIT-01
 ```
 
 ## 10. Production Notu

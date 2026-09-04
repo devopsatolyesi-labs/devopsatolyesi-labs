@@ -5,7 +5,7 @@
 | 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `docker` | `8080` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-07.zip)](/downloads/LAB-DOC-07.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-07.zip)](/downloads/LAB-DOC-07.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
 > 
 > **Terminalde çalışma ortamını hazırlayın:**
 > ```bash
@@ -301,22 +301,6 @@ docker exec spring-app id
 
 ---
 
-### Adım 7: Otomatik Doğrulama
-
-Tüm gereksinimlerin karşılandığını otomatik test aracıyla doğrulayın:
-
-```bash
-bash scripts/validate.sh
-```
-
-Terminalde şu onay mesajını görmelisiniz:
-```text
-==> [LAB-DOC-07] Doğrulama Başlatılıyor: Java Spring Boot Multi-Stage...
-[PASS] Java Spring Boot multi-stage build ve JVM optimizasyonu başarıyla doğrulandı!
-```
-
----
-
 ## 6. 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
 
 ??? question "Soru 1: Eski Java sürümlerinde (Java 8 öncesi) Docker konteynerine 512 MB bellek sınırı konsa bile JVM neden 16 GB heap ayırmaya çalışıp OOMKilled oluyordu?"
@@ -351,16 +335,6 @@ Terminalde şu onay mesajını görmelisiniz:
 - **Konteyner Başlamadan Çöküyor (Exit 137):** `--memory` sınırınızı çok düşük tutmuş olabilirsiniz (ör. 64 MB). Java 17 temel runtime için en az `256 MB` veya `512 MB` önerilir.
 - **Port Meşgul Hatası (Bind for 0.0.0.0:8080 failed):** 8080 portu başka bir servis tarafından kullanılıyorsa `docker ps` ile kontrol edip çakışan konteyneri durdurun veya `-p 8081:8080` ile yönlendirin.
 - **Permission Denied Hatası:** Dockerfile'da `COPY --from=builder` satırında `--chown=10001:10001` parametresini unuttuysanız Java JAR dosyasına erişemeyebilir.
-
----
-
-## 8. Temizlik
-
-Lab ortamını temizlemek ve kaynakları serbest bırakmak için:
-
-```bash
-bash scripts/cleanup.sh
-```
 
 ---
 

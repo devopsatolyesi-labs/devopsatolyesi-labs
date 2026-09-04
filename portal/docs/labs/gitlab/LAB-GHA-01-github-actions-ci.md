@@ -150,22 +150,6 @@ EOF
 
 ---
 
-## Doğrulama
-
-```bash
-bash scripts/validate.sh
-```
-
----
-
-## Temizlik
-
-```bash
-bash scripts/cleanup.sh
-```
-
----
-
 ## Kaynak ve Referanslar
 
 Bu lab, [github-actions-demo](https://github.com/hakanbayraktar/github-actions-demo) ve [github-action-simple](https://github.com/hakanbayraktar/github-action-simple) projelerindeki sürekli entegrasyon pratiklerinden uyarlanmıştır.

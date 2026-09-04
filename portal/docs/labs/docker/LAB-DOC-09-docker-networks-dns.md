@@ -191,16 +191,6 @@ Connected to backend (backend-service): <!DOCTYPE html>
 
 ---
 
-## Doğrulama
-
-```bash
-bash scripts/validate.sh
-```
-
-Başarılı sonuç: `[PASS] LAB-DOC-09 Inter-container DNS communication verified (HTTP 200).`
-
----
-
 ## Sorun Giderme
 
 - **502 Bad Gateway:** `backend-service` konteynerinin çalıştığını `docker ps` ile teyit edin.
@@ -209,15 +199,6 @@ Başarılı sonuç: `[PASS] LAB-DOC-09 Inter-container DNS communication verifie
 
 ---
 
-## Temizlik
-
-```bash
-bash scripts/cleanup.sh
-```
-
----
-
 ## Kaynak
 
 - [Hakan Bayraktar — Docker Commands Cheat Sheet with Examples](https://hbayraktar.medium.com/docker-commands-cheat-sheet-with-examples-d9a26396cb6f)
-

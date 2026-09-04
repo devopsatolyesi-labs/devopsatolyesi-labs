@@ -11,7 +11,7 @@
 - **Canlı temel ortam:** `https://elk1.devopsatolyesi.com`
 
 !!! warning "Bu lab manuel yapılır"
-    Öğrenci kurulum, ilk veri yükleme veya Kibana nesnesi oluşturmak için `install.sh`, `init-*.sh` ya da `reset.sh` çalıştırmaz. Her dosya elle oluşturulur, her servis elle başlatılır ve her görsel Kibana arayüzünde elle hazırlanır.
+    Öğrenci kurulum, ilk veri yükleme veya Kibana nesnesi oluşturmak için hazır otomasyon scriptleri çalıştırmaz. Her dosya elle oluşturulur, her servis elle başlatılır ve her görsel Kibana arayüzünde elle hazırlanır.
 
 ## 1. LAB-LOG-01 ile farkı
 

@@ -5,7 +5,7 @@
 | 🔴 **ADVANCED** (İleri Seviye) | ⏱️ 75 dakika | `docker, localstack` | `4566` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-TF-08.zip)](/downloads/LAB-TF-08.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-TF-08.zip)](/downloads/LAB-TF-08.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
 > 
 > **Terminalde çalışma ortamını hazırlayın:**
 > ```bash
@@ -784,12 +784,6 @@ else
 fi
 ```
 
-### Test 3: Otomatik Doğrulama Scriptini Çalıştırma
-Tüm kontrolleri tek seferde yapmak için hazırlanan doğrulama scriptini çalıştırın:
-```bash
-bash ~/devops-workspace/devops-practitioner-egitim-katalogu/outputs/lab-assets/LAB-TF-08/scripts/validate.sh
-```
-
 ---
 
 ## 8. Break/Fix ve Sorun Giderme (Troubleshooting)
@@ -827,30 +821,6 @@ bash ~/devops-workspace/devops-practitioner-egitim-katalogu/outputs/lab-assets/L
 * **Kök Neden:** `public_subnet_cidrs` ve `private_subnet_cidrs` listelerinde aynı veya kesişen IP bloklarının verilmesi.
 * **Onarım:**
   Her subnet'in benzersiz CIDR bloğuna sahip olduğunu doğrulayın (`10.0.1.0/24`, `10.0.2.0/24`, `10.0.11.0/24`, `10.0.12.0/24`).
-
----
-
-## 9. Temizlik ve Sıfırlama (Cleanup & Reset)
-
-> [!CAUTION]
-> **Bulut Maliyeti Uyarısı:** AWS üzerinde çalışan **NAT Gateway** saatlik ücretlendirilir (yaklaşık $0.045/saat) ve tahsis edilen **Elastic IP** kullanılmadığında saatlik ücret yazar. Lab tamamlandıktan sonra kaynakları mutlaka yok edin!
-
-Tüm altyapıyı güvenle silmek için:
-```bash
-# 1. Altyapıyı yok edin
-terraform destroy -auto-approve
-
-# 2. Yerel anahtar ve state dosyasını temizleyin
-rm -f lab_key.pem tfplan
-
-# VEYA tek komutla temizlik scriptini çalıştırın:
-bash ~/devops-workspace/devops-practitioner-egitim-katalogu/outputs/lab-assets/LAB-TF-08/scripts/cleanup.sh
-```
-
-Ortamı sıfırdan başlatmak isterseniz:
-```bash
-bash ~/devops-workspace/devops-practitioner-egitim-katalogu/outputs/lab-assets/LAB-TF-08/scripts/reset.sh
-```
 
 ---
 
@@ -903,4 +873,4 @@ Mevcut kod yapısını `modules/vpc` dizini altına taşıyıp root modülden ç
 
 - **Otomasyon ve Test:** Lab assetleri `outputs/lab-assets/LAB-TF-08/` dizininde eksiksiz olarak oluşturulmuştur.
 - **LocalStack Uyumluluğu:** AWS kimlik bilgisi bulunmayan test koşumlarında `enable_localstack = true` yapılarak Docker tabanlı LocalStack üzerinde test edilebilir.
-- **Güvenli Temizlik:** `cleanup.sh` ve `reset.sh` scriptleri ile cloud leakage / fatura riskleri engellenmiştir.
+- **Güvenli Temizlik:** Terraform `destroy` komutu ile cloud leakage / fatura riskleri engellenmiştir.

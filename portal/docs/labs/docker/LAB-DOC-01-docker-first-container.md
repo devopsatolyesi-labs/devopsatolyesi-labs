@@ -201,16 +201,6 @@ Hello from DevOps Atolyesi LAB-DOC-01!
 
 ---
 
-## Doğrulama
-
-```bash
-bash scripts/validate.sh
-```
-
-Başarılı sonuç: `[PASS] LAB-DOC-01 Container responds with HTTP 200`
-
----
-
 ## Sorun Giderme
 
 - **Permission Denied Hatası:** Kullanıcınızın `docker` grubunda olduğunu `groups` komutuyla kontrol edin. Değilseniz `sudo usermod -aG docker $USER` komutunu çalıştırıp yeni oturum açın.
@@ -219,15 +209,6 @@ Başarılı sonuç: `[PASS] LAB-DOC-01 Container responds with HTTP 200`
 
 ---
 
-## Temizlik
-
-```bash
-bash scripts/cleanup.sh
-```
-
----
-
 ## Kaynak
 
 - [Hakan Bayraktar — Docker Commands Cheat Sheet with Examples](https://hbayraktar.medium.com/docker-commands-cheat-sheet-with-examples-d9a26396cb6f)
-

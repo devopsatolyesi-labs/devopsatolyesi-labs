@@ -107,22 +107,6 @@ docker build -t lab-doc-08-frontend:latest .
 
 ---
 
-## Doğrulama
-
-```bash
-bash scripts/validate.sh
-```
-
----
-
-## Temizlik
-
-```bash
-bash scripts/cleanup.sh
-```
-
----
-
 ## Kaynak ve Referanslar
 
 Bu lab, [s3-landing-page](https://github.com/hakanbayraktar/s3-landing-page) açık kaynak projesindeki modern web dağıtım standartlarından uyarlanmıştır.

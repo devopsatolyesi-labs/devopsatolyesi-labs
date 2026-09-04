@@ -98,22 +98,6 @@ mysql -h 127.0.0.1 -P 33306 -u dbuser -p
 
 ---
 
-## Doğrulama
-
-```bash
-bash scripts/validate.sh
-```
-
----
-
-## Temizlik
-
-```bash
-bash scripts/cleanup.sh
-```
-
----
-
 ## Kaynak ve Referanslar
 
 Bu lab, [Secure Access to MySQL Port via SSH Tunnel — Hakan Bayraktar](https://hbayraktar.medium.com/secure-access-to-mysql-port-via-ssh-tunnel-fc1d01feffb9) makalesinden uyarlanmıştır.

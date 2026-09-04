@@ -206,26 +206,10 @@ Aşağıdaki soruları yanıtlamaya çalışın; ardından çözümü görmek i�
 
 ---
 
-## Doğrulama
-
-```bash
-bash scripts/validate.sh
-```
-
----
-
 ## Sorun Giderme
 
 - **Arşiv Bozulması:** `gzip: stdin: unexpected end of file` hatası alırsanız `save` işleminin disk doluluğu nedeniyle yarıda kalmadığından emin olun.
 - **Volume Silinemiyor:** Volume başka bir konteyner tarafından kullanılıyorsa önce konteyneri `docker rm -f` ile kaldırın.
-
----
-
-## Temizlik
-
-```bash
-bash scripts/cleanup.sh
-```
 
 ---
 

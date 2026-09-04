@@ -5,7 +5,7 @@
 | 🟢 **CORE** (Temel Seviye) | ⏱️ 45 dakika | `docker` | `8090` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-TF-01.zip)](/downloads/LAB-TF-01.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-TF-01.zip)](/downloads/LAB-TF-01.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
 > 
 > **Terminalde çalışma ortamını hazırlayın:**
 > ```bash
@@ -279,17 +279,6 @@ terraform import docker_image.nginx nginx:latest
         `terraform fmt -check` bayrağı ile çalıştırılır. Dosyaları otomatik düzenlemek yerine, formatlanmamış bir dosya bulursa exit code `1` döner ve CI boru hattını durdurarak geliştiriciyi dosyalarını biçimlendirmeye zorlar.
 
 
-## 7. Doğrulama
-Oluşturulan web servisinin HTTP 200 döndürdüğünü doğrulayın:
-```bash
-WEB_URL=$(terraform output -raw web_url)
-if curl -sf "$WEB_URL" | grep -q "Welcome to nginx"; then
-  echo "VALIDATION SUCCESS: Terraform successfully provisioned container, network and exposed on $WEB_URL."
-else
-  echo "VALIDATION FAILED: Unable to reach $WEB_URL." && exit 1
-fi
-```
-
 ## 8. Sorun Giderme
 
 ### Belirti
@@ -316,14 +305,6 @@ terraform apply -auto-approve
 ```bash
 docker ps --filter "name=tf-managed-web-server"
 # Konteyner yeniden Up durumunda listelenmelidir.
-```
-
-## 9. Temizlik / Sıfırlama
-Terraform tarafından yönetilen tüm kaynakları yok edin ve çalışma dizinini temizleyin:
-```bash
-terraform destroy -auto-approve
-rm -rf .terraform .terraform.lock.hcl terraform.tfstate* tfplan
-rm -rf ~/labs/LAB-TF-01
 ```
 
 ## 10. Production Notu

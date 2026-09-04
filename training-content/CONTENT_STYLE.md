@@ -8,8 +8,8 @@ Her lab şu sırayı izler:
 2. **Ön koşullar:** Gereken araçlar, profil, port ve önceki lablar.
 3. **Adımlar:** Tek işlem yapan, numaralı ve kopyalanabilir komutlar.
 4. **İpucu:** Yalnız öğrencinin takılma ihtimali yüksek noktada; cevabı doğrudan vermeden.
-5. **Beklenen sonuç:** Görülmesi gereken somut çıktı.
-6. **Doğrulama:** `scripts/validate.sh` ile gerçek davranış testi.
-7. **Temizlik:** Yalnız laba ait kaynakları kaldıran `scripts/cleanup.sh`.
+5. **Beklenen sonuç:** Görülmesi gereken somut çıktı (HTTP yanıtı, container durumu vb.).
+6. **Sorun Giderme:** Karşılaşılabilecek yaygın hatalar ve çözüm adımları.
+7. **Kaynak ve Referanslar:** Konuyla ilgili teknik makale ve repository referansları.
 
 Bir kavramı anlamak için gerekli olmayan tarihçe, pazarlama dili ve uzun senaryo kaldırılır. Hata mesajları öğrenciye neyi kontrol edeceğini açıkça söyler.

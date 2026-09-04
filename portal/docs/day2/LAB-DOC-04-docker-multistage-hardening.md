@@ -5,7 +5,7 @@
 | 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `docker` | `Dahili / Küme İçi` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-04.zip)](/downloads/LAB-DOC-04.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-04.zip)](/downloads/LAB-DOC-04.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
 > 
 > **Terminalde çalışma ortamını hazırlayın:**
 > ```bash
@@ -209,31 +209,11 @@ Aşağıdaki soruları yanıtlamaya çalışın; ardından çözümü görmek i�
 
 ---
 
-## Doğrulama
-
-Lab adımlarını tamamladıktan sonra otomatik doğrulama aracını çalıştırın:
-
-```bash
-bash scripts/validate.sh
-```
-
----
-
 ## Sorun Giderme
 
 - **UID Hatası:** `docker image inspect` çıktısında `Config.User` boş görünüyorsa Dockerfile'da `USER 10001` satırının runtime aşamasında yer aldığından emin olun.
 - **Dosya Yetki Hatası:** `COPY --from=builder` satırında `--chown=10001:10001` parametresinin bulunduğunu kontrol edin.
 - **Port Çakışması:** 3000 portu meşgulse `docker ps` ile eski konteynerleri temizleyin.
-
----
-
-## Temizlik
-
-Lab ortamındaki geçici konteynerleri ve imajları temizlemek için:
-
-```bash
-bash scripts/cleanup.sh
-```
 
 ---
 

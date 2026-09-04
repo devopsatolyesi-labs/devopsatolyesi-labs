@@ -5,7 +5,7 @@
 | 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 40 dakika | `docker` | `Dahili / Küme İçi` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-10.zip)](/downloads/LAB-DOC-10.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-10.zip)](/downloads/LAB-DOC-10.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
 > 
 > **Terminalde çalışma ortamını hazırlayın:**
 > ```bash
@@ -213,26 +213,10 @@ Aşağıdaki soruları yanıtlamaya çalışın; ardından çözümü görmek i�
 
 ---
 
-## Doğrulama
-
-```bash
-bash scripts/validate.sh
-```
-
----
-
 ## Sorun Giderme
 
 - **Arşiv Bozulması:** `gzip: stdin: unexpected end of file` hatası alırsanız `save` işleminin disk doluluğu nedeniyle yarıda kalmadığından emin olun.
 - **Volume Silinemiyor:** Volume başka bir konteyner tarafından kullanılıyorsa önce konteyneri `docker rm -f` ile kaldırın.
-
----
-
-## Temizlik
-
-```bash
-bash scripts/cleanup.sh
-```
 
 ---
 

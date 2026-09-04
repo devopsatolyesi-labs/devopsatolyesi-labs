@@ -5,7 +5,7 @@
 | 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 40 dakika | `docker` | `80, 443` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-LNX-02.zip)](/downloads/LAB-LNX-02.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-LNX-02.zip)](/downloads/LAB-LNX-02.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
 > 
 > **Terminalde çalışma ortamını hazırlayın:**
 > ```bash
@@ -165,22 +165,6 @@ docker rm -f nginx-ssl-test
     ??? tip "💡 Çözümü Göster"
         **Cevap:**
         SSLv3, TLS 1.0 ve TLS 1.1 protokolleri POODLE, BEAST ve Heartbleed gibi kritik şifreleme açıklarına karşı savunmasızdır. PCI-DSS ve güncel web güvenlik standartları yalnızca TLS 1.2 ve TLS 1.3 kullanımını zorunlu kılar.
-
----
-
-## Doğrulama
-
-```bash
-bash scripts/validate.sh
-```
-
----
-
-## Temizlik
-
-```bash
-bash scripts/cleanup.sh
-```
 
 ---
 

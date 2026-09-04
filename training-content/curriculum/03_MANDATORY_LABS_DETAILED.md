@@ -39,5 +39,5 @@ Tüm zorunlu lablar, öğrenci portalında doğrudan yayınlanabilecek tamlıkta
 
 1. **Doğrudan Kopyalanabilir Kod Blokları:** Tüm komutlar `cat <<'EOF' > path/to/file` yapısıyla verilmiştir; öğrencinin dosyayı elle arayıp bulmasına gerek kalmaz.
 2. **Çakışmasız Port Tahsisi:** Aynı profil içinde çalışan hiçbir servis aynı host portunu dinlemez.
-3. **Deterministik Validation:** Öğrencinin labı tamamlayıp tamamlamadığını test eden `scripts/validate.sh` scripti nesnel bir çıkış kodu (`0` veya `1`) üretir.
-4. **Acil Durum Sıfırlama (Reset):** Öğrenci labda tıkandığında ortamı başlangıç durumuna getiren `scripts/reset.sh` scripti yer alır.
+3. **Somut Doğrulama:** Öğrencinin labı başarıyla tamamladığını doğrudan test edebileceği komutlar (`curl`, `docker ps`, `kubectl get` vb.) adım adım gösterilir.
+4. **Kod Odaklı Sade Yapı:** Öğrenci gereksiz yan scriptlerle vakit kaybetmez, doğrudan uygulamanın mimarisine ve yapılandırma kodlarına odaklanır.

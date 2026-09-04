@@ -5,7 +5,7 @@
 | 🔴 **ADVANCED** (İleri Seviye) | ⏱️ 90 dakika | `secure-ci, harbor, kubernetes, argocd, monitoring` | `3000, 8000, 8082, 8085, 9090` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-CAP-01.zip)](/downloads/LAB-CAP-01.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-CAP-01.zip)](/downloads/LAB-CAP-01.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
 > 
 > **Terminalde çalışma ortamını hazırlayın:**
 > ```bash
@@ -391,18 +391,6 @@ Canli Kume Yaniti: {"message":"Capstone Order Service v2.0.0 is Live & Resilient
 ==========================================================
 ```
 
-## 7. Doğrulama
-`capstone-prod` ad alanında 2/2 podun Ready çalıştığını ve birim test raporunun üretildiğini doğrulayın:
-```bash
-READY_CNT=$(kubectl get deployment capstone-order-api -n capstone-prod -o jsonpath='{.status.readyReplicas}')
-
-if [ "$READY_CNT" -eq 2 ] && [ -f reports/junit-report.xml ]; then
-  echo "VALIDATION SUCCESS: Capstone pipeline verified. 2/2 pods running and test report exists."
-else
-  echo "VALIDATION FAILED: Pod count is $READY_CNT" && exit 1
-fi
-```
-
 ## 8. Sorun Giderme
 
 ### Belirti
@@ -429,14 +417,6 @@ kubectl rollout restart deployment/capstone-order-api -n capstone-prod
 ### Tekrar Doğrulama
 ```bash
 kubectl rollout status deployment/capstone-order-api -n capstone-prod
-```
-
-## 9. Temizlik / Sıfırlama
-Capstone ad alanını ve yerel derleme dosyalarını temizleyin:
-```bash
-kubectl delete namespace capstone-prod 2>/dev/null || true
-docker rmi localhost:8082/devops/capstone-order-api:v2.0.0 2>/dev/null || true
-rm -rf .venv reports ~/labs/LAB-CAP-01
 ```
 
 ## 10. Production Notu

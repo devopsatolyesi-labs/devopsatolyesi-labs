@@ -5,7 +5,7 @@
 | 🟢 **CORE** (Temel Seviye) | ⏱️ 45 dakika | `secure-ci` | `8080` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-JNK-01.zip)](/downloads/LAB-JNK-01.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-JNK-01.zip)](/downloads/LAB-JNK-01.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
 > 
 > **Terminalde çalışma ortamını hazırlayın:**
 > ```bash
@@ -189,16 +189,6 @@ Birim testlerin başarıyla geçtiğini gösteren Pytest terminal çıktısı:
 cat reports/junit-report.xml | grep -o 'tests="5"'
 ```
 
-## 7. Doğrulama
-JUnit rapor dosyasının oluştuğunu ve 5 testin hatasız tamamlandığını doğrulayın:
-```bash
-if [ -f reports/junit-report.xml ] && grep -q 'tests="5"' reports/junit-report.xml && grep -q 'failures="0"' reports/junit-report.xml; then
-  echo "VALIDATION SUCCESS: Declarative CI test stage passed with 5/5 tests."
-else
-  echo "VALIDATION FAILED: Test report missing or contains failures." && exit 1
-fi
-```
-
 ## 8. Sorun Giderme
 
 ### Belirti
@@ -226,13 +216,6 @@ sh '''
 
 ### Tekrar Doğrulama
 Jenkins arayüzünde "Build Now" butonuna basarak veya terminalde test scriptini tekrar çalıştırarak teyit edin.
-
-## 9. Temizlik / Sıfırlama
-Geçici test dizinlerini ve sanal ortamı temizleyin:
-```bash
-rm -rf .venv reports *.tar.gz
-rm -rf ~/labs/LAB-JNK-01
-```
 
 ## 10. Production Notu
 Üretim ortamlarında Jenkins işleri Controller (master) düğümü üzerinde çalıştırılmaz; Kubernetes pod agent'ları veya geçici (ephemeral) Docker konteynerleri üzerinde izole olarak koşturulur. Ayrıca sonsuz döngüye giren süreçlerin kaynak tüketmesini önlemek için `options { timeout(time: 15, unit: 'MINUTES') }` direktifi mutlaka eklenmelidir.

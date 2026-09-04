@@ -5,7 +5,7 @@
 | 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `gitlab-ci` | `8081` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-GLB-01.zip)](/downloads/LAB-GLB-01.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-GLB-01.zip)](/downloads/LAB-GLB-01.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
 > 
 > **Terminalde çalışma ortamını hazırlayın:**
 > ```bash
@@ -212,20 +212,6 @@ Running unit tests...
 ALL TESTS PASSED (1/1)
 ```
 
-## 7. Doğrulama
-`.gitlab-ci.yml` dosyasının sözdiziminin eksiksiz olduğunu ve tüm aşamaları içerdiğini doğrulayın:
-```bash
-python3 -c "
-import yaml
-with open('.gitlab-ci.yml') as f:
-    data = yaml.safe_load(f)
-assert 'stages' in data
-assert 'unit-tests' in data
-assert 'docker-build' in data
-print('VALIDATION SUCCESS: .gitlab-ci.yml syntax is valid and fully formatted.')
-"
-```
-
 ## 8. Sorun Giderme
 
 ### Belirti
@@ -251,13 +237,6 @@ sudo gitlab-runner restart 2>/dev/null || true
 
 ### Tekrar Doğrulama
 Pipeline'ı yeniden tetikleyerek job çıktısını kontrol edin.
-
-## 9. Temizlik / Sıfırlama
-Geçici bağımlılıkları ve çalışma dizinini temizleyin:
-```bash
-rm -rf app/node_modules
-rm -rf ~/labs/LAB-GLB-01
-```
 
 ## 10. Production Notu
 Üretim ortamlarında `cache` ve `artifacts` mekanizmaları birbirine karıştırılmamalıdır. `cache`, yalnızca sonraki derlemeleri hızlandırmak için kullanılan geçici bir önbellektir ve her zaman varlığı garanti edilmez. `artifacts` ise derleme çıktılarının (binary, paket, test raporu) aşamalar arasında deterministik olarak aktarılması için zorunludur.

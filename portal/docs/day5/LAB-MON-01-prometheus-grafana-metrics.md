@@ -5,7 +5,7 @@
 | 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `monitoring` | `3000, 8000, 9090, 9100` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-MON-01.zip)](/downloads/LAB-MON-01.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-MON-01.zip)](/downloads/LAB-MON-01.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
 > 
 > **Terminalde çalışma ortamını hazırlayın:**
 > ```bash
@@ -255,18 +255,6 @@ Adım 5'teki PromQL JSON sorgu çıktısı:
 }
 ```
 
-## 7. Doğrulama
-Prometheus üzerinde 3 hedefin (`prometheus`, `node-exporter`, `order-api`) `UP` durumunda olduğunu doğrulayın:
-```bash
-TARGETS_UP=$(curl -s http://localhost:9090/api/v1/targets | jq '[.data.activeTargets[] | select(.health=="up")] | length')
-
-if [ "$TARGETS_UP" -ge 3 ]; then
-  echo "VALIDATION SUCCESS: Prometheus 3.13 LTS is scraping 3/3 targets in UP state."
-else
-  echo "VALIDATION FAILED: Active UP targets: $TARGETS_UP" && exit 1
-fi
-```
-
 ## 8. Sorun Giderme
 
 ### Belirti
@@ -293,13 +281,6 @@ docker restart prometheus
 ```bash
 curl -s http://localhost:9090/api/v1/targets | jq '.data.activeTargets[] | select(.job=="order-api") | .health'
 # "up" yanıtı dönmelidir.
-```
-
-## 9. Temizlik / Sıfırlama
-Konteynerleri, ağları ve oluşturulan dizini temizleyin:
-```bash
-docker compose down -v
-rm -rf ~/labs/LAB-MON-01
 ```
 
 ## 10. Production Notu

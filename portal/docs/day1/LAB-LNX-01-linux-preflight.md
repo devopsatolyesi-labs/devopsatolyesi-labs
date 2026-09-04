@@ -5,7 +5,7 @@
 | 🟢 **CORE** (Temel Seviye) | ⏱️ 30 dakika | `docker` | `22` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-LNX-01.zip)](/downloads/LAB-LNX-01.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-LNX-01.zip)](/downloads/LAB-LNX-01.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
 > 
 > **Terminalde çalışma ortamını hazırlayın:**
 > ```bash
@@ -271,16 +271,6 @@ Aşağıdaki soruları yanıtlamaya çalışın; ardından çözümü görmek i�
         `uptime` veya `top` komutu çalıştırılır. `top` ekranında `1` tuşuna basıldığında CPU çekirdekleri tek tek (Cpu0, Cpu1, Cpu2...) ayrıntılanır. `Load Average` değerinin (1, 5 ve 15 dk) CPU çekirdek sayısından (`nproc`) düşük olması sistemin rahat çalıştığını gösterir.
 
 
-## 7. Doğrulama
-Preflight scriptinin sıfır hata kodu ile sonlandığını teyit edin:
-```bash
-if ~/labs/LAB-LNX-01/scripts/preflight_check.sh > /dev/null; then
-    echo "VALIDATION SUCCESS: Preflight check completed with exit code 0."
-else
-    echo "VALIDATION FAILED: Preflight script returned non-zero exit code." && exit 1
-fi
-```
-
 ## 8. Sorun Giderme
 
 ### Belirti
@@ -310,12 +300,6 @@ sudo systemctl disable nginx apache2 2>/dev/null || true
 ```bash
 sudo ss -tulpn | grep :80
 # Çıktı boş dönmelidir.
-```
-
-## 9. Temizlik / Sıfırlama
-Oluşturulan çalışma dizinini sıfırlamak için:
-```bash
-rm -rf ~/labs/LAB-LNX-01
 ```
 
 ## 10. Production Notu

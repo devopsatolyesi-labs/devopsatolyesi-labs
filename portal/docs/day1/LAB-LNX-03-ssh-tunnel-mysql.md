@@ -5,7 +5,7 @@
 | 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 35 dakika | `docker` | `Dahili / Küme İçi` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-LNX-03.zip)](/downloads/LAB-LNX-03.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-LNX-03.zip)](/downloads/LAB-LNX-03.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
 > 
 > **Terminalde çalışma ortamını hazırlayın:**
 > ```bash
@@ -102,22 +102,6 @@ mysql -h 127.0.0.1 -P 33306 -u dbuser -p
     ??? tip "💡 Çözümü Göster"
         **Cevap:**
         `-N` uzakta bir kabuk (shell) açılmasını ve komut çalıştırılmasını engeller, yalnızca port tüneli kurulacağını belirtir. `-f` ise SSH sürecini arka plana (background) atar; böylece terminaliniz kilitlenmez ve script veya otomasyon devam edebilir.
-
----
-
-## Doğrulama
-
-```bash
-bash scripts/validate.sh
-```
-
----
-
-## Temizlik
-
-```bash
-bash scripts/cleanup.sh
-```
 
 ---
 

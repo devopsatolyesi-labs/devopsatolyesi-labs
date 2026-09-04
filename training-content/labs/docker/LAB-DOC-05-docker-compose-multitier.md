@@ -239,14 +239,6 @@ curl http://localhost:8080/
 
 ---
 
-## Doğrulama
-
-```bash
-bash scripts/validate.sh
-```
-
----
-
 ## Sorun Giderme
 
 - **Sağlık Hatası (500 Internal Error):** `docker compose -p lab-doc-05 logs api-service` çıktısını kontrol edin.
@@ -255,16 +247,7 @@ bash scripts/validate.sh
 
 ---
 
-## Temizlik
-
-```bash
-bash scripts/cleanup.sh
-```
-
----
-
 ## Kaynak
 
 - [Hakan Bayraktar — book-review-app Repository](https://github.com/hakanbayraktar/book-review-app)
 - [Hakan Bayraktar — Docker Commands Cheat Sheet with Examples](https://hbayraktar.medium.com/docker-commands-cheat-sheet-with-examples-d9a26396cb6f)
-

@@ -5,7 +5,7 @@
 | 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 60 dakika | `secure-ci, harbor` | `8080, 8082, 9000` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-JNK-02.zip)](/downloads/LAB-JNK-02.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-JNK-02.zip)](/downloads/LAB-JNK-02.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
 > 
 > **Terminalde çalışma ortamını hazırlayın:**
 > ```bash
@@ -316,16 +316,6 @@ localhost:8082/devops/secure-payment-service:v1.2.0-manual (debian 12.x)
 Total: 0 (CRITICAL: 0)
 ```
 
-## 7. Doğrulama
-Birim testlerin 3/3 geçtiğini ve Trivy taramasının sıfır kritik zafiyetle tamamlandığını doğrulayın:
-```bash
-if [ -f junit-report.xml ] && grep -q 'tests="3"' junit-report.xml && grep -q 'failures="0"' junit-report.xml; then
-  echo "VALIDATION SUCCESS: Unit tests passed and Trivy verified 0 CRITICAL CVEs."
-else
-  echo "VALIDATION FAILED" && exit 1
-fi
-```
-
 ## 8. Sorun Giderme
 
 ### Belirti
@@ -347,14 +337,6 @@ Yeni eklenen bir fonksiyon için birim test yazılmamış ve test kapsama oranı
 
 ### Tekrar Doğrulama
 SonarQube dashboard'unda durumun yeşil `PASSED` olduğunu gözlemleyin.
-
-## 9. Temizlik / Sıfırlama
-Test imajını ve geçici dosyaları temizleyin:
-```bash
-docker rmi localhost:8082/devops/secure-payment-service:v1.2.0-manual 2>/dev/null || true
-rm -rf .venv coverage.xml junit-report.xml .pytest_cache
-rm -rf ~/labs/LAB-JNK-02
-```
 
 ## 10. Production Notu
 Üretim boru hatlarında güvenlik kontrolleri (`trivy image ... || true`) şeklinde asla devre dışı bırakılmamalıdır. Harbor üzerinde tanımlanan robot hesaplarına yalnızca ilgili proje için `push/pull` yetkisi verilmeli ve düzenli olarak token rotasyonu uygulanmalıdır. Ayrıca tüm `Jenkinsfile` dosyaları merkezi bir Shared Library (`@Library`) üzerinden standartlaştırılmalıdır.

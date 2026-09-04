@@ -5,7 +5,7 @@
 | 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 40 dakika | `docker` | `80` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-08.zip)](/downloads/LAB-DOC-08.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-08.zip)](/downloads/LAB-DOC-08.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
 > 
 > **Terminalde çalışma ortamını hazırlayın:**
 > ```bash
@@ -111,22 +111,6 @@ docker build -t lab-doc-08-frontend:latest .
     ??? tip "💡 Çözümü Göster"
         **Cevap:**
         SPA uygulamalarında yönlendirme (routing - örn: `/dashboard`, `/profile`) tarayıcıda JavaScript tarafından yönetilir; sunucu diskinde gerçekten `/dashboard/index.html` diye bir dosya yoktur. `try_files` olmadan kullanıcı doğrudan bir alt sayfayı açtığında Nginx o dosyayı arar ve bulamayınca 404 döner. Bu kural dosya bulunamadığında tüm istekleri `index.html`'e yönlendirerek JavaScript'in rotayı devralmasını sağlar.
-
----
-
-## Doğrulama
-
-```bash
-bash scripts/validate.sh
-```
-
----
-
-## Temizlik
-
-```bash
-bash scripts/cleanup.sh
-```
 
 ---
 

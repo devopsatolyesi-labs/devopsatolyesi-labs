@@ -5,7 +5,7 @@
 | 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 60 dakika | `docker, harbor` | `8000, 8082` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-03.zip)](/downloads/LAB-DOC-03.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-03.zip)](/downloads/LAB-DOC-03.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
 > 
 > **Terminalde çalışma ortamını hazırlayın:**
 > ```bash
@@ -212,14 +212,6 @@ Beklenen yanıt: `{"status":"UP"}`
 
 ---
 
-## Doğrulama
-
-```bash
-bash scripts/validate.sh
-```
-
----
-
 ## Sorun Giderme
 
 - **Port Çakışması:** `8000` portu doluysa `docker ps --filter publish=8000` ile çakışan konteyneri durdurun.
@@ -228,16 +220,7 @@ bash scripts/validate.sh
 
 ---
 
-## Temizlik
-
-```bash
-bash scripts/cleanup.sh
-```
-
----
-
 ## Kaynak
 
 - [Hakan Bayraktar — flask-monitoring Repository](https://github.com/hakanbayraktar/flask-monitoring)
 - [Hakan Bayraktar — Docker Commands Cheat Sheet with Examples](https://hbayraktar.medium.com/docker-commands-cheat-sheet-with-examples-d9a26396cb6f)
-

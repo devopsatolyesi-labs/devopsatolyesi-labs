@@ -59,7 +59,7 @@ markdown_extensions:
 
 extra_javascript:
   - https://unpkg.com/mermaid@10.9.1/dist/mermaid.min.js
-  - javascripts/open_in_new_tab.js?v=20260904-7
+  - javascripts/open_in_new_tab.js?v=20260904-8
 
 nav:
   - Ana Sayfa: index.md

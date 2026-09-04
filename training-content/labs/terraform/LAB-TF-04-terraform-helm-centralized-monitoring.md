@@ -448,31 +448,6 @@ prometheus-kube-prometheus-stack-prometheus-0            2/2     Running   0    
 
 ---
 
-## 7. Doğrulama
-
-Katalog doğrulama scriptini çalıştırın:
-```bash
-bash ~/devops-workspace/devops-practitioner-egitim-katalogu/outputs/lab-assets/LAB-TF-04/scripts/validate.sh
-```
-
-**Beklenen Doğrulama Çıktısı:**
-```text
-==========================================================
-  VALIDATING CENTRALIZED MONITORING STACK (LAB-TF-04)    
-==========================================================
-[PASS] Namespace 'monitoring' exists and is Active.
-[PASS] Helm release 'kube-prometheus-stack' is deployed.
-[PASS] Prometheus StatefulSet has 1 ready replica(s).
-[PASS] Grafana Deployment has 1 ready replica(s).
-[PASS] ServiceMonitor CRD is successfully registered in Kubernetes.
-----------------------------------------------------------
-  SUMMARY: PASS=5 | FAIL=0
-----------------------------------------------------------
-  RESULT: CENTRALIZED MONITORING DEPLOYMENT VALIDATED
-```
-
----
-
 ## 8. Sorun Giderme
 
 | Sorun / Hata Mesajı | Olası Kök Neden | Çözüm Adımı |
@@ -481,23 +456,6 @@ bash ~/devops-workspace/devops-practitioner-egitim-katalogu/outputs/lab-assets/L
 | Podlar `Pending` durumunda bekliyor | `kind` worker düğümlerinde bellek yetersizliği. | `kubectl describe nodes` ile MemoryPressure durumunu inceleyin; diğer Docker konteynerlerini durdurun. |
 | `failed to get client config: invalid context` | Kubeconfig context adı `kind-devops-cluster` ile eşleşmiyor. | `kubectl config current-context` çıktısını kontrol edip `variables.tf` içindeki `kube_context` değişkenine verin. |
 | Grafana girişinde `Invalid username or password` | `adminPassword` değişkeni set edilmemiş. | `values-monitoring.yaml` dosyasındaki şifreyi veya `set_sensitive` bloğunu kontrol edin. |
-
----
-
-## 9. Temizlik / Sıfırlama
-
-Dağıtılan izleme yığınını ve örnek uygulamayı tamamen kaldırarak belleği boşaltın:
-```bash
-# Otomatik temizleme scripti
-bash ~/devops-workspace/devops-practitioner-egitim-katalogu/outputs/lab-assets/LAB-TF-04/scripts/cleanup.sh
-```
-
-Veya manuel olarak:
-```bash
-cd ~/labs/LAB-TF-04
-terraform destroy -auto-approve
-kubectl delete -f sample-app.yaml --ignore-not-found=true
-```
 
 ---
 

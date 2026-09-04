@@ -222,7 +222,7 @@ Bulut ortamına çıkmadan önce yerel altyapının (Docker ağları, kind Kuber
 - `terraform apply` ile 17 kaynağın hatasız oluşturulması.
 - Bastion üzerinden Private EC2 sunucusuna SSH tüneliyle bağlanılabilmesi.
 - Private sunucu içinden yapılan `curl https://checkip.amazonaws.com` sorgusunun NAT Gateway Elastic IP'sini döndürmesi.
-- `scripts/validate.sh` testinin %100 PASS üretmesi.
+- AWS mimarisinin ve kaynak bağlantılarının eksiksiz çalışır durumda olması.
 
 ---
 

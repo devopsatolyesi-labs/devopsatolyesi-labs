@@ -5,7 +5,7 @@
 | 🟢 **CORE** (Temel Seviye) | ⏱️ 45 dakika | `kubernetes` | `80, 443` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-K8S-01.zip)](/downloads/LAB-K8S-01.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-K8S-01.zip)](/downloads/LAB-K8S-01.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
 > 
 > **Terminalde çalışma ortamını hazırlayın:**
 > ```bash
@@ -341,19 +341,6 @@ kubectl scale deployment/web-api --replicas=5
         Bu komut kabuktan çıkıldığı (`exit`) anda pod nesnesini kümeden otomatik olarak temizler.
 
 
-## 7. Doğrulama
-Kümedeki 3 düğümün Ready olduğunu ve Deployment'ın 3 sağlıklı podunun çalıştığını doğrulayın:
-```bash
-READY_NODES=$(kubectl get nodes --no-headers | grep -c "Ready")
-READY_PODS=$(kubectl get deployment payment-api-deployment -o jsonpath='{.status.readyReplicas}')
-
-if [ "$READY_NODES" -ge 3 ] && [ "$READY_PODS" -eq 3 ]; then
-  echo "VALIDATION SUCCESS: kind cluster is healthy with 3 nodes (K8s v1.31.4), and 3/3 deployment replicas are running."
-else
-  echo "VALIDATION FAILED: Nodes: $READY_NODES, Pods: $READY_PODS" && exit 1
-fi
-```
-
 ## 8. Sorun Giderme
 
 ### Belirti
@@ -376,14 +363,6 @@ Yama başlığını `apiVersion: kubeadm.k8s.io/v1beta4` olarak güncelleyin ve 
 ### Tekrar Doğrulama
 ```bash
 kind create cluster --config kind-config.yaml --image kindest/node:v1.31.4
-```
-
-## 9. Temizlik / Sıfırlama
-Oluşturulan Kubernetes kaynaklarını ve kind kümesini silin:
-```bash
-kubectl delete -f manifests/deployment-resilient.yaml manifests/pod-basic.yaml 2>/dev/null || true
-kind delete cluster --name devops-cluster 2>/dev/null || true
-rm -rf ~/labs/LAB-K8S-01
 ```
 
 ## 10. Production Notu
