@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     var portalHome = window.location.origin + "/";
     var keycloakLogout = "https://auth.devopsatolyesi.com/realms/devops-atolyesi/protocol/openid-connect/logout" +
-      "?client_id=labs-portal&post_logout_redirect_uri=" + encodeURIComponent(portalHome);
+      "?client_id=labs-portal&id_token_hint={id_token}&post_logout_redirect_uri=" + encodeURIComponent(portalHome);
     var logout = document.createElement("a");
     logout.id = "portal-logout";
     logout.className = "md-header__button";
