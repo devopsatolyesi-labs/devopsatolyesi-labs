@@ -114,7 +114,16 @@
           "labs": [
             "LAB-K8S-01",
             "LAB-K8S-02",
-            "LAB-K8S-03"
+            "LAB-K8S-03",
+            "LAB-K8S-04",
+            "LAB-K8S-05",
+            "LAB-K8S-06",
+            "LAB-K8S-07",
+            "LAB-K8S-08",
+            "LAB-K8S-09",
+            "LAB-K8S-10",
+            "LAB-K8S-11",
+            "LAB-K8S-12"
           ]
         },
         {
@@ -172,7 +181,16 @@
           "labs": [
             "LAB-K8S-01",
             "LAB-K8S-02",
-            "LAB-K8S-03"
+            "LAB-K8S-03",
+            "LAB-K8S-04",
+            "LAB-K8S-05",
+            "LAB-K8S-06",
+            "LAB-K8S-07",
+            "LAB-K8S-08",
+            "LAB-K8S-09",
+            "LAB-K8S-10",
+            "LAB-K8S-11",
+            "LAB-K8S-12"
           ]
         }
       ]
@@ -869,10 +887,10 @@
     },
     {
       "id": "LAB-K8S-01",
-      "title": "kind Multi-Node Cluster ve kubectl Preflight",
+      "title": "Kind ile Kubernetes Cluster Kurulumu ve kubectl",
       "topic": "kubernetes",
       "difficulty": 100,
-      "estimated_minutes": 45,
+      "estimated_minutes": 30,
       "profiles": [
         "kubernetes"
       ],
@@ -887,17 +905,17 @@
         "devops-practitioner-5-day",
         "docker-kubernetes-2-day"
       ],
-      "guide": "training-content/labs/kubernetes/LAB-K8S-01-kind-pods-deployments.md",
+      "guide": "training-content/labs/kubernetes/LAB-K8S-01-kind-cluster-kubectl.md",
       "assets": "training-content/lab-assets/LAB-K8S-01",
       "status": "published",
       "package_contract": "standard"
     },
     {
       "id": "LAB-K8S-02",
-      "title": "Services, ConfigMaps ve Secrets",
+      "title": "İlk Pod, YAML ve Pod Yaşam Döngüsü",
       "topic": "kubernetes",
       "difficulty": 100,
-      "estimated_minutes": 45,
+      "estimated_minutes": 40,
       "profiles": [
         "kubernetes"
       ],
@@ -909,17 +927,17 @@
         "devops-practitioner-5-day",
         "docker-kubernetes-2-day"
       ],
-      "guide": "training-content/labs/kubernetes/LAB-K8S-02-services-config-secrets.md",
+      "guide": "training-content/labs/kubernetes/LAB-K8S-02-pod-yaml-lifecycle.md",
       "assets": "training-content/lab-assets/LAB-K8S-02",
       "status": "published",
       "package_contract": "standard"
     },
     {
       "id": "LAB-K8S-03",
-      "title": "Production Workloads, Probes, Rollouts ve PVC",
+      "title": "Deployment, ReplicaSet ve Self-Healing",
       "topic": "kubernetes",
-      "difficulty": 200,
-      "estimated_minutes": 60,
+      "difficulty": 100,
+      "estimated_minutes": 45,
       "profiles": [
         "kubernetes"
       ],
@@ -931,8 +949,215 @@
         "devops-practitioner-5-day",
         "docker-kubernetes-2-day"
       ],
-      "guide": "training-content/labs/kubernetes/LAB-K8S-03-production-workloads.md",
+      "guide": "training-content/labs/kubernetes/LAB-K8S-03-deployment-self-healing.md",
       "assets": "training-content/lab-assets/LAB-K8S-03",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-K8S-04",
+      "title": "Scaling, Rolling Update ve Rollback",
+      "topic": "kubernetes",
+      "difficulty": 200,
+      "estimated_minutes": 45,
+      "profiles": [
+        "kubernetes"
+      ],
+      "ports": [],
+      "prerequisites": [
+        "LAB-K8S-03"
+      ],
+      "courses": [
+        "devops-practitioner-5-day",
+        "docker-kubernetes-2-day"
+      ],
+      "guide": "training-content/labs/kubernetes/LAB-K8S-04-scaling-rollout-rollback.md",
+      "assets": "training-content/lab-assets/LAB-K8S-04",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-K8S-05",
+      "title": "Service, Port Mapping ve Kubernetes DNS",
+      "topic": "kubernetes",
+      "difficulty": 200,
+      "estimated_minutes": 45,
+      "profiles": [
+        "kubernetes"
+      ],
+      "ports": [
+        8080
+      ],
+      "prerequisites": [
+        "LAB-K8S-04"
+      ],
+      "courses": [
+        "devops-practitioner-5-day",
+        "docker-kubernetes-2-day"
+      ],
+      "guide": "training-content/labs/kubernetes/LAB-K8S-05-service-dns.md",
+      "assets": "training-content/lab-assets/LAB-K8S-05",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-K8S-06",
+      "title": "ConfigMap ve Secret ile Yapılandırma",
+      "topic": "kubernetes",
+      "difficulty": 200,
+      "estimated_minutes": 40,
+      "profiles": [
+        "kubernetes"
+      ],
+      "ports": [],
+      "prerequisites": [
+        "LAB-K8S-05"
+      ],
+      "courses": [
+        "devops-practitioner-5-day",
+        "docker-kubernetes-2-day"
+      ],
+      "guide": "training-content/labs/kubernetes/LAB-K8S-06-configmap-secret.md",
+      "assets": "training-content/lab-assets/LAB-K8S-06",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-K8S-07",
+      "title": "Liveness, Readiness ve Resource Limits",
+      "topic": "kubernetes",
+      "difficulty": 200,
+      "estimated_minutes": 50,
+      "profiles": [
+        "kubernetes"
+      ],
+      "ports": [],
+      "prerequisites": [
+        "LAB-K8S-06"
+      ],
+      "courses": [
+        "devops-practitioner-5-day",
+        "docker-kubernetes-2-day"
+      ],
+      "guide": "training-content/labs/kubernetes/LAB-K8S-07-probes-resources.md",
+      "assets": "training-content/lab-assets/LAB-K8S-07",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-K8S-08",
+      "title": "PersistentVolume ve PersistentVolumeClaim",
+      "topic": "kubernetes",
+      "difficulty": 200,
+      "estimated_minutes": 45,
+      "profiles": [
+        "kubernetes"
+      ],
+      "ports": [],
+      "prerequisites": [
+        "LAB-K8S-07"
+      ],
+      "courses": [
+        "devops-practitioner-5-day",
+        "docker-kubernetes-2-day"
+      ],
+      "guide": "training-content/labs/kubernetes/LAB-K8S-08-pv-pvc.md",
+      "assets": "training-content/lab-assets/LAB-K8S-08",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-K8S-09",
+      "title": "Ingress NGINX ile Dışa Açma ve Path Routing",
+      "topic": "kubernetes",
+      "difficulty": 200,
+      "estimated_minutes": 45,
+      "profiles": [
+        "kubernetes"
+      ],
+      "ports": [
+        80,
+        443
+      ],
+      "prerequisites": [
+        "LAB-K8S-08"
+      ],
+      "courses": [
+        "devops-practitioner-5-day",
+        "docker-kubernetes-2-day"
+      ],
+      "guide": "training-content/labs/kubernetes/LAB-K8S-09-ingress-nginx.md",
+      "assets": "training-content/lab-assets/LAB-K8S-09",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-K8S-10",
+      "title": "Helm Temelleri, Chart Kurulumu ve Rollback",
+      "topic": "kubernetes",
+      "difficulty": 200,
+      "estimated_minutes": 45,
+      "profiles": [
+        "kubernetes",
+        "helm"
+      ],
+      "ports": [],
+      "prerequisites": [
+        "LAB-K8S-09"
+      ],
+      "courses": [
+        "devops-practitioner-5-day",
+        "docker-kubernetes-2-day"
+      ],
+      "guide": "training-content/labs/kubernetes/LAB-K8S-10-helm.md",
+      "assets": "training-content/lab-assets/LAB-K8S-10",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-K8S-11",
+      "title": "Kubernetes Troubleshooting ve CrashLoopBackOff",
+      "topic": "kubernetes",
+      "difficulty": 300,
+      "estimated_minutes": 50,
+      "profiles": [
+        "kubernetes"
+      ],
+      "ports": [],
+      "prerequisites": [
+        "LAB-K8S-10"
+      ],
+      "courses": [
+        "devops-practitioner-5-day",
+        "docker-kubernetes-2-day"
+      ],
+      "guide": "training-content/labs/kubernetes/LAB-K8S-11-troubleshooting.md",
+      "assets": "training-content/lab-assets/LAB-K8S-11",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-K8S-12",
+      "title": "Çok Katmanlı Production Kubernetes Mimarisi (Capstone)",
+      "topic": "kubernetes",
+      "difficulty": 300,
+      "estimated_minutes": 60,
+      "profiles": [
+        "kubernetes"
+      ],
+      "ports": [
+        80,
+        443
+      ],
+      "prerequisites": [
+        "LAB-K8S-11"
+      ],
+      "courses": [
+        "devops-practitioner-5-day",
+        "docker-kubernetes-2-day"
+      ],
+      "guide": "training-content/labs/kubernetes/LAB-K8S-12-capstone.md",
+      "assets": "training-content/lab-assets/LAB-K8S-12",
       "status": "published",
       "package_contract": "standard"
     },

@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: misconfigured-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: misconfigured
+  template:
+    metadata:
+      labels:
+        app: misconfigured
+    spec:
+      containers:
+      - name: broken
+        image: nginx:alpine
+        command: ["non-existent-executable"]

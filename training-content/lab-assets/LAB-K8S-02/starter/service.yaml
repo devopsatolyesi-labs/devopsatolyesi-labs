@@ -1,5 +1,0 @@
-# TODO: Write ClusterIP Service
-apiVersion: v1
-kind: Service
-metadata:
-  name: web-service

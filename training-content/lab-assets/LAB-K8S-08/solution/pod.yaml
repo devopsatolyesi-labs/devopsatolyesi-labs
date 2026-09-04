@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: storage-demo
+spec:
+  volumes:
+  - name: my-data
+    persistentVolumeClaim:
+      claimName: storage-claim
+  containers:
+  - name: writer
+    image: alpine
+    command: ["sh", "-c", "echo 'Stored data at $(date)' >> /data/log.txt && sleep 3600"]
+    volumeMounts:
+    - name: my-data
+      mountPath: /data

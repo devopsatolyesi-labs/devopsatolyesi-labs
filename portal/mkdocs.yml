@@ -125,9 +125,18 @@ nav:
       - LAB-TF-04 - Terraform Helm Centralized Monitoring: day3/LAB-TF-04-terraform-helm-centralized-monitoring.md
       - LAB-TF-08 - Terraform AWS VPC Mimarisi: day3/LAB-TF-08-terraform-aws-vpc-architecture.md
   - Kubernetes:
-      - LAB-K8S-01 - Kubernetes Pods ve Deployments: day4/LAB-K8S-01-kind-pods-deployments.md
-      - LAB-K8S-02 - Services, ConfigMaps ve Secrets: day4/LAB-K8S-02-services-config-secrets.md
-      - LAB-K8S-03 - Production Workloads: day4/LAB-K8S-03-production-workloads.md
+      - LAB-K8S-01 - kind Cluster ve kubectl: day4/LAB-K8S-01-kind-cluster-kubectl.md
+      - LAB-K8S-02 - Pod, YAML ve Yaşam Döngüsü: day4/LAB-K8S-02-pod-yaml-lifecycle.md
+      - LAB-K8S-03 - Deployment ve Self-Healing: day4/LAB-K8S-03-deployment-self-healing.md
+      - LAB-K8S-04 - Scaling, Rollout ve Rollback: day4/LAB-K8S-04-scaling-rollout-rollback.md
+      - LAB-K8S-05 - Service ve Kubernetes DNS: day4/LAB-K8S-05-service-dns.md
+      - LAB-K8S-06 - ConfigMap ve Secret: day4/LAB-K8S-06-configmap-secret.md
+      - LAB-K8S-07 - Liveness, Readiness ve Kaynak Limitleri: day4/LAB-K8S-07-probes-resources.md
+      - LAB-K8S-08 - PersistentVolume ve PVC: day4/LAB-K8S-08-pv-pvc.md
+      - LAB-K8S-09 - Ingress NGINX ile Dışa Açma: day4/LAB-K8S-09-ingress-nginx.md
+      - LAB-K8S-10 - Helm Temelleri ve Paket Yönetimi: day4/LAB-K8S-10-helm.md
+      - LAB-K8S-11 - Kubernetes Troubleshooting: day4/LAB-K8S-11-troubleshooting.md
+      - LAB-K8S-12 - Çok Katmanlı Microservice Mimarisi (Capstone): day4/LAB-K8S-12-capstone.md
   - GitOps:
       - LAB-HLM-01 - Helm Chart Deployment: day4/LAB-HLM-01-helm-chart-deployment.md
       - LAB-ARG-01 - Argo CD GitOps Senkronizasyonu: day4/LAB-ARG-01-argocd-gitops-sync.md

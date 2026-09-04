@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-blue
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: blue
+  template:
+    metadata:
+      labels:
+        app: blue
+    spec:
+      containers:
+      - name: blue
+        image: nginx:alpine
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-blue
+spec:
+  selector:
+    app: blue
+  ports:
+  - port: 80
+    targetPort: 80

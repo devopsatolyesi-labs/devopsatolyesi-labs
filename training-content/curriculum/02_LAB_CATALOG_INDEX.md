@@ -4,30 +4,51 @@ DevOps Atölyesi laboratuvar kütüphanesi, katılımcıların bilgi seviyelerin
 
 Aşağıdaki sekmeleri kullanarak dilediğiniz seviyedeki labları listeleyebilir ve doğrudan çalışmaya başlayabilirsiniz:
 
-=== "Tüm Lablar (34 Lab)"
+=== "Tüm Lablar (52 Lab)"
 
     | Lab ID | Seviye | Lab Başlığı | Konu | Süre | Portlar | İncele |
     | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
     | `LAB-ENV-00` | 🟢 CORE | Ubuntu Server 24.04 DevOps Ortamı Kurulumu ve Doğrulama | ENVIRONMENT | 90 dk | `-` | [Labı Aç →](../env/LAB-ENV-00-environment-setup/) |
     | `LAB-LNX-01` | 🟢 CORE | Linux Preflight ve Systemd Servis İncelemesi | LINUX | 30 dk | `22` | [Labı Aç →](../day1/LAB-LNX-01-linux-preflight/) |
     | `LAB-GIT-01` | 🟢 CORE | Git Workflow, Branching ve Conflict Resolution | GIT | 45 dk | `-` | [Labı Aç →](../day1/LAB-GIT-01-git-workflow/) |
-    | `LAB-DOC-01` | 🟢 CORE | İlk Docker Konteyneri ve Port Mapping | DOCKER | 30 dk | `8080` | [Labı Aç →](../day1/LAB-DOC-01-docker-first-container/) |
-    | `LAB-DOC-02` | 🟢 CORE | Container Lifecycle, Env ve Volume Persistence | DOCKER | 40 dk | `5432` | [Labı Aç →](../day1/LAB-DOC-02-docker-volumes-env/) |
-    | `LAB-DOC-03` | 🟡 PRACTITIONER | Docker İmaj Optimizasyonu ve Registry Dağıtımı | DOCKER | 60 dk | `8000, 8082` | [Labı Aç →](../day2/LAB-DOC-03-dockerfile-optimization/) |
-    | `LAB-DOC-09` | 🟡 PRACTITIONER | User-Defined Docker Network ve Container DNS | DOCKER | 45 dk | `8080` | [Labı Aç →](../day2/LAB-DOC-09-docker-networks-dns/) |
-    | `LAB-DOC-04` | 🟡 PRACTITIONER | Multi-Stage Build, Non-Root ve Image Hardening | DOCKER | 45 dk | `-` | [Labı Aç →](../day2/LAB-DOC-04-docker-multistage-hardening/) |
-    | `LAB-DOC-05` | 🟡 PRACTITIONER | Docker Compose Multi-Tier Orchestration | DOCKER | 60 dk | `8080` | [Labı Aç →](../day2/LAB-DOC-05-docker-compose-multitier/) |
-    | `LAB-DOC-06` | 🟡 PRACTITIONER | Trivy Container Security Gate | CONTAINER-SECURITY | 30 dk | `-` | [Labı Aç →](../day2/LAB-DOC-06-trivy-harbor-integration/) |
-    | `LAB-DOC-13` | 🔴 ADVANCED | Production-Ready Docker Compose Patterns | DOCKER | 60 dk | `8080` | [Labı Aç →](../day2/LAB-DOC-13-docker-compose-production-patterns/) |
+    | `LAB-DOC-01` | 🟢 CORE | İlk Docker Konteyneri ve Temel Komutlar | DOCKER | 35 dk | `8080` | [Labı Aç →](../day1/LAB-DOC-01-docker-first-container/) |
+    | `LAB-DOC-02` | 🟢 CORE | Konteyner Yaşam Döngüsü ve Teşhis Komutları | DOCKER | 40 dk | `8080` | [Labı Aç →](../day2/LAB-DOC-02-docker-lifecycle-diagnostics/) |
+    | `LAB-DOC-03` | 🟢 CORE | Docker İmaj, Etiketleme ve Registry Yönetimi | DOCKER | 45 dk | `5000` | [Labı Aç →](../day2/LAB-DOC-03-docker-image-registry/) |
+    | `LAB-DOC-04` | 🟢 CORE | Docker Volumes ve Veri Kalıcılığı | DOCKER | 45 dk | `5432` | [Labı Aç →](../day2/LAB-DOC-04-docker-volumes-persistence/) |
+    | `LAB-DOC-05` | 🟢 CORE | Ortam Değişkenleri, .env ve Konfigürasyon Yönetimi | DOCKER | 35 dk | `3000` | [Labı Aç →](../day2/LAB-DOC-05-docker-env-secrets/) |
+    | `LAB-DOC-06` | 🟡 PRACTITIONER | Docker Network, Port İzolasyonu ve DNS Çözümleme | DOCKER | 45 dk | `8080` | [Labı Aç →](../day2/LAB-DOC-06-docker-networks-dns/) |
+    | `LAB-DOC-07` | 🟡 PRACTITIONER | İlk Dockerfile ile İmaj Oluşturma | DOCKER | 40 dk | `5000` | [Labı Aç →](../day2/LAB-DOC-07-dockerfile-basics/) |
+    | `LAB-DOC-08` | 🟡 PRACTITIONER | Dockerfile Katmanları ve BuildKit Cache | DOCKER | 45 dk | `8080` | [Labı Aç →](../day2/LAB-DOC-08-dockerfile-optimization/) |
+    | `LAB-DOC-09` | 🟡 PRACTITIONER | Multi-Stage Build ve Boyut Optimizasyonu | DOCKER | 45 dk | `8080` | [Labı Aç →](../day2/LAB-DOC-09-docker-multistage-build/) |
+    | `LAB-DOC-10` | 🔴 ADVANCED | Docker Runtime Güvenliği ve Hardening | DOCKER | 45 dk | `8080` | [Labı Aç →](../day2/LAB-DOC-10-docker-runtime-security/) |
+    | `LAB-DOC-11` | 🟡 PRACTITIONER | Java Spring Boot Konteynerleştirme ve JVM Optimizasyonu | DOCKER | 50 dk | `8080` | [Labı Aç →](../day2/LAB-DOC-11-docker-java-spring-boot/) |
+    | `LAB-DOC-12` | 🟡 PRACTITIONER | React SPA ve Nginx Frontend Container | DOCKER | 40 dk | `80` | [Labı Aç →](../day2/LAB-DOC-12-docker-react-nginx/) |
+    | `LAB-DOC-13` | 🟡 PRACTITIONER | Docker Compose ile Çok Katmanlı Mimari | DOCKER | 50 dk | `80, 3000, 5432` | [Labı Aç →](../day2/LAB-DOC-13-docker-compose-multitier/) |
+    | `LAB-DOC-14` | 🔴 ADVANCED | Healthcheck, Restart Policy ve Kaynak Limitleri | DOCKER | 45 dk | `8080` | [Labı Aç →](../day2/LAB-DOC-14-docker-healthcheck-limits/) |
+    | `LAB-DOC-15` | 🟡 PRACTITIONER | Docker Loglama ve Gözlemlenebilirlik | DOCKER | 40 dk | `8080, 8081` | [Labı Aç →](../day2/LAB-DOC-15-docker-logging-observability/) |
+    | `LAB-DOC-16` | 🟡 PRACTITIONER | Trivy Güvenlik Taraması, SBOM ve Harbor Entegrasyonu | DOCKER | 50 dk | `80, 443` | [Labı Aç →](../day2/LAB-DOC-16-trivy-harbor-integration/) |
+    | `LAB-DOC-17` | 🟡 PRACTITIONER | İmaj ve Volume Yedekleme / Geri Yükleme | DOCKER | 45 dk | `5432` | [Labı Aç →](../day2/LAB-DOC-17-docker-backup-restore/) |
+    | `LAB-DOC-18` | 🔴 ADVANCED | Docker Sorun Giderme ve Teşhis Senaryoları | DOCKER | 55 dk | `8080, 5432` | [Labı Aç →](../day2/LAB-DOC-18-docker-troubleshooting/) |
+    | `LAB-DOC-19` | 🔴 ADVANCED | Production Docker Compose Desenleri | DOCKER | 50 dk | `80, 3000` | [Labı Aç →](../day2/LAB-DOC-19-docker-compose-production-patterns/) |
+    | `LAB-DOC-20` | 🔴 ADVANCED | Docker Final Capstone Projesi: Üretim Seviyesi Mikroservis Platformu | DOCKER | 90 dk | `80, 3000, 5432, 6379` | [Labı Aç →](../day2/LAB-DOC-20-docker-capstone/) |
     | `LAB-JNK-01` | 🟢 CORE | Jenkins Declarative Pipeline | JENKINS | 45 dk | `8080` | [Labı Aç →](../day3/LAB-JNK-01-jenkins-declarative-pipeline/) |
     | `LAB-JNK-02` | 🟡 PRACTITIONER | Jenkins Secure Pipeline, SonarQube, Trivy ve Harbor | JENKINS | 60 dk | `8080, 8082, 9000` | [Labı Aç →](../day3/LAB-JNK-02-jenkins-secure-pipeline/) |
     | `LAB-GLB-01` | 🟡 PRACTITIONER | GitLab CI/CD Fundamentals | GITLAB-CI | 45 dk | `8081` | [Labı Aç →](../day3/LAB-GLB-01-gitlab-ci-pipeline/) |
     | `LAB-TF-01` | 🟢 CORE | Terraform Docker Provider ve State Lifecycle | TERRAFORM | 45 dk | `8090` | [Labı Aç →](../day3/LAB-TF-01-terraform-docker-provider/) |
     | `LAB-TF-04` | 🔴 ADVANCED | Terraform ve Helm ile Merkezi Kubernetes İzleme | TERRAFORM | 60 dk | `-` | [Labı Aç →](../day3/LAB-TF-04-terraform-helm-centralized-monitoring/) |
     | `LAB-TF-08` | 🔴 ADVANCED | Terraform ile Production AWS VPC | TERRAFORM | 75 dk | `4566` | [Labı Aç →](../day3/LAB-TF-08-terraform-aws-vpc-architecture/) |
-    | `LAB-K8S-01` | 🟢 CORE | kind Multi-Node Cluster ve kubectl Preflight | KUBERNETES | 45 dk | `80, 443` | [Labı Aç →](../day4/LAB-K8S-01-kind-pods-deployments/) |
-    | `LAB-K8S-02` | 🟢 CORE | Services, ConfigMaps ve Secrets | KUBERNETES | 45 dk | `-` | [Labı Aç →](../day4/LAB-K8S-02-services-config-secrets/) |
-    | `LAB-K8S-03` | 🟡 PRACTITIONER | Production Workloads, Probes, Rollouts ve PVC | KUBERNETES | 60 dk | `-` | [Labı Aç →](../day4/LAB-K8S-03-production-workloads/) |
+    | `LAB-K8S-01` | 🟢 CORE | Kind ile Kubernetes Cluster Kurulumu ve kubectl | KUBERNETES | 30 dk | `80, 443` | [Labı Aç →](../day4/LAB-K8S-01-kind-cluster-kubectl/) |
+    | `LAB-K8S-02` | 🟢 CORE | İlk Pod, YAML ve Pod Yaşam Döngüsü | KUBERNETES | 40 dk | `-` | [Labı Aç →](../day4/LAB-K8S-02-pod-yaml-lifecycle/) |
+    | `LAB-K8S-03` | 🟢 CORE | Deployment, ReplicaSet ve Self-Healing | KUBERNETES | 45 dk | `-` | [Labı Aç →](../day4/LAB-K8S-03-deployment-self-healing/) |
+    | `LAB-K8S-04` | 🟡 PRACTITIONER | Scaling, Rolling Update ve Rollback | KUBERNETES | 45 dk | `-` | [Labı Aç →](../day4/LAB-K8S-04-scaling-rollout-rollback/) |
+    | `LAB-K8S-05` | 🟡 PRACTITIONER | Service, Port Mapping ve Kubernetes DNS | KUBERNETES | 45 dk | `8080` | [Labı Aç →](../day4/LAB-K8S-05-service-dns/) |
+    | `LAB-K8S-06` | 🟡 PRACTITIONER | ConfigMap ve Secret ile Yapılandırma | KUBERNETES | 40 dk | `-` | [Labı Aç →](../day4/LAB-K8S-06-configmap-secret/) |
+    | `LAB-K8S-07` | 🟡 PRACTITIONER | Liveness, Readiness ve Resource Limits | KUBERNETES | 50 dk | `-` | [Labı Aç →](../day4/LAB-K8S-07-probes-resources/) |
+    | `LAB-K8S-08` | 🟡 PRACTITIONER | PersistentVolume ve PersistentVolumeClaim | KUBERNETES | 45 dk | `-` | [Labı Aç →](../day4/LAB-K8S-08-pv-pvc/) |
+    | `LAB-K8S-09` | 🟡 PRACTITIONER | Ingress NGINX ile Dışa Açma ve Path Routing | KUBERNETES | 45 dk | `80, 443` | [Labı Aç →](../day4/LAB-K8S-09-ingress-nginx/) |
+    | `LAB-K8S-10` | 🟡 PRACTITIONER | Helm Temelleri, Chart Kurulumu ve Rollback | KUBERNETES | 45 dk | `-` | [Labı Aç →](../day4/LAB-K8S-10-helm/) |
+    | `LAB-K8S-11` | 🔴 ADVANCED | Kubernetes Troubleshooting ve CrashLoopBackOff | KUBERNETES | 50 dk | `-` | [Labı Aç →](../day4/LAB-K8S-11-troubleshooting/) |
+    | `LAB-K8S-12` | 🔴 ADVANCED | Çok Katmanlı Production Kubernetes Mimarisi (Capstone) | KUBERNETES | 60 dk | `80, 443` | [Labı Aç →](../day4/LAB-K8S-12-capstone/) |
     | `LAB-HLM-01` | 🟡 PRACTITIONER | Helm Chart Deployment | HELM | 45 dk | `-` | [Labı Aç →](../day4/LAB-HLM-01-helm-chart-deployment/) |
     | `LAB-ARG-01` | 🟡 PRACTITIONER | Argo CD GitOps Sync ve Self-Healing | GITOPS | 45 dk | `8085` | [Labı Aç →](../day4/LAB-ARG-01-argocd-gitops-sync/) |
     | `LAB-MON-01` | 🟡 PRACTITIONER | Prometheus ve Grafana Metrics | MONITORING | 45 dk | `3000, 8000, 9090, 9100` | [Labı Aç →](../day5/LAB-MON-01-prometheus-grafana-metrics/) |
@@ -36,64 +57,79 @@ Aşağıdaki sekmeleri kullanarak dilediğiniz seviyedeki labları listeleyebili
     | `LAB-LOG-02` | 🔴 ADVANCED | İleri ELK Gözlemlenebilirliği | LOGGING | 90 dk | `-` | [Labı Aç →](../day5/LAB-LOG-02-elk-centralized-logging/) |
     | `LAB-INC-01` | 🔴 ADVANCED | Kubernetes War Room ve Postmortem | INCIDENT-RESPONSE | 45 dk | `-` | [Labı Aç →](../day5/LAB-INC-01-k8s-crashloop-postmortem/) |
     | `LAB-CAP-01` | 🔴 ADVANCED | Code to Observability DevOps Capstone | CAPSTONE | 90 dk | `3000, 8000, 8082, 8085, 9090` | [Labı Aç →](../day5/LAB-CAP-01-end-to-end-devops/) |
-    | `LAB-DOC-10` | 🟡 PRACTITIONER | Docker İmaj, Konteyner ve Volume Yedekleme / Geri Yükleme | DOCKER | 40 dk | `-` | [Labı Aç →](../day2/LAB-DOC-10-docker-backup-restore/) |
     | `LAB-LNX-02` | 🟡 PRACTITIONER | Nginx Üzerinde Let's Encrypt SSL/TLS ve Certbot Otomasyonu | LINUX | 40 dk | `80, 443` | [Labı Aç →](../day1/LAB-LNX-02-nginx-letsencrypt-ssl/) |
     | `LAB-LNX-03` | 🟡 PRACTITIONER | SSH Tunneling (Port Forwarding) ile Güvenli Veritabanı Erişimi | LINUX | 35 dk | `-` | [Labı Aç →](../day1/LAB-LNX-03-ssh-tunnel-mysql/) |
-    | `LAB-DOC-07` | 🟡 PRACTITIONER | Java Spring Boot Multi-Stage Build ve JVM Optimizasyonu | DOCKER | 45 dk | `8080` | [Labı Aç →](../day2/LAB-DOC-07-docker-java-spring-boot/) |
-    | `LAB-DOC-08` | 🟡 PRACTITIONER | Modern React / Statik Frontend Build ve Nginx Container | DOCKER | 40 dk | `80` | [Labı Aç →](../day2/LAB-DOC-08-docker-react-nginx/) |
     | `LAB-GHA-01` | 🟡 PRACTITIONER | GitHub Actions ile Sürekli Entegrasyon (CI) ve Otomatik Test | CI-CD | 45 dk | `-` | [Labı Aç →](../day3/LAB-GHA-01-github-actions-ci/) |
 
-=== "🟢 CORE — Temel Seviye (9 Lab)"
+=== "🟢 CORE — Temel Seviye (13 Lab)"
 
-    DevOps kültürüne giriş, Linux yönetimi, Git sürüm kontrolü ve ilk Docker konteyneri gibi temel yetkinlikleri kazandırır.
+    DevOps kültürüne giriş, Linux yönetimi, Git sürüm kontrolü, Docker ve Kubernetes temelleri gibi çekirdek yetkinlikleri kazandırır.
 
     | Lab ID | Lab Başlığı | Konu | Süre | Portlar | İncele |
     | :--- | :--- | :--- | :--- | :--- | :--- |
     | `LAB-ENV-00` | Ubuntu Server 24.04 DevOps Ortamı Kurulumu ve Doğrulama | ENVIRONMENT | 90 dk | `-` | [Labı Aç →](../env/LAB-ENV-00-environment-setup/) |
     | `LAB-LNX-01` | Linux Preflight ve Systemd Servis İncelemesi | LINUX | 30 dk | `22` | [Labı Aç →](../day1/LAB-LNX-01-linux-preflight/) |
     | `LAB-GIT-01` | Git Workflow, Branching ve Conflict Resolution | GIT | 45 dk | `-` | [Labı Aç →](../day1/LAB-GIT-01-git-workflow/) |
-    | `LAB-DOC-01` | İlk Docker Konteyneri ve Port Mapping | DOCKER | 30 dk | `8080` | [Labı Aç →](../day1/LAB-DOC-01-docker-first-container/) |
-    | `LAB-DOC-02` | Container Lifecycle, Env ve Volume Persistence | DOCKER | 40 dk | `5432` | [Labı Aç →](../day1/LAB-DOC-02-docker-volumes-env/) |
+    | `LAB-DOC-01` | İlk Docker Konteyneri ve Temel Komutlar | DOCKER | 35 dk | `8080` | [Labı Aç →](../day1/LAB-DOC-01-docker-first-container/) |
+    | `LAB-DOC-02` | Konteyner Yaşam Döngüsü ve Teşhis Komutları | DOCKER | 40 dk | `8080` | [Labı Aç →](../day2/LAB-DOC-02-docker-lifecycle-diagnostics/) |
+    | `LAB-DOC-03` | Docker İmaj, Etiketleme ve Registry Yönetimi | DOCKER | 45 dk | `5000` | [Labı Aç →](../day2/LAB-DOC-03-docker-image-registry/) |
+    | `LAB-DOC-04` | Docker Volumes ve Veri Kalıcılığı | DOCKER | 45 dk | `5432` | [Labı Aç →](../day2/LAB-DOC-04-docker-volumes-persistence/) |
+    | `LAB-DOC-05` | Ortam Değişkenleri, .env ve Konfigürasyon Yönetimi | DOCKER | 35 dk | `3000` | [Labı Aç →](../day2/LAB-DOC-05-docker-env-secrets/) |
     | `LAB-JNK-01` | Jenkins Declarative Pipeline | JENKINS | 45 dk | `8080` | [Labı Aç →](../day3/LAB-JNK-01-jenkins-declarative-pipeline/) |
     | `LAB-TF-01` | Terraform Docker Provider ve State Lifecycle | TERRAFORM | 45 dk | `8090` | [Labı Aç →](../day3/LAB-TF-01-terraform-docker-provider/) |
-    | `LAB-K8S-01` | kind Multi-Node Cluster ve kubectl Preflight | KUBERNETES | 45 dk | `80, 443` | [Labı Aç →](../day4/LAB-K8S-01-kind-pods-deployments/) |
-    | `LAB-K8S-02` | Services, ConfigMaps ve Secrets | KUBERNETES | 45 dk | `-` | [Labı Aç →](../day4/LAB-K8S-02-services-config-secrets/) |
+    | `LAB-K8S-01` | Kind ile Kubernetes Cluster Kurulumu ve kubectl | KUBERNETES | 30 dk | `80, 443` | [Labı Aç →](../day4/LAB-K8S-01-kind-cluster-kubectl/) |
+    | `LAB-K8S-02` | İlk Pod, YAML ve Pod Yaşam Döngüsü | KUBERNETES | 40 dk | `-` | [Labı Aç →](../day4/LAB-K8S-02-pod-yaml-lifecycle/) |
+    | `LAB-K8S-03` | Deployment, ReplicaSet ve Self-Healing | KUBERNETES | 45 dk | `-` | [Labı Aç →](../day4/LAB-K8S-03-deployment-self-healing/) |
 
-=== "🟡 PRACTITIONER — Üretim Standartları (19 Lab)"
+=== "🟡 PRACTITIONER — Üretim Standartları (27 Lab)"
 
-    Kurumsal ortamlarda kullanılan ileri düzey Docker multi-stage hardening, Java Spring Boot JVM optimizasyonu, Docker Compose, Jenkins, Terraform, Kubernetes, Helm ve Argo CD GitOps uygulamalarını kapsar.
+    Kurumsal ortamlarda kullanılan ileri düzey Docker multi-stage, container networking, Java Spring Boot, Docker Compose, Jenkins, GitLab CI, Terraform, Kubernetes, Helm ve Argo CD GitOps uygulamalarını kapsar.
 
     | Lab ID | Lab Başlığı | Konu | Süre | Portlar | İncele |
     | :--- | :--- | :--- | :--- | :--- | :--- |
-    | `LAB-DOC-03` | Docker İmaj Optimizasyonu ve Registry Dağıtımı | DOCKER | 60 dk | `8000, 8082` | [Labı Aç →](../day2/LAB-DOC-03-dockerfile-optimization/) |
-    | `LAB-DOC-09` | User-Defined Docker Network ve Container DNS | DOCKER | 45 dk | `8080` | [Labı Aç →](../day2/LAB-DOC-09-docker-networks-dns/) |
-    | `LAB-DOC-04` | Multi-Stage Build, Non-Root ve Image Hardening | DOCKER | 45 dk | `-` | [Labı Aç →](../day2/LAB-DOC-04-docker-multistage-hardening/) |
-    | `LAB-DOC-05` | Docker Compose Multi-Tier Orchestration | DOCKER | 60 dk | `8080` | [Labı Aç →](../day2/LAB-DOC-05-docker-compose-multitier/) |
-    | `LAB-DOC-06` | Trivy Container Security Gate | CONTAINER-SECURITY | 30 dk | `-` | [Labı Aç →](../day2/LAB-DOC-06-trivy-harbor-integration/) |
+    | `LAB-DOC-06` | Docker Network, Port İzolasyonu ve DNS Çözümleme | DOCKER | 45 dk | `8080` | [Labı Aç →](../day2/LAB-DOC-06-docker-networks-dns/) |
+    | `LAB-DOC-07` | İlk Dockerfile ile İmaj Oluşturma | DOCKER | 40 dk | `5000` | [Labı Aç →](../day2/LAB-DOC-07-dockerfile-basics/) |
+    | `LAB-DOC-08` | Dockerfile Katmanları ve BuildKit Cache | DOCKER | 45 dk | `8080` | [Labı Aç →](../day2/LAB-DOC-08-dockerfile-optimization/) |
+    | `LAB-DOC-09` | Multi-Stage Build ve Boyut Optimizasyonu | DOCKER | 45 dk | `8080` | [Labı Aç →](../day2/LAB-DOC-09-docker-multistage-build/) |
+    | `LAB-DOC-11` | Java Spring Boot Konteynerleştirme ve JVM Optimizasyonu | DOCKER | 50 dk | `8080` | [Labı Aç →](../day2/LAB-DOC-11-docker-java-spring-boot/) |
+    | `LAB-DOC-12` | React SPA ve Nginx Frontend Container | DOCKER | 40 dk | `80` | [Labı Aç →](../day2/LAB-DOC-12-docker-react-nginx/) |
+    | `LAB-DOC-13` | Docker Compose ile Çok Katmanlı Mimari | DOCKER | 50 dk | `80, 3000, 5432` | [Labı Aç →](../day2/LAB-DOC-13-docker-compose-multitier/) |
+    | `LAB-DOC-15` | Docker Loglama ve Gözlemlenebilirlik | DOCKER | 40 dk | `8080, 8081` | [Labı Aç →](../day2/LAB-DOC-15-docker-logging-observability/) |
+    | `LAB-DOC-16` | Trivy Güvenlik Taraması, SBOM ve Harbor Entegrasyonu | DOCKER | 50 dk | `80, 443` | [Labı Aç →](../day2/LAB-DOC-16-trivy-harbor-integration/) |
+    | `LAB-DOC-17` | İmaj ve Volume Yedekleme / Geri Yükleme | DOCKER | 45 dk | `5432` | [Labı Aç →](../day2/LAB-DOC-17-docker-backup-restore/) |
     | `LAB-JNK-02` | Jenkins Secure Pipeline, SonarQube, Trivy ve Harbor | JENKINS | 60 dk | `8080, 8082, 9000` | [Labı Aç →](../day3/LAB-JNK-02-jenkins-secure-pipeline/) |
     | `LAB-GLB-01` | GitLab CI/CD Fundamentals | GITLAB-CI | 45 dk | `8081` | [Labı Aç →](../day3/LAB-GLB-01-gitlab-ci-pipeline/) |
-    | `LAB-K8S-03` | Production Workloads, Probes, Rollouts ve PVC | KUBERNETES | 60 dk | `-` | [Labı Aç →](../day4/LAB-K8S-03-production-workloads/) |
+    | `LAB-K8S-04` | Scaling, Rolling Update ve Rollback | KUBERNETES | 45 dk | `-` | [Labı Aç →](../day4/LAB-K8S-04-scaling-rollout-rollback/) |
+    | `LAB-K8S-05` | Service, Port Mapping ve Kubernetes DNS | KUBERNETES | 45 dk | `8080` | [Labı Aç →](../day4/LAB-K8S-05-service-dns/) |
+    | `LAB-K8S-06` | ConfigMap ve Secret ile Yapılandırma | KUBERNETES | 40 dk | `-` | [Labı Aç →](../day4/LAB-K8S-06-configmap-secret/) |
+    | `LAB-K8S-07` | Liveness, Readiness ve Resource Limits | KUBERNETES | 50 dk | `-` | [Labı Aç →](../day4/LAB-K8S-07-probes-resources/) |
+    | `LAB-K8S-08` | PersistentVolume ve PersistentVolumeClaim | KUBERNETES | 45 dk | `-` | [Labı Aç →](../day4/LAB-K8S-08-pv-pvc/) |
+    | `LAB-K8S-09` | Ingress NGINX ile Dışa Açma ve Path Routing | KUBERNETES | 45 dk | `80, 443` | [Labı Aç →](../day4/LAB-K8S-09-ingress-nginx/) |
+    | `LAB-K8S-10` | Helm Temelleri, Chart Kurulumu ve Rollback | KUBERNETES | 45 dk | `-` | [Labı Aç →](../day4/LAB-K8S-10-helm/) |
     | `LAB-HLM-01` | Helm Chart Deployment | HELM | 45 dk | `-` | [Labı Aç →](../day4/LAB-HLM-01-helm-chart-deployment/) |
     | `LAB-ARG-01` | Argo CD GitOps Sync ve Self-Healing | GITOPS | 45 dk | `8085` | [Labı Aç →](../day4/LAB-ARG-01-argocd-gitops-sync/) |
     | `LAB-MON-01` | Prometheus ve Grafana Metrics | MONITORING | 45 dk | `3000, 8000, 9090, 9100` | [Labı Aç →](../day5/LAB-MON-01-prometheus-grafana-metrics/) |
     | `LAB-MON-02` | Prometheus Alertmanager Kuralları | MONITORING | 45 dk | `9090, 9093` | [Labı Aç →](../day5/LAB-MON-02-alertmanager-rules/) |
     | `LAB-LOG-01` | ELK ile Nginx Loglarını Merkezileştirme | LOGGING | 75 dk | `-` | [Labı Aç →](../day5/LAB-LOG-01-centralized-logging/) |
-    | `LAB-DOC-10` | Docker İmaj, Konteyner ve Volume Yedekleme / Geri Yükleme | DOCKER | 40 dk | `-` | [Labı Aç →](../day2/LAB-DOC-10-docker-backup-restore/) |
     | `LAB-LNX-02` | Nginx Üzerinde Let's Encrypt SSL/TLS ve Certbot Otomasyonu | LINUX | 40 dk | `80, 443` | [Labı Aç →](../day1/LAB-LNX-02-nginx-letsencrypt-ssl/) |
     | `LAB-LNX-03` | SSH Tunneling (Port Forwarding) ile Güvenli Veritabanı Erişimi | LINUX | 35 dk | `-` | [Labı Aç →](../day1/LAB-LNX-03-ssh-tunnel-mysql/) |
-    | `LAB-DOC-07` | Java Spring Boot Multi-Stage Build ve JVM Optimizasyonu | DOCKER | 45 dk | `8080` | [Labı Aç →](../day2/LAB-DOC-07-docker-java-spring-boot/) |
-    | `LAB-DOC-08` | Modern React / Statik Frontend Build ve Nginx Container | DOCKER | 40 dk | `80` | [Labı Aç →](../day2/LAB-DOC-08-docker-react-nginx/) |
     | `LAB-GHA-01` | GitHub Actions ile Sürekli Entegrasyon (CI) ve Otomatik Test | CI-CD | 45 dk | `-` | [Labı Aç →](../day3/LAB-GHA-01-github-actions-ci/) |
 
-=== "🔴 ADVANCED — İleri Seviye & Capstone (6 Lab)"
+=== "🔴 ADVANCED — İleri Seviye ve Capstone (12 Lab)"
 
-    Gerçek dünya felaket senaryoları (Incident Response / War Room), merkezi ELK log analitiği, Alertmanager kuralları ve uçtan uca DevOps Capstone projesini içerir.
+    Üretim seviyesinde gözlemlenebilirlik, Kubernetes troubleshooting, yüksek erişilebilirlik ve uçtan uca DevSecOps capstone projelerini içerir.
 
     | Lab ID | Lab Başlığı | Konu | Süre | Portlar | İncele |
     | :--- | :--- | :--- | :--- | :--- | :--- |
-    | `LAB-DOC-13` | Production-Ready Docker Compose Patterns | DOCKER | 60 dk | `8080` | [Labı Aç →](../day2/LAB-DOC-13-docker-compose-production-patterns/) |
+    | `LAB-DOC-10` | Docker Runtime Güvenliği ve Hardening | DOCKER | 45 dk | `8080` | [Labı Aç →](../day2/LAB-DOC-10-docker-runtime-security/) |
+    | `LAB-DOC-14` | Healthcheck, Restart Policy ve Kaynak Limitleri | DOCKER | 45 dk | `8080` | [Labı Aç →](../day2/LAB-DOC-14-docker-healthcheck-limits/) |
+    | `LAB-DOC-18` | Docker Sorun Giderme ve Teşhis Senaryoları | DOCKER | 55 dk | `8080, 5432` | [Labı Aç →](../day2/LAB-DOC-18-docker-troubleshooting/) |
+    | `LAB-DOC-19` | Production Docker Compose Desenleri | DOCKER | 50 dk | `80, 3000` | [Labı Aç →](../day2/LAB-DOC-19-docker-compose-production-patterns/) |
+    | `LAB-DOC-20` | Docker Final Capstone Projesi: Üretim Seviyesi Mikroservis Platformu | DOCKER | 90 dk | `80, 3000, 5432, 6379` | [Labı Aç →](../day2/LAB-DOC-20-docker-capstone/) |
     | `LAB-TF-04` | Terraform ve Helm ile Merkezi Kubernetes İzleme | TERRAFORM | 60 dk | `-` | [Labı Aç →](../day3/LAB-TF-04-terraform-helm-centralized-monitoring/) |
     | `LAB-TF-08` | Terraform ile Production AWS VPC | TERRAFORM | 75 dk | `4566` | [Labı Aç →](../day3/LAB-TF-08-terraform-aws-vpc-architecture/) |
+    | `LAB-K8S-11` | Kubernetes Troubleshooting ve CrashLoopBackOff | KUBERNETES | 50 dk | `-` | [Labı Aç →](../day4/LAB-K8S-11-troubleshooting/) |
+    | `LAB-K8S-12` | Çok Katmanlı Production Kubernetes Mimarisi (Capstone) | KUBERNETES | 60 dk | `80, 443` | [Labı Aç →](../day4/LAB-K8S-12-capstone/) |
     | `LAB-LOG-02` | İleri ELK Gözlemlenebilirliği | LOGGING | 90 dk | `-` | [Labı Aç →](../day5/LAB-LOG-02-elk-centralized-logging/) |
     | `LAB-INC-01` | Kubernetes War Room ve Postmortem | INCIDENT-RESPONSE | 45 dk | `-` | [Labı Aç →](../day5/LAB-INC-01-k8s-crashloop-postmortem/) |
     | `LAB-CAP-01` | Code to Observability DevOps Capstone | CAPSTONE | 90 dk | `3000, 8000, 8082, 8085, 9090` | [Labı Aç →](../day5/LAB-CAP-01-end-to-end-devops/) |

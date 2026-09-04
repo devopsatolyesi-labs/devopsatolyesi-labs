@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
-kubectl delete -f deployment.yaml --ignore-not-found=true 2>/dev/null || true
-echo "Cleanup completed for LAB-K8S-01."
+set -euo pipefail
+echo "==> Cleaning up LAB-K8S-01..."
+# Kind cluster is persistent across labs, no destructive deletion by default
+echo "[PASS] Cleanup complete."

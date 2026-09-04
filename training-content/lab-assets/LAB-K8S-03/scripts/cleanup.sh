@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
-kubectl delete -f ingress.yaml --ignore-not-found=true 2>/dev/null || true
-echo "Cleanup completed for LAB-K8S-03."
+set -euo pipefail
+kubectl delete deployment order-api --ignore-not-found=true
+echo "[PASS] Cleanup complete."

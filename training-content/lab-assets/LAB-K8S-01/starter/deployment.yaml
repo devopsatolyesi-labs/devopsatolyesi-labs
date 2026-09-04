@@ -1,5 +1,0 @@
-# TODO: Write Kubernetes Deployment with 3 replicas
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: web-app
