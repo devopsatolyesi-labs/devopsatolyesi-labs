@@ -134,3 +134,47 @@ atanabilir.
 9. **Tam kabul testi:** iki ayrı kullanıcıyla menü, indirme, runtime ve temizlik.
 
 Bir faz bitmeden sonraki fazdaki lablar `published` yapılmaz.
+
+## 6. Hakan Bayraktar Kaynak Proje Envanteri
+
+Bu kaynaklar doğrudan kopyalanmaz. Uygulama kodu güncel sürümlere yükseltilir,
+gereksiz bileşenler çıkarılır ve bu belgedeki bağımsız lab standardına uyarlanır.
+Her uyarlamada asıl kaynak bağlantısı labın “Kaynak” bölümünde korunur.
+
+| Kaynak | Eğitimde Kullanım | Hedef |
+|---|---|---|
+| [jenkins-ci-cd-lab](https://github.com/hakanbayraktar/jenkins-ci-cd-lab) | Python uygulaması, Jenkins CI/CD, Nexus ve kind yapısından sade senaryolar | `LAB-JNK-01`, `LAB-JNK-02`, `LAB-CAP-01` |
+| [github-actions-demo](https://github.com/hakanbayraktar/github-actions-demo) | Test, cache, matrix ve deployment workflow örnekleri | `LAB-GHA-01` |
+| [ci-cd-docker](https://github.com/hakanbayraktar/ci-cd-docker) | Küçük Node.js uygulaması ve container CI | `LAB-DOC-04`, `LAB-GHA-01` |
+| [jenkins-node](https://github.com/hakanbayraktar/jenkins-node) | Node.js test, Dockerfile ve Jenkinsfile | `LAB-DOC-04`, `LAB-JNK-01` alternatif uygulaması |
+| [flask-monitoring](https://github.com/hakanbayraktar/flask-monitoring) | Flask, Jenkins, Kubernetes ve monitoring akışı | `LAB-JNK-02`, `LAB-MON-01` |
+| [argocd-python](https://github.com/hakanbayraktar/argocd-python) | Küçük Python uygulaması, image workflow ve Argo CD manifestleri | `LAB-ARG-01` |
+| [ArgoCD-Basics-To-Production](https://github.com/hakanbayraktar/ArgoCD-Basics-To-Production) | Sync, prune, self-heal, project, hook, wave ve Helm örnekleri | `LAB-ARG-01`, ileri GitOps labları |
+| [github-kubernetes](https://github.com/hakanbayraktar/github-kubernetes) | Node.js uygulaması, GitHub Actions ve Kubernetes deployment | `LAB-GHA-01`, `LAB-K8S-01` |
+| [AI-BankApp-DevOps](https://github.com/hakanbayraktar/AI-BankApp-DevOps) | Spring Boot, Compose, CI/CD ve Kubernetes için sadeleştirilecek uygulama | `LAB-DOC-07`, `LAB-CAP-01` |
+| [spring-boot-course](https://github.com/hakanbayraktar/spring-boot-course) | Küçük Spring Boot API başlangıç kodu | `LAB-DOC-07` |
+| [aws-vpc-terraform](https://github.com/hakanbayraktar/aws-vpc-terraform) | VPC modüllerinin maliyetsiz `fmt`, `validate` ve `plan` çalışması | `LAB-TF-08` |
+| [retail-store-sample-app](https://github.com/hakanbayraktar/retail-store-sample-app) | Büyük uygulamayı hazır servis olarak kullanarak container/GitOps/observability mini projesi | `MP-RETAIL-01` |
+
+### Medium İçeriklerinden Uyarlanacak Konular
+
+| Kaynak | Uyarlama |
+|---|---|
+| [Docker Commands Cheat Sheet](https://hbayraktar.medium.com/docker-commands-cheat-sheet-with-examples-d9a26396cb6f) | Komut listesi yerine çalışan lifecycle ve image yönetimi görevleri: `LAB-DOC-01`, `LAB-DOC-10` |
+| [Flask, Jenkins ve Kubernetes](https://hbayraktar.medium.com/deploying-a-flask-application-with-jenkins-to-a-kubernetes-cluster-4aa7b78d5817) | Güncel Jenkins pipeline, immutable image ve kind hedefi: `LAB-JNK-02` |
+| [Modern CI/CD ve Auto-Healing](https://hbayraktar.medium.com/deployment-is-not-enough-how-to-build-a-modern-ci-cd-pipeline-with-auto-healing-infrastructure-8a04d3f737b2) | Cloud maliyeti oluşturmayan yerel Capstone kabul kriterleri: `LAB-CAP-01` |
+| [Container Runtime ve Image Troubleshooting](https://hbayraktar.medium.com/production-troubleshooting-guide-3-container-runtime-image-troubleshooting-ee5499e3a8c3) | Kısa arıza kartları ve kanıt komutları: Docker/Kubernetes troubleshooting labları |
+| [CI/CD, GitOps ve Helm Troubleshooting](https://hbayraktar.medium.com/production-troubleshooting-guide-4-ci-cd-gitops-helm-and-deployment-troubleshooting-c1b582baa313) | Commit → image → Helm → Argo CD iz sürme görevi: `LAB-INC-01` |
+| [ASP.NET Core Dockerization](https://hbayraktar.medium.com/how-to-dockerize-a-net-8-asp-net-core-web-application-b15f63246535) | İsteğe bağlı çoklu dil containerization labı; güncel LTS sürümle yeniden yazılacak |
+| [AI Kubernetes Troubleshooting Lab](https://hbayraktar.medium.com/ai-powered-kubernetes-troubleshooting-a-hands-on-agent-lab-for-junior-devops-engineers-875ae7c8a8a0) | DevOps Practitioner sonrası isteğe bağlı mini proje |
+
+### Kaynak Kabul Kriteri
+
+Bir kaynak yalnız şu kontrollerden sonra kataloğa alınır:
+
+1. Lisans ve kaynak bağlantısı belirtilir.
+2. Bağımlılık ve image sürümleri sabitlenir.
+3. Cloud kaynağı zorunluysa yerel veya `plan-only` alternatif sağlanır.
+4. Secret, gerçek hesap ve kişisel path temizlenir.
+5. Temiz Ubuntu makinesinde setup, validate ve cleanup geçer.
+6. Web sayfası ve öğrenci ZIP’i aynı dosyalardan üretilir.
