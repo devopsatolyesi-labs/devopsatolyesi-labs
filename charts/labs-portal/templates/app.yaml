@@ -124,6 +124,7 @@ spec:
             - --cookie-expire=8h
             - --cookie-refresh=1h
             - --whitelist-domain=.devopsatolyesi.com
+            - --backend-logout-url=https://auth.devopsatolyesi.com/realms/devops-atolyesi/protocol/openid-connect/logout?id_token_hint={id_token}
             - --upstream=static://202
           env:
             - name: OAUTH2_PROXY_CLIENT_SECRET

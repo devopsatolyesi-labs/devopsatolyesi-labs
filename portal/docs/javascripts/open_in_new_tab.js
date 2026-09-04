@@ -26,13 +26,11 @@ document.addEventListener("DOMContentLoaded", function() {
   function installLogoutButton() {
     if (document.getElementById("portal-logout")) return;
 
-    var portalHome = window.location.origin + "/";
-    var keycloakLogout = "https://auth.devopsatolyesi.com/realms/devops-atolyesi/protocol/openid-connect/logout" +
-      "?client_id=labs-portal&id_token_hint={id_token}&post_logout_redirect_uri=" + encodeURIComponent(portalHome);
+    var reauthenticate = window.location.origin + "/oauth2/start?rd=%2F&prompt=login";
     var logout = document.createElement("a");
     logout.id = "portal-logout";
     logout.className = "md-header__button";
-    logout.href = "/oauth2/sign_out?rd=" + encodeURIComponent(keycloakLogout);
+    logout.href = "/oauth2/sign_out?rd=" + encodeURIComponent(reauthenticate);
     logout.textContent = "Çıkış";
     logout.setAttribute("title", "Portal ve kimlik oturumunu kapat");
     logout.style.color = "inherit";
