@@ -1,146 +1,17 @@
 # LAB-LOG-02 — İleri ELK Gözlemlenebilirliği: Linux, Docker, Kubernetes, GeoMap ve Canvas
 
-> [Bu labın başlangıç dosyalarını indir (ZIP)](/downloads/LAB-LOG-02.zip) — paket README, starter ve doğrulama scriptlerini içerir; çözüm içermez.
+| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
+| :--- | :--- | :--- | :--- |
+| 🔴 **ADVANCED** (İleri Seviye) | ⏱️ 90 dakika | `logging, kubernetes` | `Dahili / Küme İçi` |
 
-
-İndirdikten sonra terminalde: `unzip LAB-LOG-02.zip && cd LAB-LOG-02`
-
-## ZIP İndirmeden Dosyaları Oluşturma
-
-Aşağıdaki bloklar ZIP paketiyle birebir aynı dosyaları oluşturur.
-
-```bash
-mkdir -p ~/labs/LAB-LOG-02
-cd ~/labs/LAB-LOG-02
-```
-
-### `starter/logstash/pipeline/main.conf`
-
-```bash
-mkdir -p "$(dirname -- starter/logstash/pipeline/main.conf)"
-cat > starter/logstash/pipeline/main.conf <<'LAB_FILE_EOF_1'
-# ==============================================================================
-# LAB-LOG-02: STARTER Logstash Pipeline
-# Complete the TODO sections to parse JSON, Grok Nginx logs, sanitize PII,
-# and output to Elasticsearch daily indices.
-# ==============================================================================
-
-input {
-  # TODO 1: Add Beats input on port 5044
-  beats {
-    port => 5044
-  }
-
-  # TODO 2: Add TCP input on port 5000 with json_lines codec
-  tcp {
-    port => 5000
-    codec => json_lines
-  }
-
-  # TODO 3: Add HTTP input on port 8080 with json codec
-  http {
-    port => 8080
-    codec => json
-  }
-}
-
-filter {
-  # TODO 4: Parse JSON strings in message field
-  if [message] =~ /^\{.*\}$/ {
-    json {
-      source => "message"
-      target => "parsed"
-      skip_on_invalid_json => true
-    }
-  }
-
-  # TODO 5: Add Grok filter for Nginx combined logs
-  # Pattern hint: %{IPORHOST:client_ip} ...
-
-  # TODO 6: Sanitize PII and sensitive fields (password, credit_card, ssn)
-  # mutate { remove_field => [...] }
-
-  # TODO 7: Add environment and cluster metadata
-  mutate {
-    add_field => {
-      "environment" => "${ENVIRONMENT:development}"
-    }
-  }
-}
-
-output {
-  # TODO 8: Route processed events to Elasticsearch logs-%{+YYYY.MM.dd}
-  elasticsearch {
-    hosts => ["http://elasticsearch:9200"]
-    index => "logs-%{+YYYY.MM.dd}"
-  }
-
-  stdout {
-    codec => rubydebug
-  }
-}
-LAB_FILE_EOF_1
-```
-
-### `scripts/cleanup.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/cleanup.sh)"
-cat > scripts/cleanup.sh <<'LAB_FILE_EOF_2'
-#!/usr/bin/env bash
-set -euo pipefail
-echo "==> Cleaning up Lab LOG-02 containers and data..."
-docker compose down -v --remove-orphans 2>/dev/null || true
-echo "==> Lab LOG-02 clean."
-LAB_FILE_EOF_2
-chmod +x scripts/cleanup.sh
-```
-
-### `scripts/reset.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/reset.sh)"
-cat > scripts/reset.sh <<'LAB_FILE_EOF_3'
-#!/usr/bin/env bash
-set -euo pipefail
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-bash "${SCRIPT_DIR}/cleanup.sh"
-echo "==> Lab LOG-02 reset complete."
-LAB_FILE_EOF_3
-chmod +x scripts/reset.sh
-```
-
-### `scripts/validate.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/validate.sh)"
-cat > scripts/validate.sh <<'LAB_FILE_EOF_4'
-#!/usr/bin/env bash
-set -euo pipefail
-ES_URL="${ELASTICSEARCH_URL:-http://localhost:9200}"
-
-echo "==> Validating Lab LOG-02 (ELK Centralized Logging)..."
-if ! curl -s "${ES_URL}/_cluster/health" 2>/dev/null | grep -q '"status":"green"\|"status":"yellow"'; then
-  echo "FAIL: Elasticsearch cluster is not healthy."
-  exit 1
-fi
-
-COUNT=$(curl -s "${ES_URL}/logs-*/_count" 2>/dev/null | grep -o '"count":[0-9]*' | cut -d':' -f2 || echo "0")
-if [ -n "$COUNT" ] && [ "$COUNT" -gt 0 ]; then
-  echo "PASS: Successfully verified $COUNT indexed log documents in Elasticsearch."
-else
-  echo "FAIL: No indexed logs found in Elasticsearch."
-  exit 1
-fi
-LAB_FILE_EOF_4
-chmod +x scripts/validate.sh
-```
-
-Başlangıç dosyalarını çalışma dizinine alın:
-
-```bash
-cp -a starter/. .
-```
+> [!TIP]
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-LOG-02.zip)](/downloads/LAB-LOG-02.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 
+> **Terminalde çalışma ortamını hazırlayın:**
+> ```bash
+> mkdir -p ~/labs/LAB-LOG-02
+> cd ~/labs/LAB-LOG-02
+> ```
 
 
 ## 1. LAB-LOG-01 ile farkı

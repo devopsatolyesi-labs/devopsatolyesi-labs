@@ -1,129 +1,17 @@
 # LAB-DOC-10 — Docker İmaj, Konteyner ve Volume Yedekleme / Geri Yükleme
 
-> [Bu labın başlangıç dosyalarını indir (ZIP)](/downloads/LAB-DOC-10.zip) — paket README, starter ve doğrulama scriptlerini içerir; çözüm içermez.
+| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
+| :--- | :--- | :--- | :--- |
+| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 40 dakika | `docker` | `Dahili / Küme İçi` |
 
-
-İndirdikten sonra terminalde: `unzip LAB-DOC-10.zip && cd LAB-DOC-10`
-
-## ZIP İndirmeden Dosyaları Oluşturma
-
-Aşağıdaki bloklar ZIP paketiyle birebir aynı dosyaları oluşturur.
-
-```bash
-mkdir -p ~/labs/LAB-DOC-10
-cd ~/labs/LAB-DOC-10
-```
-
-### `starter/backup.sh`
-
-```bash
-mkdir -p "$(dirname -- starter/backup.sh)"
-cat > starter/backup.sh <<'LAB_FILE_EOF_1'
-#!/usr/bin/env bash
-set -euo pipefail
-
-# TODO: Aşağıdaki yedekleme işlemlerini tamamlayın:
-# 1. 'alpine:3.21' imajını 'alpine-backup.tar.gz' olarak sıkıştırarak kaydedin (docker save + gzip)
-# 2. 'test-app' adında bir volume oluşturup içerisine 'backup-test.txt' dosyası yazın
-# 3. Geçici bir alpine container ile 'test-app' volume içeriğini 'volume-backup.tar.gz' dosyasına yedekleyin
-LAB_FILE_EOF_1
-```
-
-### `starter/restore.sh`
-
-```bash
-mkdir -p "$(dirname -- starter/restore.sh)"
-cat > starter/restore.sh <<'LAB_FILE_EOF_2'
-#!/usr/bin/env bash
-set -euo pipefail
-
-# TODO: Aşağıdaki geri yükleme işlemlerini tamamlayın:
-# 1. 'alpine-backup.tar.gz' dosyasından imajı geri yükleyin (docker load)
-# 2. 'restored-app-data' adında yeni bir volume oluşturun
-# 3. 'volume-backup.tar.gz' arşivini yeni volume içerisine açın
-LAB_FILE_EOF_2
-```
-
-### `scripts/cleanup.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/cleanup.sh)"
-cat > scripts/cleanup.sh <<'LAB_FILE_EOF_3'
-#!/usr/bin/env bash
-set -euo pipefail
-
-echo "==> [LAB-DOC-10] Temizleniyor..."
-docker volume rm -f test-app-data restored-app-data 2>/dev/null || true
-rm -f alpine-backup.tar.gz volume-backup.tar.gz 2>/dev/null || true
-echo "[BİLGİ] LAB-DOC-10 kaynakları temizlendi."
-LAB_FILE_EOF_3
-chmod +x scripts/cleanup.sh
-```
-
-### `scripts/reset.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/reset.sh)"
-cat > scripts/reset.sh <<'LAB_FILE_EOF_4'
-#!/usr/bin/env bash
-set -euo pipefail
-
-echo "==> [LAB-DOC-10] Sıfırlanıyor..."
-docker volume rm -f test-app-data restored-app-data 2>/dev/null || true
-rm -f alpine-backup.tar.gz volume-backup.tar.gz 2>/dev/null || true
-cp -a starter/. .
-echo "[BİLGİ] LAB-DOC-10 başlangıç durumuna sıfırlandı."
-LAB_FILE_EOF_4
-chmod +x scripts/reset.sh
-```
-
-### `scripts/validate.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/validate.sh)"
-cat > scripts/validate.sh <<'LAB_FILE_EOF_5'
-#!/usr/bin/env bash
-set -euo pipefail
-
-echo "==> [LAB-DOC-10] Doğrulama Başlatılıyor: Docker Backup & Restore..."
-
-if [[ ! -f backup.sh || ! -f restore.sh ]]; then
-  echo "[HATA] backup.sh veya restore.sh bulunamadı! Lütfen ~/labs/LAB-DOC-10 dizininde çalıştırın." >&2
-  exit 1
-fi
-
-chmod +x backup.sh restore.sh
-
-echo "[1/3] backup.sh çalıştırılıyor..."
-bash backup.sh >/dev/null 2>&1
-
-if [[ ! -f alpine-backup.tar.gz || ! -f volume-backup.tar.gz ]]; then
-  echo "[HATA] Beklenen yedek dosyaları (alpine-backup.tar.gz, volume-backup.tar.gz) üretilemedi!" >&2
-  exit 1
-fi
-
-echo "[2/3] restore.sh çalıştırılıyor..."
-bash restore.sh >/dev/null 2>&1
-
-echo "[3/3] Geri yüklenen verinin doğruluğu kontrol ediliyor..."
-output=$(docker run --rm -v restored-app-data:/data alpine:3.21 cat /data/backup-test.txt 2>/dev/null || true)
-
-if [[ "$output" == *"DevOps Atolyesi"* ]]; then
-  echo "[PASS] Docker İmaj ve Volume Backup/Restore doğrulaması eksiksiz geçti!"
-  exit 0
-else
-  echo "[FAIL] Geri yüklenen volume verisi doğrulanamadı. Çıktı: '$output'" >&2
-  exit 1
-fi
-LAB_FILE_EOF_5
-chmod +x scripts/validate.sh
-```
-
-Başlangıç dosyalarını çalışma dizinine alın:
-
-```bash
-cp -a starter/. .
-```
+> [!TIP]
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-10.zip)](/downloads/LAB-DOC-10.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 
+> **Terminalde çalışma ortamını hazırlayın:**
+> ```bash
+> mkdir -p ~/labs/LAB-DOC-10
+> cd ~/labs/LAB-DOC-10
+> ```
 
 
 ## Amaç

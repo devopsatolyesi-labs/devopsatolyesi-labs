@@ -1,92 +1,17 @@
 # LAB-INC-01 — War Room: Kubernetes CrashLoopBackOff, ImagePullBackOff & Postmortem
 
-> [Bu labın başlangıç dosyalarını indir (ZIP)](/downloads/LAB-INC-01.zip) — paket README, starter ve doğrulama scriptlerini içerir; çözüm içermez.
+| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
+| :--- | :--- | :--- | :--- |
+| 🔴 **ADVANCED** (İleri Seviye) | ⏱️ 45 dakika | `kubernetes` | `Dahili / Küme İçi` |
 
-
-İndirdikten sonra terminalde: `unzip LAB-INC-01.zip && cd LAB-INC-01`
-
-## ZIP İndirmeden Dosyaları Oluşturma
-
-Aşağıdaki bloklar ZIP paketiyle birebir aynı dosyaları oluşturur.
-
-```bash
-mkdir -p ~/labs/LAB-INC-01
-cd ~/labs/LAB-INC-01
-```
-
-### `starter/faulty-deployment.yaml`
-
-```bash
-mkdir -p "$(dirname -- starter/faulty-deployment.yaml)"
-cat > starter/faulty-deployment.yaml <<'LAB_FILE_EOF_1'
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: incident-app
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: incident-app
-  template:
-    metadata:
-      labels:
-        app: incident-app
-    spec:
-      containers:
-        - name: app
-          image: busybox:1.37
-          command: ["sh", "-c", "exit 1"]
-LAB_FILE_EOF_1
-```
-
-### `scripts/cleanup.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/cleanup.sh)"
-cat > scripts/cleanup.sh <<'LAB_FILE_EOF_2'
-#!/usr/bin/env bash
-kubectl delete -f fixed-deployment.yaml --ignore-not-found=true 2>/dev/null || true
-echo "Cleanup completed for LAB-INC-01."
-LAB_FILE_EOF_2
-chmod +x scripts/cleanup.sh
-```
-
-### `scripts/reset.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/reset.sh)"
-cat > scripts/reset.sh <<'LAB_FILE_EOF_3'
-#!/usr/bin/env bash
-set -euo pipefail
-lab_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
-echo "Resetting workspace for LAB-INC-01..."
-bash "$lab_dir/scripts/cleanup.sh"
-cp -r "$lab_dir/starter"/. .
-echo "Workspace reset to starter state for LAB-INC-01."
-LAB_FILE_EOF_3
-chmod +x scripts/reset.sh
-```
-
-### `scripts/validate.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/validate.sh)"
-cat > scripts/validate.sh <<'LAB_FILE_EOF_4'
-#!/usr/bin/env bash
-set -euo pipefail
-echo "==> Validating LAB-INC-01: Incident fix deployment..."
-kubectl apply --dry-run=client -f fixed-deployment.yaml
-echo "[PASS] Fixed deployment syntax is valid and ready to resolve CrashLoopBackOff."
-LAB_FILE_EOF_4
-chmod +x scripts/validate.sh
-```
-
-Başlangıç dosyalarını çalışma dizinine alın:
-
-```bash
-cp -a starter/. .
-```
+> [!TIP]
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-INC-01.zip)](/downloads/LAB-INC-01.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 
+> **Terminalde çalışma ortamını hazırlayın:**
+> ```bash
+> mkdir -p ~/labs/LAB-INC-01
+> cd ~/labs/LAB-INC-01
+> ```
 
 
 ## 1. Lab Senaryosu

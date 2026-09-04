@@ -59,14 +59,14 @@ markdown_extensions:
 
 extra_javascript:
   - https://unpkg.com/mermaid@10.9.1/dist/mermaid.min.js
-  - javascripts/open_in_new_tab.js?v=20260904-6
+  - javascripts/open_in_new_tab.js?v=20260904-7
 
 nav:
   - Ana Sayfa: index.md
   - Eğitim Programı:
       - DevOps Practitioner — 5 Gün: curriculum/01_5_DAY_CURRICULUM.md
       - Docker and Kubernetes — 2 Gün: curriculum/02_2_DAY_DOCKER_KUBERNETES.md
-      - Lab Kataloğu İndeksi: curriculum/02_LAB_CATALOG_INDEX.md
+      - Lab Kataloğu (Zorluk Seviyeleri): curriculum/02_LAB_CATALOG_INDEX.md
       - Zorunlu Lablar Planı: curriculum/03_MANDATORY_LABS_DETAILED.md
       - Demo Uygulama Haritası: curriculum/06_DEMO_APPLICATION_MAPPING.md
   - Kurulum & Araç Hazırlığı:

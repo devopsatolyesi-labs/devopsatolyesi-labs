@@ -1,140 +1,17 @@
 # LAB-DOC-08 — Modern React / Statik Frontend Uygulamasını Nginx ile Dağıtma
 
-> [Bu labın başlangıç dosyalarını indir (ZIP)](/downloads/LAB-DOC-08.zip) — paket README, starter ve doğrulama scriptlerini içerir; çözüm içermez.
+| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
+| :--- | :--- | :--- | :--- |
+| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 40 dakika | `docker` | `80` |
 
-
-İndirdikten sonra terminalde: `unzip LAB-DOC-08.zip && cd LAB-DOC-08`
-
-## ZIP İndirmeden Dosyaları Oluşturma
-
-Aşağıdaki bloklar ZIP paketiyle birebir aynı dosyaları oluşturur.
-
-```bash
-mkdir -p ~/labs/LAB-DOC-08
-cd ~/labs/LAB-DOC-08
-```
-
-### `starter/Dockerfile`
-
-```bash
-mkdir -p "$(dirname -- starter/Dockerfile)"
-cat > starter/Dockerfile <<'LAB_FILE_EOF_1'
-# TODO: Aşama 1: Node.js Builder
-# FROM node:20-alpine AS builder
-
-# TODO: Aşama 2: Nginx Runtime
-# FROM nginx:alpine
-LAB_FILE_EOF_1
-```
-
-### `starter/index.html`
-
-```bash
-mkdir -p "$(dirname -- starter/index.html)"
-cat > starter/index.html <<'LAB_FILE_EOF_2'
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <title>DevOps Atölyesi Frontend</title>
-</head>
-<body>
-    <h1>Modern Frontend Nginx Container</h1>
-</body>
-</html>
-LAB_FILE_EOF_2
-```
-
-### `starter/nginx.conf`
-
-```bash
-mkdir -p "$(dirname -- starter/nginx.conf)"
-cat > starter/nginx.conf <<'LAB_FILE_EOF_3'
-events { worker_connections 1024; }
-
-http {
-    include /etc/nginx/mime.types;
-    default_type application/octet-stream;
-
-    gzip on;
-    gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
-
-    server {
-        listen 80;
-        server_name localhost;
-        root /usr/share/nginx/html;
-        index index.html;
-
-        # Single Page Application (SPA) Routing
-        location / {
-            try_files $uri $uri/ /index.html;
-        }
-
-        # Statik dosyalar için önbellekleme
-        location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg)$ {
-            expires 1y;
-            add_header Cache-Control "public, immutable";
-        }
-    }
-}
-LAB_FILE_EOF_3
-```
-
-### `scripts/cleanup.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/cleanup.sh)"
-cat > scripts/cleanup.sh <<'LAB_FILE_EOF_4'
-#!/usr/bin/env bash
-set -euo pipefail
-echo "[BİLGİ] LAB-DOC-08 temizlendi."
-LAB_FILE_EOF_4
-chmod +x scripts/cleanup.sh
-```
-
-### `scripts/reset.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/reset.sh)"
-cat > scripts/reset.sh <<'LAB_FILE_EOF_5'
-#!/usr/bin/env bash
-set -euo pipefail
-cp -a starter/. .
-echo "[BİLGİ] LAB-DOC-08 sıfırlandı."
-LAB_FILE_EOF_5
-chmod +x scripts/reset.sh
-```
-
-### `scripts/validate.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/validate.sh)"
-cat > scripts/validate.sh <<'LAB_FILE_EOF_6'
-#!/usr/bin/env bash
-set -euo pipefail
-
-echo "==> [LAB-DOC-08] Doğrulama Başlatılıyor: React / Static Frontend Nginx..."
-
-if [[ ! -f Dockerfile || ! -f nginx.conf ]]; then
-  echo "[HATA] Dockerfile veya nginx.conf bulunamadı! ~/labs/LAB-DOC-08 dizininde çalıştırın." >&2
-  exit 1
-fi
-
-if ! grep -q 'try_files' nginx.conf; then
-  echo "[HATA] nginx.conf dosyasında SPA desteği için 'try_files' yönlendirmesi bulunmalıdır." >&2
-  exit 1
-fi
-
-echo "[PASS] React / Statik Frontend Nginx yapılandırması başarıyla doğrulandı!"
-LAB_FILE_EOF_6
-chmod +x scripts/validate.sh
-```
-
-Başlangıç dosyalarını çalışma dizinine alın:
-
-```bash
-cp -a starter/. .
-```
+> [!TIP]
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-08.zip)](/downloads/LAB-DOC-08.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 
+> **Terminalde çalışma ortamını hazırlayın:**
+> ```bash
+> mkdir -p ~/labs/LAB-DOC-08
+> cd ~/labs/LAB-DOC-08
+> ```
 
 
 ## Amaç

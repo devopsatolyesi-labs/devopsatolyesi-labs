@@ -1,80 +1,17 @@
 # LAB-MON-01 — Prometheus Architecture, Scrape Targets & PromQL Basics
 
-> [Bu labın başlangıç dosyalarını indir (ZIP)](/downloads/LAB-MON-01.zip) — paket README, starter ve doğrulama scriptlerini içerir; çözüm içermez.
+| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
+| :--- | :--- | :--- | :--- |
+| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `monitoring` | `3000, 8000, 9090, 9100` |
 
-
-İndirdikten sonra terminalde: `unzip LAB-MON-01.zip && cd LAB-MON-01`
-
-## ZIP İndirmeden Dosyaları Oluşturma
-
-Aşağıdaki bloklar ZIP paketiyle birebir aynı dosyaları oluşturur.
-
-```bash
-mkdir -p ~/labs/LAB-MON-01
-cd ~/labs/LAB-MON-01
-```
-
-### `starter/prometheus.yml`
-
-```bash
-mkdir -p "$(dirname -- starter/prometheus.yml)"
-cat > starter/prometheus.yml <<'LAB_FILE_EOF_1'
-# TODO: Configure Prometheus scrape job
-global:
-  scrape_interval: 15s
-scrape_configs:
-  - job_name: 'prometheus'
-    static_configs:
-      - targets: ['localhost:9090']
-LAB_FILE_EOF_1
-```
-
-### `scripts/cleanup.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/cleanup.sh)"
-cat > scripts/cleanup.sh <<'LAB_FILE_EOF_2'
-#!/usr/bin/env bash
-echo "Cleanup completed for LAB-MON-01."
-LAB_FILE_EOF_2
-chmod +x scripts/cleanup.sh
-```
-
-### `scripts/reset.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/reset.sh)"
-cat > scripts/reset.sh <<'LAB_FILE_EOF_3'
-#!/usr/bin/env bash
-set -euo pipefail
-lab_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
-echo "Resetting workspace for LAB-MON-01..."
-bash "$lab_dir/scripts/cleanup.sh"
-cp -r "$lab_dir/starter"/. .
-echo "Workspace reset to starter state for LAB-MON-01."
-LAB_FILE_EOF_3
-chmod +x scripts/reset.sh
-```
-
-### `scripts/validate.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/validate.sh)"
-cat > scripts/validate.sh <<'LAB_FILE_EOF_4'
-#!/usr/bin/env bash
-set -euo pipefail
-echo "==> Validating LAB-MON-01: Prometheus configuration..."
-docker run --rm -v "$(pwd)/prometheus.yml:/etc/prometheus/prometheus.yml" prom/prometheus:v3.13.2 check config /etc/prometheus/prometheus.yml
-echo "[PASS] Prometheus configuration syntax verified."
-LAB_FILE_EOF_4
-chmod +x scripts/validate.sh
-```
-
-Başlangıç dosyalarını çalışma dizinine alın:
-
-```bash
-cp -a starter/. .
-```
+> [!TIP]
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-MON-01.zip)](/downloads/LAB-MON-01.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 
+> **Terminalde çalışma ortamını hazırlayın:**
+> ```bash
+> mkdir -p ~/labs/LAB-MON-01
+> cd ~/labs/LAB-MON-01
+> ```
 
 
 ## 1. Lab Senaryosu

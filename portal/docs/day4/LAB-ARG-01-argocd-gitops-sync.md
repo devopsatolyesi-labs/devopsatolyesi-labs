@@ -1,79 +1,17 @@
 # LAB-ARG-01 — GitOps with Argo CD: Setup, Declarative Sync & Self-Healing
 
-> [Bu labın başlangıç dosyalarını indir (ZIP)](/downloads/LAB-ARG-01.zip) — paket README, starter ve doğrulama scriptlerini içerir; çözüm içermez.
+| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
+| :--- | :--- | :--- | :--- |
+| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `kubernetes, argocd` | `8085` |
 
-
-İndirdikten sonra terminalde: `unzip LAB-ARG-01.zip && cd LAB-ARG-01`
-
-## ZIP İndirmeden Dosyaları Oluşturma
-
-Aşağıdaki bloklar ZIP paketiyle birebir aynı dosyaları oluşturur.
-
-```bash
-mkdir -p ~/labs/LAB-ARG-01
-cd ~/labs/LAB-ARG-01
-```
-
-### `starter/application.yaml`
-
-```bash
-mkdir -p "$(dirname -- starter/application.yaml)"
-cat > starter/application.yaml <<'LAB_FILE_EOF_1'
-# TODO: Argo CD Application CRD
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: demo-gitops-app
-LAB_FILE_EOF_1
-```
-
-### `scripts/cleanup.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/cleanup.sh)"
-cat > scripts/cleanup.sh <<'LAB_FILE_EOF_2'
-#!/usr/bin/env bash
-kubectl delete -f application.yaml --ignore-not-found=true 2>/dev/null || true
-echo "Cleanup completed for LAB-ARG-01."
-LAB_FILE_EOF_2
-chmod +x scripts/cleanup.sh
-```
-
-### `scripts/reset.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/reset.sh)"
-cat > scripts/reset.sh <<'LAB_FILE_EOF_3'
-#!/usr/bin/env bash
-set -euo pipefail
-lab_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
-echo "Resetting workspace for LAB-ARG-01..."
-bash "$lab_dir/scripts/cleanup.sh"
-cp -r "$lab_dir/starter"/. .
-echo "Workspace reset to starter state for LAB-ARG-01."
-LAB_FILE_EOF_3
-chmod +x scripts/reset.sh
-```
-
-### `scripts/validate.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/validate.sh)"
-cat > scripts/validate.sh <<'LAB_FILE_EOF_4'
-#!/usr/bin/env bash
-set -euo pipefail
-echo "==> Validating LAB-ARG-01: Argo CD Application manifest..."
-kubectl apply --dry-run=client -f application.yaml
-echo "[PASS] Argo CD Application manifest syntax verified."
-LAB_FILE_EOF_4
-chmod +x scripts/validate.sh
-```
-
-Başlangıç dosyalarını çalışma dizinine alın:
-
-```bash
-cp -a starter/. .
-```
+> [!TIP]
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-ARG-01.zip)](/downloads/LAB-ARG-01.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 
+> **Terminalde çalışma ortamını hazırlayın:**
+> ```bash
+> mkdir -p ~/labs/LAB-ARG-01
+> cd ~/labs/LAB-ARG-01
+> ```
 
 
 ## 1. Lab Senaryosu

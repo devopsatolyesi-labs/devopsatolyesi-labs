@@ -1,78 +1,17 @@
 # LAB-HLM-01 — Helm Fundamentals: Chart Structure, Custom Values & Release Management
 
-> [Bu labın başlangıç dosyalarını indir (ZIP)](/downloads/LAB-HLM-01.zip) — paket README, starter ve doğrulama scriptlerini içerir; çözüm içermez.
+| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
+| :--- | :--- | :--- | :--- |
+| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `kubernetes` | `Dahili / Küme İçi` |
 
-
-İndirdikten sonra terminalde: `unzip LAB-HLM-01.zip && cd LAB-HLM-01`
-
-## ZIP İndirmeden Dosyaları Oluşturma
-
-Aşağıdaki bloklar ZIP paketiyle birebir aynı dosyaları oluşturur.
-
-```bash
-mkdir -p ~/labs/LAB-HLM-01
-cd ~/labs/LAB-HLM-01
-```
-
-### `starter/Chart.yaml`
-
-```bash
-mkdir -p "$(dirname -- starter/Chart.yaml)"
-cat > starter/Chart.yaml <<'LAB_FILE_EOF_1'
-apiVersion: v2
-name: demo-app
-description: A Helm chart for Kubernetes training
-version: 0.1.0
-appVersion: "1.0.0"
-LAB_FILE_EOF_1
-```
-
-### `scripts/cleanup.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/cleanup.sh)"
-cat > scripts/cleanup.sh <<'LAB_FILE_EOF_2'
-#!/usr/bin/env bash
-echo "Cleanup completed for LAB-HLM-01."
-LAB_FILE_EOF_2
-chmod +x scripts/cleanup.sh
-```
-
-### `scripts/reset.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/reset.sh)"
-cat > scripts/reset.sh <<'LAB_FILE_EOF_3'
-#!/usr/bin/env bash
-set -euo pipefail
-lab_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
-echo "Resetting workspace for LAB-HLM-01..."
-bash "$lab_dir/scripts/cleanup.sh"
-cp -r "$lab_dir/starter"/. .
-echo "Workspace reset to starter state for LAB-HLM-01."
-LAB_FILE_EOF_3
-chmod +x scripts/reset.sh
-```
-
-### `scripts/validate.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/validate.sh)"
-cat > scripts/validate.sh <<'LAB_FILE_EOF_4'
-#!/usr/bin/env bash
-set -euo pipefail
-echo "==> Validating LAB-HLM-01: Helm Chart structure..."
-helm lint .
-echo "[PASS] Helm chart lint completed with zero errors."
-LAB_FILE_EOF_4
-chmod +x scripts/validate.sh
-```
-
-Başlangıç dosyalarını çalışma dizinine alın:
-
-```bash
-cp -a starter/. .
-```
+> [!TIP]
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-HLM-01.zip)](/downloads/LAB-HLM-01.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 
+> **Terminalde çalışma ortamını hazırlayın:**
+> ```bash
+> mkdir -p ~/labs/LAB-HLM-01
+> cd ~/labs/LAB-HLM-01
+> ```
 
 
 ## 1. Lab Senaryosu

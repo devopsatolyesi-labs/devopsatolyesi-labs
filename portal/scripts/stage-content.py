@@ -54,54 +54,36 @@ def visible_lab_files(assets: Path) -> list[tuple[Path, Path]]:
     return files
 
 
-def render_visible_lab_files(assets: Path, lab_id: str) -> str:
-    files = visible_lab_files(assets)
-    if not files:
-        return ""
-    output = ["", "## ZIP İndirmeden Dosyaları Oluşturma", ""]
-    output.extend(
-        [
-            "Aşağıdaki bloklar ZIP paketiyle birebir aynı dosyaları oluşturur.",
-            "",
-            "```bash",
-            f"mkdir -p ~/labs/{lab_id}",
-            f"cd ~/labs/{lab_id}",
-            "```",
-        ]
-    )
-    for index, (source, relative) in enumerate(files, start=1):
-        content = source.read_text(encoding="utf-8")
-        delimiter = f"LAB_FILE_EOF_{index}"
-        while delimiter in content.splitlines():
-            delimiter += "_X"
-        target = shlex.quote(relative.as_posix())
-        output.extend(
-            [
-                "",
-                f"### `{relative.as_posix()}`",
-                "",
-                "```bash",
-                f"mkdir -p \"$(dirname -- {target})\"",
-                f"cat > {target} <<'{delimiter}'",
-                content.rstrip(),
-                delimiter,
-            ]
-        )
-        if relative.parts[0] == "scripts":
-            output.append(f"chmod +x {target}")
-        output.append("```")
-    if any(relative.parts[0] == "starter" for _, relative in files):
-        output.extend(
-            [
-                "",
-                "Başlangıç dosyalarını çalışma dizinine alın:",
-                "",
-                "```bash",
-                "cp -a starter/. .",
-                "```",
-            ]
-        )
-    return "\n".join(output) + "\n"
+def format_lab_header(lab: dict) -> str:
+    diff_val = lab.get("difficulty", 200)
+    if diff_val <= 100:
+        difficulty = "🟢 **CORE** (Temel Seviye)"
+    elif diff_val <= 200:
+        difficulty = "🟡 **PRACTITIONER** (Orta Seviye)"
+    else:
+        difficulty = "🔴 **ADVANCED** (İleri Seviye)"
+
+    minutes = lab.get("estimated_minutes", 45)
+    profiles = ", ".join(lab.get("profiles", [])) or "docker"
+    ports = ", ".join(str(p) for p in lab.get("ports", [])) or "Dahili / Küme İçi"
+
+    header = [
+        "",
+        "| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |",
+        "| :--- | :--- | :--- | :--- |",
+        f"| {difficulty} | ⏱️ {minutes} dakika | `{profiles}` | `{ports}` |",
+        "",
+        "> [!TIP]",
+        f"> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir ({lab['id']}.zip)](/downloads/{lab['id']}.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.",
+        "> ",
+        "> **Terminalde çalışma ortamını hazırlayın:**",
+        "> ```bash",
+        f"> mkdir -p ~/labs/{lab['id']}",
+        f"> cd ~/labs/{lab['id']}",
+        "> ```",
+        "",
+    ]
+    return "\n".join(header)
 
 
 def remove_path(path: Path) -> None:
@@ -154,20 +136,11 @@ def main() -> None:
         package_guide = studentize_guide(canonical_guide)
         guide = package_guide.replace("../../lab-assets/", "../lab-assets/")
         guide_lines = guide.splitlines()
-        guide_lines.insert(
-            1,
-            f"\n> [Bu labın başlangıç dosyalarını indir (ZIP)](/downloads/{lab['id']}.zip)"
-            " — paket README, starter ve doğrulama scriptlerini içerir; çözüm içermez.\n",
-        )
-        assets = training.parent / lab["assets"]
-        guide_lines.insert(
-            2,
-            f"\nİndirdikten sonra terminalde: `unzip {lab['id']}.zip && cd {lab['id']}`\n"
-            + render_visible_lab_files(assets, lab["id"]),
-        )
+        guide_lines.insert(1, format_lab_header(lab))
         guide = "\n".join(guide_lines) + "\n"
         candidates[0].write_text(guide, encoding="utf-8")
 
+        assets = training.parent / lab["assets"]
         download = docs / "downloads" / f"{lab['id']}.zip"
         download.parent.mkdir(parents=True, exist_ok=True)
         with zipfile.ZipFile(download, "w", compression=zipfile.ZIP_DEFLATED) as archive:

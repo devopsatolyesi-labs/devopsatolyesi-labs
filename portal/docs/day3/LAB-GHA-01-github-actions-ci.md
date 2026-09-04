@@ -1,106 +1,17 @@
 # LAB-GHA-01 — GitHub Actions ile Sürekli Entegrasyon (CI) ve Otomatik Test
 
-> [Bu labın başlangıç dosyalarını indir (ZIP)](/downloads/LAB-GHA-01.zip) — paket README, starter ve doğrulama scriptlerini içerir; çözüm içermez.
+| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
+| :--- | :--- | :--- | :--- |
+| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `docker` | `Dahili / Küme İçi` |
 
-
-İndirdikten sonra terminalde: `unzip LAB-GHA-01.zip && cd LAB-GHA-01`
-
-## ZIP İndirmeden Dosyaları Oluşturma
-
-Aşağıdaki bloklar ZIP paketiyle birebir aynı dosyaları oluşturur.
-
-```bash
-mkdir -p ~/labs/LAB-GHA-01
-cd ~/labs/LAB-GHA-01
-```
-
-### `starter/.github/workflows/ci.yml`
-
-```bash
-mkdir -p "$(dirname -- starter/.github/workflows/ci.yml)"
-cat > starter/.github/workflows/ci.yml <<'LAB_FILE_EOF_1'
-name: Python Application CI
-
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
-jobs:
-  # TODO: Python test ve lint adımlarını içeren bir test job'ı tanımlayın
-  # TODO: Docker build ve Trivy güvenlik taraması içeren bir build job'ı tanımlayın
-LAB_FILE_EOF_1
-```
-
-### `starter/test_app.py`
-
-```bash
-mkdir -p "$(dirname -- starter/test_app.py)"
-cat > starter/test_app.py <<'LAB_FILE_EOF_2'
-def add(x, y):
-    return x + y
-
-def test_add():
-    assert add(2, 3) == 5
-LAB_FILE_EOF_2
-```
-
-### `scripts/cleanup.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/cleanup.sh)"
-cat > scripts/cleanup.sh <<'LAB_FILE_EOF_3'
-#!/usr/bin/env bash
-set -euo pipefail
-echo "[BİLGİ] LAB-GHA-01 temizlendi."
-LAB_FILE_EOF_3
-chmod +x scripts/cleanup.sh
-```
-
-### `scripts/reset.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/reset.sh)"
-cat > scripts/reset.sh <<'LAB_FILE_EOF_4'
-#!/usr/bin/env bash
-set -euo pipefail
-cp -a starter/. .
-echo "[BİLGİ] LAB-GHA-01 sıfırlandı."
-LAB_FILE_EOF_4
-chmod +x scripts/reset.sh
-```
-
-### `scripts/validate.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/validate.sh)"
-cat > scripts/validate.sh <<'LAB_FILE_EOF_5'
-#!/usr/bin/env bash
-set -euo pipefail
-
-echo "==> [LAB-GHA-01] Doğrulama Başlatılıyor: GitHub Actions CI..."
-
-if [[ ! -f .github/workflows/ci.yml ]]; then
-  echo "[HATA] .github/workflows/ci.yml bulunamadı! ~/labs/LAB-GHA-01 dizininde çalıştırın." >&2
-  exit 1
-fi
-
-if ! grep -q 'runs-on: ubuntu-latest' .github/workflows/ci.yml || ! grep -q 'actions/checkout' .github/workflows/ci.yml; then
-  echo "[HATA] Workflow içinde 'runs-on: ubuntu-latest' ve 'actions/checkout' adımları bulunmalıdır." >&2
-  exit 1
-fi
-
-echo "[PASS] GitHub Actions CI workflow dosyası ve adımları başarıyla doğrulandı!"
-LAB_FILE_EOF_5
-chmod +x scripts/validate.sh
-```
-
-Başlangıç dosyalarını çalışma dizinine alın:
-
-```bash
-cp -a starter/. .
-```
+> [!TIP]
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-GHA-01.zip)](/downloads/LAB-GHA-01.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 
+> **Terminalde çalışma ortamını hazırlayın:**
+> ```bash
+> mkdir -p ~/labs/LAB-GHA-01
+> cd ~/labs/LAB-GHA-01
+> ```
 
 
 ## Amaç

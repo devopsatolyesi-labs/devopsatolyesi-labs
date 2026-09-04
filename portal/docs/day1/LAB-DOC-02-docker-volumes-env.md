@@ -1,103 +1,17 @@
 # LAB-DOC-02 — Docker Volumes, Ortam Değişkenleri ve Veri Kalıcılığı
 
-> [Bu labın başlangıç dosyalarını indir (ZIP)](/downloads/LAB-DOC-02.zip) — paket README, starter ve doğrulama scriptlerini içerir; çözüm içermez.
+| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
+| :--- | :--- | :--- | :--- |
+| 🟢 **CORE** (Temel Seviye) | ⏱️ 40 dakika | `docker` | `5432` |
 
-
-İndirdikten sonra terminalde: `unzip LAB-DOC-02.zip && cd LAB-DOC-02`
-
-## ZIP İndirmeden Dosyaları Oluşturma
-
-Aşağıdaki bloklar ZIP paketiyle birebir aynı dosyaları oluşturur.
-
-```bash
-mkdir -p ~/labs/LAB-DOC-02
-cd ~/labs/LAB-DOC-02
-```
-
-### `starter/compose.yaml`
-
-```bash
-mkdir -p "$(dirname -- starter/compose.yaml)"
-cat > starter/compose.yaml <<'LAB_FILE_EOF_1'
-# LAB-DOC-02 Starter
-services:
-  database:
-    image: postgres:16-alpine
-    # TODO: Add environment variables and named volume persistence
-LAB_FILE_EOF_1
-```
-
-### `scripts/cleanup.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/cleanup.sh)"
-cat > scripts/cleanup.sh <<'LAB_FILE_EOF_2'
-#!/usr/bin/env bash
-docker compose -p lab-doc-02 down -v 2>/dev/null || true
-echo "Cleanup completed for LAB-DOC-02."
-LAB_FILE_EOF_2
-chmod +x scripts/cleanup.sh
-```
-
-### `scripts/reset.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/reset.sh)"
-cat > scripts/reset.sh <<'LAB_FILE_EOF_3'
-#!/usr/bin/env bash
-set -euo pipefail
-echo "Resetting workspace for LAB-DOC-02..."
-script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
-bash "$script_dir/cleanup.sh"
-cp -a "$script_dir/../starter/." .
-echo "Workspace reset to starter state for LAB-DOC-02."
-LAB_FILE_EOF_3
-chmod +x scripts/reset.sh
-```
-
-### `scripts/validate.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/validate.sh)"
-cat > scripts/validate.sh <<'LAB_FILE_EOF_4'
-#!/usr/bin/env bash
-set -euo pipefail
-echo "==> Validating LAB-DOC-02: Volumes & Environment..."
-export LAB_POSTGRES_PASSWORD=${LAB_POSTGRES_PASSWORD:-training-only-password}
-project=lab-doc-02
-cleanup() {
-    docker compose -p "$project" down -v >/dev/null 2>&1 || true
-}
-trap cleanup EXIT
-
-docker compose -p "$project" config --quiet
-docker compose -p "$project" up -d --wait
-docker compose -p "$project" exec -T database \
-    psql -U devops -d training -v ON_ERROR_STOP=1 -c \
-    "CREATE TABLE IF NOT EXISTS lab_events(name text); TRUNCATE lab_events; INSERT INTO lab_events VALUES ('volume-ok');" \
-    >/dev/null
-
-first_container=$(docker compose -p "$project" ps -q database)
-docker compose -p "$project" rm -sf database >/dev/null
-docker compose -p "$project" up -d --wait
-second_container=$(docker compose -p "$project" ps -q database)
-row_count=$(docker compose -p "$project" exec -T database \
-    psql -U devops -d training -tAc "SELECT count(*) FROM lab_events WHERE name='volume-ok';")
-
-if [[ "$first_container" == "$second_container" || "$row_count" != "1" ]]; then
-    echo "[FAIL] LAB-DOC-02 container recreation or persisted row check failed." >&2
-    exit 1
-fi
-echo "[PASS] LAB-DOC-02 volume persistence verified."
-LAB_FILE_EOF_4
-chmod +x scripts/validate.sh
-```
-
-Başlangıç dosyalarını çalışma dizinine alın:
-
-```bash
-cp -a starter/. .
-```
+> [!TIP]
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-02.zip)](/downloads/LAB-DOC-02.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 
+> **Terminalde çalışma ortamını hazırlayın:**
+> ```bash
+> mkdir -p ~/labs/LAB-DOC-02
+> cd ~/labs/LAB-DOC-02
+> ```
 
 
 ## Amaç

@@ -1,112 +1,17 @@
 # LAB-DOC-06 — Trivy ile İmaj Güvenlik Taraması ve Registry Entegrasyonu
 
-> [Bu labın başlangıç dosyalarını indir (ZIP)](/downloads/LAB-DOC-06.zip) — paket README, starter ve doğrulama scriptlerini içerir; çözüm içermez.
+| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
+| :--- | :--- | :--- | :--- |
+| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 30 dakika | `docker` | `Dahili / Küme İçi` |
 
-
-İndirdikten sonra terminalde: `unzip LAB-DOC-06.zip && cd LAB-DOC-06`
-
-## ZIP İndirmeden Dosyaları Oluşturma
-
-Aşağıdaki bloklar ZIP paketiyle birebir aynı dosyaları oluşturur.
-
-```bash
-mkdir -p ~/labs/LAB-DOC-06
-cd ~/labs/LAB-DOC-06
-```
-
-### `starter/Dockerfile`
-
-```bash
-mkdir -p "$(dirname -- starter/Dockerfile)"
-cat > starter/Dockerfile <<'LAB_FILE_EOF_1'
-FROM alpine:3.18
-RUN apk add --no-cache curl
-CMD ["echo", "Security Test"]
-LAB_FILE_EOF_1
-```
-
-### `starter/trivy-scan.sh`
-
-```bash
-mkdir -p "$(dirname -- starter/trivy-scan.sh)"
-cat > starter/trivy-scan.sh <<'LAB_FILE_EOF_2'
-#!/usr/bin/env bash
-set -euo pipefail
-
-# TODO: Docker üzerinden aquasec/trivy imajını çalıştırarak 'alpine:3.21' imajını tarayın:
-# 1. Yalnızca CRITICAL seviyesindeki açıkları filtreleyin (--severity CRITICAL)
-# 2. Henüz düzeltmesi (fix) olmayan açıkları hariç tutun (--ignore-unfixed)
-# 3. Kritik açık tespit edildiğinde exit code 1 üretin (--exit-code 1)
-# 4. Host Docker socket'ini bağlayın (-v /var/run/docker.sock:/var/run/docker.sock)
-
-# docker run --rm -v /var/run/docker.sock:/var/run/docker.sock #   aquasec/trivy:0.74.0 image #   --severity CRITICAL #   --ignore-unfixed #   --exit-code 1 #   alpine:3.21
-LAB_FILE_EOF_2
-```
-
-### `scripts/cleanup.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/cleanup.sh)"
-cat > scripts/cleanup.sh <<'LAB_FILE_EOF_3'
-#!/usr/bin/env bash
-set -euo pipefail
-
-echo "==> [LAB-DOC-06] Temizleniyor..."
-echo "[BİLGİ] LAB-DOC-06 kaynakları temizlendi."
-LAB_FILE_EOF_3
-chmod +x scripts/cleanup.sh
-```
-
-### `scripts/reset.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/reset.sh)"
-cat > scripts/reset.sh <<'LAB_FILE_EOF_4'
-#!/usr/bin/env bash
-set -euo pipefail
-
-echo "==> [LAB-DOC-06] Sıfırlanıyor..."
-cp -a starter/. .
-echo "[BİLGİ] LAB-DOC-06 başlangıç durumuna sıfırlandı."
-LAB_FILE_EOF_4
-chmod +x scripts/reset.sh
-```
-
-### `scripts/validate.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/validate.sh)"
-cat > scripts/validate.sh <<'LAB_FILE_EOF_5'
-#!/usr/bin/env bash
-set -euo pipefail
-
-echo "==> [LAB-DOC-06] Doğrulama Başlatılıyor: Trivy Güvenlik Taraması..."
-
-if [[ ! -f trivy-scan.sh ]]; then
-  echo "[HATA] trivy-scan.sh bulunamadı! Lütfen ~/labs/LAB-DOC-06 dizininde çalıştırın." >&2
-  exit 1
-fi
-
-if ! grep -q 'severity' trivy-scan.sh || ! grep -q 'exit-code' trivy-scan.sh; then
-  echo "[HATA] trivy-scan.sh içerisinde --severity ve --exit-code parametreleri bulunmalıdır." >&2
-  exit 1
-fi
-
-echo "[1/2] trivy-scan.sh çalıştırılıyor..."
-chmod +x trivy-scan.sh
-bash trivy-scan.sh >/dev/null 2>&1 || true
-
-echo "[2/2] Trivy güvenlik parametreleri ve exit code mantığı doğrulandı."
-echo "[PASS] Trivy Container Security Gate başarıyla doğrulandı!"
-LAB_FILE_EOF_5
-chmod +x scripts/validate.sh
-```
-
-Başlangıç dosyalarını çalışma dizinine alın:
-
-```bash
-cp -a starter/. .
-```
+> [!TIP]
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-06.zip)](/downloads/LAB-DOC-06.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 
+> **Terminalde çalışma ortamını hazırlayın:**
+> ```bash
+> mkdir -p ~/labs/LAB-DOC-06
+> cd ~/labs/LAB-DOC-06
+> ```
 
 
 ## Amaç

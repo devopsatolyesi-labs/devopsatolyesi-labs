@@ -96,6 +96,40 @@ Lablara başlamadan önce ihtiyaç duyacağınız araçları ve altyapıyı **[K
 
 ---
 
+## 🎯 Zorluk Seviyesine Göre Lab Kataloğu ve Seçim
+
+Tüm 34 laboratuvarı zorluk derecelerine, sürelere ve port gereksinimlerine göre filtrelemek için **[Lab Kataloğu ve Zorluk Filtresi](curriculum/02_LAB_CATALOG_INDEX/)** sayfasını kullanabilirsiniz:
+
+<div class="grid cards" markdown>
+
+-   :material-numeric-1-box-outline:{ .lg .middle } **🟢 CORE (Temel Seviye — 9 Lab)**
+
+    ---
+
+    Linux sistem analizi, Git akışları, ilk Docker konteyneri, volumes/env, Jenkins declarative CI ve temel Kubernetes.
+
+    [:octicons-arrow-right-24: CORE Lablarını İncele](curriculum/02_LAB_CATALOG_INDEX/)
+
+-   :material-numeric-2-box-outline:{ .lg .middle } **🟡 PRACTITIONER (Üretim Seviyesi — 19 Lab)**
+
+    ---
+
+    Multi-stage hardening, Java Spring Boot JVM optimizasyonu, React/Nginx, Compose, Trivy, GitLab CI, K8s iş yükleri, Helm ve Argo CD.
+
+    [:octicons-arrow-right-24: PRACTITIONER Lablarını İncele](curriculum/02_LAB_CATALOG_INDEX/)
+
+-   :material-numeric-3-box-outline:{ .lg .middle } **🔴 ADVANCED (İleri Seviye — 6 Lab)**
+
+    ---
+
+    Enterprise Compose, AWS VPC, ELK merkezi log analitiği, Kubernetes CrashLoop War Room / Postmortem ve Uçtan Uca Capstone.
+
+    [:octicons-arrow-right-24: ADVANCED Lablarını İncele](curriculum/02_LAB_CATALOG_INDEX/)
+
+</div>
+
+---
+
 ## 📚 Eğitim Modülleri ve Laboratuvarlar
 
 <div class="grid cards" markdown>

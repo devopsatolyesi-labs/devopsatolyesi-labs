@@ -19,4 +19,9 @@ if ! grep -q 'MaxRAMPercentage' Dockerfile && ! grep -q 'UseContainerSupport' Do
   exit 1
 fi
 
+if ! grep -q 'USER' Dockerfile; then
+  echo "[HATA] Dockerfile içerisinde kısıtlı kullanıcı (USER) tanımlanmalıdır." >&2
+  exit 1
+fi
+
 echo "[PASS] Java Spring Boot multi-stage build ve JVM optimizasyonu başarıyla doğrulandı!"

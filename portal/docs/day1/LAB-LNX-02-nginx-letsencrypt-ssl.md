@@ -1,113 +1,17 @@
 # LAB-LNX-02 — Nginx Üzerinde Let's Encrypt SSL/TLS Kurulumu ve Otomatik Yenileme
 
-> [Bu labın başlangıç dosyalarını indir (ZIP)](/downloads/LAB-LNX-02.zip) — paket README, starter ve doğrulama scriptlerini içerir; çözüm içermez.
+| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
+| :--- | :--- | :--- | :--- |
+| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 40 dakika | `docker` | `80, 443` |
 
-
-İndirdikten sonra terminalde: `unzip LAB-LNX-02.zip && cd LAB-LNX-02`
-
-## ZIP İndirmeden Dosyaları Oluşturma
-
-Aşağıdaki bloklar ZIP paketiyle birebir aynı dosyaları oluşturur.
-
-```bash
-mkdir -p ~/labs/LAB-LNX-02
-cd ~/labs/LAB-LNX-02
-```
-
-### `starter/certbot-setup.sh`
-
-```bash
-mkdir -p "$(dirname -- starter/certbot-setup.sh)"
-cat > starter/certbot-setup.sh <<'LAB_FILE_EOF_1'
-#!/usr/bin/env bash
-set -euo pipefail
-
-# TODO: Certbot ile test sertifikası üretin veya kendi kendine imzalı simülasyon sertifikası oluşturun
-LAB_FILE_EOF_1
-```
-
-### `starter/nginx.conf`
-
-```bash
-mkdir -p "$(dirname -- starter/nginx.conf)"
-cat > starter/nginx.conf <<'LAB_FILE_EOF_2'
-events { worker_connections 1024; }
-
-http {
-    server {
-        listen 80;
-        server_name example.devopsatolyesi.local;
-
-        # TODO: Let's Encrypt / Certbot ACME challenge dizinini tanımlayın
-        # location /.well-known/acme-challenge/ {
-        #     root /var/www/certbot;
-        # }
-
-        # TODO: Tüm HTTP trafiğini HTTPS'e yönlendirin (301 redirect)
-        location / {
-            return 200 "HTTP Insecure Server\n";
-        }
-    }
-}
-LAB_FILE_EOF_2
-```
-
-### `scripts/cleanup.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/cleanup.sh)"
-cat > scripts/cleanup.sh <<'LAB_FILE_EOF_3'
-#!/usr/bin/env bash
-set -euo pipefail
-sudo rm -rf /etc/letsencrypt/live/example.devopsatolyesi.local 2>/dev/null || true
-echo "[BİLGİ] LAB-LNX-02 temizlendi."
-LAB_FILE_EOF_3
-chmod +x scripts/cleanup.sh
-```
-
-### `scripts/reset.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/reset.sh)"
-cat > scripts/reset.sh <<'LAB_FILE_EOF_4'
-#!/usr/bin/env bash
-set -euo pipefail
-cp -a starter/. .
-echo "[BİLGİ] LAB-LNX-02 sıfırlandı."
-LAB_FILE_EOF_4
-chmod +x scripts/reset.sh
-```
-
-### `scripts/validate.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/validate.sh)"
-cat > scripts/validate.sh <<'LAB_FILE_EOF_5'
-#!/usr/bin/env bash
-set -euo pipefail
-
-echo "==> [LAB-LNX-02] Doğrulama Başlatılıyor: Nginx Let's Encrypt SSL/TLS..."
-
-if [[ ! -f nginx.conf ]]; then
-  echo "[HATA] nginx.conf dosyası bulunamadı! ~/labs/LAB-LNX-02 dizininde çalıştırın." >&2
-  exit 1
-fi
-
-if ! grep -q '443 ssl' nginx.conf || ! grep -q 'return 301 https' nginx.conf; then
-  echo "[HATA] nginx.conf içinde 443 ssl ve HTTPS yönlendirmesi (301) tanımlanmalıdır." >&2
-  exit 1
-fi
-
-echo "[PASS] Nginx SSL/TLS konfigürasyonu ve HTTPS yönlendirmesi başarıyla doğrulandı!"
-LAB_FILE_EOF_5
-chmod +x scripts/validate.sh
-```
-
-Başlangıç dosyalarını çalışma dizinine alın:
-
-```bash
-cp -a starter/. .
-```
+> [!TIP]
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-LNX-02.zip)](/downloads/LAB-LNX-02.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 
+> **Terminalde çalışma ortamını hazırlayın:**
+> ```bash
+> mkdir -p ~/labs/LAB-LNX-02
+> cd ~/labs/LAB-LNX-02
+> ```
 
 
 ## Amaç

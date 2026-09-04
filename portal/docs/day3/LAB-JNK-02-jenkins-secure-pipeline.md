@@ -1,121 +1,17 @@
 # LAB-JNK-02 — Jenkins Secure Pipeline: SonarQube Gate, Trivy & Harbor
 
-> [Bu labın başlangıç dosyalarını indir (ZIP)](/downloads/LAB-JNK-02.zip) — paket README, starter ve doğrulama scriptlerini içerir; çözüm içermez.
+| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
+| :--- | :--- | :--- | :--- |
+| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 60 dakika | `secure-ci, harbor` | `8080, 8082, 9000` |
 
-
-İndirdikten sonra terminalde: `unzip LAB-JNK-02.zip && cd LAB-JNK-02`
-
-## ZIP İndirmeden Dosyaları Oluşturma
-
-Aşağıdaki bloklar ZIP paketiyle birebir aynı dosyaları oluşturur.
-
-```bash
-mkdir -p ~/labs/LAB-JNK-02
-cd ~/labs/LAB-JNK-02
-```
-
-### `starter/Dockerfile`
-
-```bash
-mkdir -p "$(dirname -- starter/Dockerfile)"
-cat > starter/Dockerfile <<'LAB_FILE_EOF_1'
-FROM python:3.11-alpine
-WORKDIR /app
-COPY app/ /app/
-EXPOSE 8000
-CMD ["python", "main.py"]
-LAB_FILE_EOF_1
-```
-
-### `starter/Jenkinsfile`
-
-```bash
-mkdir -p "$(dirname -- starter/Jenkinsfile)"
-cat > starter/Jenkinsfile <<'LAB_FILE_EOF_2'
-// TODO: DevSecOps pipeline with SonarQube Quality Gate, Trivy scan and Harbor push
-pipeline {
-    agent any
-    stages {
-        stage('Checkout') {
-            steps { echo 'Checkout...' }
-        }
-    }
-}
-LAB_FILE_EOF_2
-```
-
-### `starter/app/main.py`
-
-```bash
-mkdir -p "$(dirname -- starter/app/main.py)"
-cat > starter/app/main.py <<'LAB_FILE_EOF_3'
-from http.server import HTTPServer, BaseHTTPRequestHandler
-import json
-
-class PaymentHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)
-        self.send_header('Content-Type', 'application/json')
-        self.end_headers()
-        self.wfile.write(json.dumps({"service": "secure-payment-service", "status": "active"}).encode())
-
-if __name__ == '__main__':
-    server = HTTPServer(('0.0.0.0', 8000), PaymentHandler)
-    server.serve_forever()
-LAB_FILE_EOF_3
-```
-
-### `scripts/cleanup.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/cleanup.sh)"
-cat > scripts/cleanup.sh <<'LAB_FILE_EOF_4'
-#!/usr/bin/env bash
-echo "Cleanup completed for LAB-JNK-02."
-LAB_FILE_EOF_4
-chmod +x scripts/cleanup.sh
-```
-
-### `scripts/reset.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/reset.sh)"
-cat > scripts/reset.sh <<'LAB_FILE_EOF_5'
-#!/usr/bin/env bash
-set -euo pipefail
-lab_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
-echo "Resetting workspace for LAB-JNK-02..."
-bash "$lab_dir/scripts/cleanup.sh"
-cp -r "$lab_dir/starter"/. .
-echo "Workspace reset to starter state for LAB-JNK-02."
-LAB_FILE_EOF_5
-chmod +x scripts/reset.sh
-```
-
-### `scripts/validate.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/validate.sh)"
-cat > scripts/validate.sh <<'LAB_FILE_EOF_6'
-#!/usr/bin/env bash
-set -euo pipefail
-echo "==> Validating LAB-JNK-02: DevSecOps Pipeline..."
-if [ -f Jenkinsfile ] && grep -q "Trivy" Jenkinsfile && [ -f Dockerfile ]; then
-    echo "[PASS] LAB-JNK-02 DevSecOps pipeline and Dockerfile verified."
-    exit 0
-else
-    echo "[FAIL] LAB-JNK-02 Missing pipeline or Dockerfile."
-    exit 1
-fi
-LAB_FILE_EOF_6
-chmod +x scripts/validate.sh
-```
-
-Başlangıç dosyalarını çalışma dizinine alın:
-
-```bash
-cp -a starter/. .
-```
+> [!TIP]
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-JNK-02.zip)](/downloads/LAB-JNK-02.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 
+> **Terminalde çalışma ortamını hazırlayın:**
+> ```bash
+> mkdir -p ~/labs/LAB-JNK-02
+> cd ~/labs/LAB-JNK-02
+> ```
 
 
 ## 1. Lab Senaryosu

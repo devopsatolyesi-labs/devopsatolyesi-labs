@@ -1,137 +1,17 @@
 # LAB-JNK-01 — Jenkins Declarative Pipeline: Git Checkout, Build & Test
 
-> [Bu labın başlangıç dosyalarını indir (ZIP)](/downloads/LAB-JNK-01.zip) — paket README, starter ve doğrulama scriptlerini içerir; çözüm içermez.
+| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
+| :--- | :--- | :--- | :--- |
+| 🟢 **CORE** (Temel Seviye) | ⏱️ 45 dakika | `secure-ci` | `8080` |
 
-
-İndirdikten sonra terminalde: `unzip LAB-JNK-01.zip && cd LAB-JNK-01`
-
-## ZIP İndirmeden Dosyaları Oluşturma
-
-Aşağıdaki bloklar ZIP paketiyle birebir aynı dosyaları oluşturur.
-
-```bash
-mkdir -p ~/labs/LAB-JNK-01
-cd ~/labs/LAB-JNK-01
-```
-
-### `starter/Jenkinsfile`
-
-```bash
-mkdir -p "$(dirname -- starter/Jenkinsfile)"
-cat > starter/Jenkinsfile <<'LAB_FILE_EOF_1'
-// TODO: Write Declarative Pipeline with Checkout, Linting, Unit Tests
-pipeline {
-    agent any
-    stages {
-        stage('Checkout') {
-            steps {
-                echo 'Checking out...'
-            }
-        }
-    }
-}
-LAB_FILE_EOF_1
-```
-
-### `starter/requirements.txt`
-
-```bash
-mkdir -p "$(dirname -- starter/requirements.txt)"
-cat > starter/requirements.txt <<'LAB_FILE_EOF_2'
-pytest==8.0.2
-pytest-cov==4.1.0
-flake8==7.0.0
-LAB_FILE_EOF_2
-```
-
-### `starter/src/calculator.py`
-
-```bash
-mkdir -p "$(dirname -- starter/src/calculator.py)"
-cat > starter/src/calculator.py <<'LAB_FILE_EOF_3'
-def add(a, b): return a + b
-def subtract(a, b): return a - b
-def multiply(a, b): return a * b
-def divide(a, b):
-    if b == 0: raise ValueError("Cannot divide by zero")
-    return a / b
-LAB_FILE_EOF_3
-```
-
-### `starter/tests/test_calculator.py`
-
-```bash
-mkdir -p "$(dirname -- starter/tests/test_calculator.py)"
-cat > starter/tests/test_calculator.py <<'LAB_FILE_EOF_4'
-import pytest
-from src.calculator import add, subtract, multiply, divide
-
-def test_add(): assert add(2, 3) == 5
-def test_subtract(): assert subtract(10, 4) == 6
-def test_multiply(): assert multiply(3, 4) == 12
-def test_divide(): assert divide(10, 2) == 5
-def test_divide_zero():
-    with pytest.raises(ValueError): divide(5, 0)
-LAB_FILE_EOF_4
-```
-
-### `scripts/cleanup.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/cleanup.sh)"
-cat > scripts/cleanup.sh <<'LAB_FILE_EOF_5'
-#!/usr/bin/env bash
-rm -rf reports .pytest_cache *.tar.gz 2>/dev/null || true
-echo "Cleanup completed for LAB-JNK-01."
-LAB_FILE_EOF_5
-chmod +x scripts/cleanup.sh
-```
-
-### `scripts/reset.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/reset.sh)"
-cat > scripts/reset.sh <<'LAB_FILE_EOF_6'
-#!/usr/bin/env bash
-set -euo pipefail
-lab_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
-echo "Resetting workspace for LAB-JNK-01..."
-bash "$lab_dir/scripts/cleanup.sh"
-cp -r "$lab_dir/starter"/. .
-echo "Workspace reset to starter state for LAB-JNK-01."
-LAB_FILE_EOF_6
-chmod +x scripts/reset.sh
-```
-
-### `scripts/validate.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/validate.sh)"
-cat > scripts/validate.sh <<'LAB_FILE_EOF_7'
-#!/usr/bin/env bash
-set -euo pipefail
-echo "==> Validating LAB-JNK-01: Declarative Pipeline..."
-if [[ ! -f Jenkinsfile ]] || ! grep -q "pipeline {" Jenkinsfile || ! grep -q "stage('Unit Tests')" Jenkinsfile; then
-    echo "[FAIL] LAB-JNK-01 Incomplete Declarative Jenkinsfile."
-    exit 1
-fi
-python3 -m venv .venv
-. .venv/bin/activate
-python3 -m pip install --quiet --disable-pip-version-check -r requirements.txt
-mkdir -p reports
-flake8 src/ --max-line-length=100
-pytest --junitxml=reports/junit-report.xml --cov=src tests/
-test -s reports/junit-report.xml
-echo "[PASS] LAB-JNK-01 Declarative Jenkinsfile and Python tests verified."
-LAB_FILE_EOF_7
-chmod +x scripts/validate.sh
-```
-
-Başlangıç dosyalarını çalışma dizinine alın:
-
-```bash
-cp -a starter/. .
-```
+> [!TIP]
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-JNK-01.zip)](/downloads/LAB-JNK-01.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 
+> **Terminalde çalışma ortamını hazırlayın:**
+> ```bash
+> mkdir -p ~/labs/LAB-JNK-01
+> cd ~/labs/LAB-JNK-01
+> ```
 
 
 ## 1. Lab Senaryosu

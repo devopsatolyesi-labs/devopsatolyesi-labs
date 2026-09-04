@@ -1,87 +1,17 @@
 # LAB-GIT-01 — Git Workflow, Branching & Conflict Resolution
 
-> [Bu labın başlangıç dosyalarını indir (ZIP)](/downloads/LAB-GIT-01.zip) — paket README, starter ve doğrulama scriptlerini içerir; çözüm içermez.
+| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
+| :--- | :--- | :--- | :--- |
+| 🟢 **CORE** (Temel Seviye) | ⏱️ 45 dakika | `docker` | `Dahili / Küme İçi` |
 
-
-İndirdikten sonra terminalde: `unzip LAB-GIT-01.zip && cd LAB-GIT-01`
-
-## ZIP İndirmeden Dosyaları Oluşturma
-
-Aşağıdaki bloklar ZIP paketiyle birebir aynı dosyaları oluşturur.
-
-```bash
-mkdir -p ~/labs/LAB-GIT-01
-cd ~/labs/LAB-GIT-01
-```
-
-### `starter/app-config.json`
-
-```bash
-mkdir -p "$(dirname -- starter/app-config.json)"
-cat > starter/app-config.json <<'LAB_FILE_EOF_1'
-{
-  "appName": "payment-service",
-  "version": "1.0.0",
-  "port": 8080,
-  "features": {
-    "logging": "INFO",
-    "auth": "BASIC"
-  }
-}
-LAB_FILE_EOF_1
-```
-
-### `scripts/cleanup.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/cleanup.sh)"
-cat > scripts/cleanup.sh <<'LAB_FILE_EOF_2'
-#!/usr/bin/env bash
-echo "Cleanup completed for LAB-GIT-01."
-LAB_FILE_EOF_2
-chmod +x scripts/cleanup.sh
-```
-
-### `scripts/reset.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/reset.sh)"
-cat > scripts/reset.sh <<'LAB_FILE_EOF_3'
-#!/usr/bin/env bash
-set -euo pipefail
-lab_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
-echo "Resetting workspace for LAB-GIT-01..."
-bash "$lab_dir/scripts/cleanup.sh"
-cp -r "$lab_dir/starter"/. .
-echo "Workspace reset to starter state for LAB-GIT-01."
-LAB_FILE_EOF_3
-chmod +x scripts/reset.sh
-```
-
-### `scripts/validate.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/validate.sh)"
-cat > scripts/validate.sh <<'LAB_FILE_EOF_4'
-#!/usr/bin/env bash
-set -euo pipefail
-echo "==> Validating LAB-GIT-01: Git Config Resolution..."
-if grep -q '"auth": "JWT_OAUTH2"' app-config.json && grep -q '"port": 9090' app-config.json; then
-    echo "[PASS] LAB-GIT-01 Conflict resolved with required parameters."
-    exit 0
-else
-    echo "[FAIL] LAB-GIT-01 app-config.json missing expected configuration."
-    exit 1
-fi
-LAB_FILE_EOF_4
-chmod +x scripts/validate.sh
-```
-
-Başlangıç dosyalarını çalışma dizinine alın:
-
-```bash
-cp -a starter/. .
-```
+> [!TIP]
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-GIT-01.zip)](/downloads/LAB-GIT-01.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 
+> **Terminalde çalışma ortamını hazırlayın:**
+> ```bash
+> mkdir -p ~/labs/LAB-GIT-01
+> cd ~/labs/LAB-GIT-01
+> ```
 
 
 ## 1. Lab Senaryosu

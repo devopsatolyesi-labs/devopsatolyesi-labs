@@ -1,89 +1,17 @@
 # LAB-LNX-03 — SSH Tunneling ile Güvenli Uzak Veritabanı Erişimi
 
-> [Bu labın başlangıç dosyalarını indir (ZIP)](/downloads/LAB-LNX-03.zip) — paket README, starter ve doğrulama scriptlerini içerir; çözüm içermez.
+| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
+| :--- | :--- | :--- | :--- |
+| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 35 dakika | `docker` | `Dahili / Küme İçi` |
 
-
-İndirdikten sonra terminalde: `unzip LAB-LNX-03.zip && cd LAB-LNX-03`
-
-## ZIP İndirmeden Dosyaları Oluşturma
-
-Aşağıdaki bloklar ZIP paketiyle birebir aynı dosyaları oluşturur.
-
-```bash
-mkdir -p ~/labs/LAB-LNX-03
-cd ~/labs/LAB-LNX-03
-```
-
-### `starter/tunnel-setup.sh`
-
-```bash
-mkdir -p "$(dirname -- starter/tunnel-setup.sh)"
-cat > starter/tunnel-setup.sh <<'LAB_FILE_EOF_1'
-#!/usr/bin/env bash
-set -euo pipefail
-
-# TODO: SSH Local Port Forwarding komutunu tamamlayın
-# Hedef: Uzaktaki MySQL sunucusunun 3306 portunu yerel makinenin 33306 portuna tünelleyin
-# ssh -N -L <LOCAL_PORT>:<REMOTE_HOST>:<REMOTE_PORT> <USER>@<BASTION_HOST>
-LAB_FILE_EOF_1
-```
-
-### `scripts/cleanup.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/cleanup.sh)"
-cat > scripts/cleanup.sh <<'LAB_FILE_EOF_2'
-#!/usr/bin/env bash
-set -euo pipefail
-rm -f ~/ssh-tunnel-command.txt 2>/dev/null || true
-echo "[BİLGİ] LAB-LNX-03 temizlendi."
-LAB_FILE_EOF_2
-chmod +x scripts/cleanup.sh
-```
-
-### `scripts/reset.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/reset.sh)"
-cat > scripts/reset.sh <<'LAB_FILE_EOF_3'
-#!/usr/bin/env bash
-set -euo pipefail
-cp -a starter/. .
-echo "[BİLGİ] LAB-LNX-03 sıfırlandı."
-LAB_FILE_EOF_3
-chmod +x scripts/reset.sh
-```
-
-### `scripts/validate.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/validate.sh)"
-cat > scripts/validate.sh <<'LAB_FILE_EOF_4'
-#!/usr/bin/env bash
-set -euo pipefail
-
-echo "==> [LAB-LNX-03] Doğrulama Başlatılıyor: SSH Tunneling..."
-
-if [[ ! -f tunnel-setup.sh ]]; then
-  echo "[HATA] tunnel-setup.sh bulunamadı! ~/labs/LAB-LNX-03 dizininde çalıştırın." >&2
-  exit 1
-fi
-
-if ! grep -q '\-L' tunnel-setup.sh || ! grep -q '3306' tunnel-setup.sh; then
-  echo "[HATA] tunnel-setup.sh içinde -L bayrağı ve hedef MySQL portu (3306) bulunmalıdır." >&2
-  exit 1
-fi
-
-echo "[PASS] SSH Tünelleme komutu ve port yönlendirme mantığı başarıyla doğrulandı!"
-LAB_FILE_EOF_4
-chmod +x scripts/validate.sh
-```
-
-Başlangıç dosyalarını çalışma dizinine alın:
-
-```bash
-cp -a starter/. .
-```
+> [!TIP]
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-LNX-03.zip)](/downloads/LAB-LNX-03.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 
+> **Terminalde çalışma ortamını hazırlayın:**
+> ```bash
+> mkdir -p ~/labs/LAB-LNX-03
+> cd ~/labs/LAB-LNX-03
+> ```
 
 
 ## Amaç

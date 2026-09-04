@@ -1,109 +1,17 @@
 # LAB-DOC-01 — İlk Docker Konteyneri ve Yaşam Döngüsü
 
-> [Bu labın başlangıç dosyalarını indir (ZIP)](/downloads/LAB-DOC-01.zip) — paket README, starter ve doğrulama scriptlerini içerir; çözüm içermez.
+| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
+| :--- | :--- | :--- | :--- |
+| 🟢 **CORE** (Temel Seviye) | ⏱️ 30 dakika | `docker` | `8080` |
 
-
-İndirdikten sonra terminalde: `unzip LAB-DOC-01.zip && cd LAB-DOC-01`
-
-## ZIP İndirmeden Dosyaları Oluşturma
-
-Aşağıdaki bloklar ZIP paketiyle birebir aynı dosyaları oluşturur.
-
-```bash
-mkdir -p ~/labs/LAB-DOC-01
-cd ~/labs/LAB-DOC-01
-```
-
-### `starter/Dockerfile`
-
-```bash
-mkdir -p "$(dirname -- starter/Dockerfile)"
-cat > starter/Dockerfile <<'LAB_FILE_EOF_1'
-# TODO: Write Dockerfile for Python HTTP Server
-# Hint: FROM python:3.11-alpine
-LAB_FILE_EOF_1
-```
-
-### `starter/app.py`
-
-```bash
-mkdir -p "$(dirname -- starter/app.py)"
-cat > starter/app.py <<'LAB_FILE_EOF_2'
-# LAB-DOC-01 Starter App
-from http.server import HTTPServer, BaseHTTPRequestHandler
-
-class SimpleHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)
-        self.send_header('Content-type', 'text/plain')
-        self.end_headers()
-        self.wfile.write(b"Hello from DevOps Atolyesi LAB-DOC-01!\n")
-
-if __name__ == '__main__':
-    server = HTTPServer(('0.0.0.0', 8080), SimpleHandler)
-    print("Serving on port 8080...")
-    server.serve_forever()
-LAB_FILE_EOF_2
-```
-
-### `scripts/cleanup.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/cleanup.sh)"
-cat > scripts/cleanup.sh <<'LAB_FILE_EOF_3'
-#!/usr/bin/env bash
-docker rm -f lab-doc-01-test 2>/dev/null || true
-docker rmi devops-first-container:v1 2>/dev/null || true
-echo "Cleanup completed for LAB-DOC-01."
-LAB_FILE_EOF_3
-chmod +x scripts/cleanup.sh
-```
-
-### `scripts/reset.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/reset.sh)"
-cat > scripts/reset.sh <<'LAB_FILE_EOF_4'
-#!/usr/bin/env bash
-set -euo pipefail
-echo "Resetting workspace for LAB-DOC-01..."
-script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
-bash "$script_dir/cleanup.sh"
-cp -a "$script_dir/../starter/." .
-echo "Workspace reset to starter state for LAB-DOC-01."
-LAB_FILE_EOF_4
-chmod +x scripts/reset.sh
-```
-
-### `scripts/validate.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/validate.sh)"
-cat > scripts/validate.sh <<'LAB_FILE_EOF_5'
-#!/usr/bin/env bash
-set -euo pipefail
-echo "==> Validating LAB-DOC-01: First Container..."
-docker build -t devops-first-container:v1 . >/dev/null
-docker run -d --name lab-doc-01-test -p 8080:8080 devops-first-container:v1 >/dev/null
-sleep 2
-HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080 || echo "000")
-docker rm -f lab-doc-01-test >/dev/null 2>&1 || true
-if [ "$HTTP_CODE" = "200" ]; then
-    echo "[PASS] LAB-DOC-01 Container responds with HTTP 200"
-    exit 0
-else
-    echo "[FAIL] LAB-DOC-01 Expected HTTP 200, got $HTTP_CODE"
-    exit 1
-fi
-LAB_FILE_EOF_5
-chmod +x scripts/validate.sh
-```
-
-Başlangıç dosyalarını çalışma dizinine alın:
-
-```bash
-cp -a starter/. .
-```
+> [!TIP]
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-01.zip)](/downloads/LAB-DOC-01.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 
+> **Terminalde çalışma ortamını hazırlayın:**
+> ```bash
+> mkdir -p ~/labs/LAB-DOC-01
+> cd ~/labs/LAB-DOC-01
+> ```
 
 
 ## Amaç

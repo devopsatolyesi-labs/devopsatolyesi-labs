@@ -3,7 +3,7 @@
 3323643dc6800523f4ab5faa4551471e6095d2967372e727abeedc1307d227ad  ./catalog.json
 aa029740afdcb58b44dd59fee0bcc74904552e9b364b83cda28703107fa8443b  ./curriculum/01_5_DAY_CURRICULUM.md
 d85573dcf6692858659e679729e1d9302ceb13efa76f9423de036a1d37ac25fc  ./curriculum/02_2_DAY_DOCKER_KUBERNETES.md
-429545073f5cab82436725244e29c925d42f5707b0912bf093859cd1aa981e64  ./curriculum/02_LAB_CATALOG_INDEX.md
+bf4e4115447e56db8bcadf76b70043b64cb190e1b2b6e1a6bbe9cdd91f72217d  ./curriculum/02_LAB_CATALOG_INDEX.md
 3ed453451f24397c0e49bf9e5d1238f1b8b92cbe9bc3fb0d1c3d4cf865b9b426  ./curriculum/03_MANDATORY_LABS_DETAILED.md
 9b55e09389f256ff6ef6c120d14798542f703a1f4840fe68a4a54e0009021cd1  ./curriculum/04_OPTIONAL_ADVANCED_LABS.md
 a6a788732b960a9d7d249267939ec2110b76eb0e2c8950c57253596dc0110b28  ./curriculum/06_DEMO_APPLICATION_MAPPING.md
@@ -89,13 +89,15 @@ ca02c3c3f84599b51b18c136b8f33c12bd85d6292cb68fa934425da5a6009245  ./lab-assets/L
 9e8b1b7437e2ee519ffcb125d5a4d61ed3a2ab72da6ba58807dc7b49e98e9011  ./lab-assets/LAB-DOC-06/solution/trivy-scan.sh
 f7cdfd637819ddfc29e7928926f502683d7ec7beeff017c282cf600d45ca6426  ./lab-assets/LAB-DOC-06/starter/Dockerfile
 c7760bf9425584bcaf689c6193bcb896a4c308f33d40c4cec17dadbb0e083c51  ./lab-assets/LAB-DOC-06/starter/trivy-scan.sh
-54868e587ed0cecc0ddf9faaf58a34a6db5413bc41ab58e3cb656f8d49bc76e6  ./lab-assets/LAB-DOC-07/scripts/cleanup.sh
+b04fbe6049c6ad11092dc588c8c917ff75920370eaf85c7a8da17aa57ec04d72  ./lab-assets/LAB-DOC-07/scripts/cleanup.sh
 89297df52faa9b1c6f33a959195947f3c38eee737dc34e0fded240b9f8afd0bf  ./lab-assets/LAB-DOC-07/scripts/reset.sh
-98e7fca5473f95601b98421861bdee1b0fc94205a0da994ad8e749cca7ae428a  ./lab-assets/LAB-DOC-07/scripts/validate.sh
-3e643e4db5e428ffa9ebfa9958433b44298077106ba20342c7896df533c86046  ./lab-assets/LAB-DOC-07/solution/Dockerfile
+5d33df3300d78213c96af5f8b55b66f612c5de9e9335cbcc014e5af3ba6ebd12  ./lab-assets/LAB-DOC-07/scripts/validate.sh
+62d69b03287a22ae9db8c21656611ad37396c5dd338dd7a0f602435fb874fef7  ./lab-assets/LAB-DOC-07/solution/Dockerfile
 c976df9311181fc1a3a30e83ec8757c0a05eb3a6e46cab29604958d07efef571  ./lab-assets/LAB-DOC-07/solution/pom.xml
-4c634c70ae57ea384e7c64f307a3c173c12a1465f3066d7bc1c6838719037491  ./lab-assets/LAB-DOC-07/starter/Dockerfile
+c7234fef5e1fe919d44dbddefcde3bee887ae6fd54676dd5f30b859fc2608423  ./lab-assets/LAB-DOC-07/solution/src/main/java/com/devopsatolyesi/Application.java
+dcbae8959f7b172d861de2a70741339fe7bb41094907826569d8f1761c92e6ff  ./lab-assets/LAB-DOC-07/starter/Dockerfile
 c976df9311181fc1a3a30e83ec8757c0a05eb3a6e46cab29604958d07efef571  ./lab-assets/LAB-DOC-07/starter/pom.xml
+c7234fef5e1fe919d44dbddefcde3bee887ae6fd54676dd5f30b859fc2608423  ./lab-assets/LAB-DOC-07/starter/src/main/java/com/devopsatolyesi/Application.java
 6621d45a428100c47d63f6c0b530df66fbfeba7118b626ca6851f0492355f614  ./lab-assets/LAB-DOC-08/scripts/cleanup.sh
 2787dead5448586e61d39a0b1e1716cb3747c8e8ee947595ad4338d957e20c4c  ./lab-assets/LAB-DOC-08/scripts/reset.sh
 397dd902387eaaa4e82e6a3a7bb05ec4800a32276f58b5e991682a82a620d3cd  ./lab-assets/LAB-DOC-08/scripts/validate.sh
@@ -348,7 +350,7 @@ a28af8eb884e5e0437e42db9091e62e072bff8eb6d857275b44e12244e45cfc9  ./labs/docker/
 d04e440e27e86b79b22bc6c78e2dafd958cfb3d34a312e4171f04ac6b9b53aba  ./labs/docker/LAB-DOC-04-docker-multistage-hardening.md
 c4c2573a0054ed1d9f1bcac6498c38a52c313d2ff5adef438da2dde49bfbc4b5  ./labs/docker/LAB-DOC-05-docker-compose-multitier.md
 4dbc3b042a6061808d1af61e5b48118f824674b591e6a99cededd7997ddf28e5  ./labs/docker/LAB-DOC-06-trivy-harbor-integration.md
-10ddf47db93817858f1405eb9ba6dd4156a20581741896e1bb10f2de04ae7fd3  ./labs/docker/LAB-DOC-07-docker-java-spring-boot.md
+b7ed2cd36de7c3391c12a555a99c7944fe7a368c71ddebfd708be4858af25113  ./labs/docker/LAB-DOC-07-docker-java-spring-boot.md
 43557fd009df2877356328f85d7ea0c641454534674906da5bb9476fee09de83  ./labs/docker/LAB-DOC-08-docker-react-nginx.md
 17185dc3f09a95bd322791d00e69908173b6b894d8d5305c100db543db01dfee  ./labs/docker/LAB-DOC-09-docker-networks-dns.md
 e33c6d41e740ab22a1e1f397e865efd71d7c576169c80f0df99405adce642e1b  ./labs/docker/LAB-DOC-10-docker-backup-restore.md

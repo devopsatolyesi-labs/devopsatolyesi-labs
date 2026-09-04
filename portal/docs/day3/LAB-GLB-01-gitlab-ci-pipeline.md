@@ -1,124 +1,17 @@
 # LAB-GLB-01 — GitLab CI/CD Fundamentals: Stages, Jobs, Artifacts & Registry
 
-> [Bu labın başlangıç dosyalarını indir (ZIP)](/downloads/LAB-GLB-01.zip) — paket README, starter ve doğrulama scriptlerini içerir; çözüm içermez.
+| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
+| :--- | :--- | :--- | :--- |
+| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `gitlab-ci` | `8081` |
 
-
-İndirdikten sonra terminalde: `unzip LAB-GLB-01.zip && cd LAB-GLB-01`
-
-## ZIP İndirmeden Dosyaları Oluşturma
-
-Aşağıdaki bloklar ZIP paketiyle birebir aynı dosyaları oluşturur.
-
-```bash
-mkdir -p ~/labs/LAB-GLB-01
-cd ~/labs/LAB-GLB-01
-```
-
-### `starter/.gitlab-ci.yml`
-
-```bash
-mkdir -p "$(dirname -- starter/.gitlab-ci.yml)"
-cat > starter/.gitlab-ci.yml <<'LAB_FILE_EOF_1'
-# TODO: Define stages test, security, build
-stages:
-  - test
-LAB_FILE_EOF_1
-```
-
-### `starter/app/package.json`
-
-```bash
-mkdir -p "$(dirname -- starter/app/package.json)"
-cat > starter/app/package.json <<'LAB_FILE_EOF_2'
-{
-  "name": "gitlab-demo-api",
-  "version": "1.0.0",
-  "main": "server.js",
-  "scripts": {
-    "test": "node test.js",
-    "start": "node server.js"
-  }
-}
-LAB_FILE_EOF_2
-```
-
-### `starter/app/server.js`
-
-```bash
-mkdir -p "$(dirname -- starter/app/server.js)"
-cat > starter/app/server.js <<'LAB_FILE_EOF_3'
-const http = require('http');
-const server = http.createServer((req, res) => {
-  res.writeHead(200, {'Content-Type': 'application/json'});
-  res.end(JSON.stringify({status: "UP", service: "gitlab-demo-api"}));
-});
-server.listen(3000);
-LAB_FILE_EOF_3
-```
-
-### `starter/app/test.js`
-
-```bash
-mkdir -p "$(dirname -- starter/app/test.js)"
-cat > starter/app/test.js <<'LAB_FILE_EOF_4'
-console.log("Running unit tests...");
-console.log("3/3 tests passed.");
-process.exit(0);
-LAB_FILE_EOF_4
-```
-
-### `scripts/cleanup.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/cleanup.sh)"
-cat > scripts/cleanup.sh <<'LAB_FILE_EOF_5'
-#!/usr/bin/env bash
-echo "Cleanup completed for LAB-GLB-01."
-LAB_FILE_EOF_5
-chmod +x scripts/cleanup.sh
-```
-
-### `scripts/reset.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/reset.sh)"
-cat > scripts/reset.sh <<'LAB_FILE_EOF_6'
-#!/usr/bin/env bash
-set -euo pipefail
-lab_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
-echo "Resetting workspace for LAB-GLB-01..."
-bash "$lab_dir/scripts/cleanup.sh"
-cp -r "$lab_dir/starter"/. .
-echo "Workspace reset to starter state for LAB-GLB-01."
-LAB_FILE_EOF_6
-chmod +x scripts/reset.sh
-```
-
-### `scripts/validate.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/validate.sh)"
-cat > scripts/validate.sh <<'LAB_FILE_EOF_7'
-#!/usr/bin/env bash
-set -euo pipefail
-echo "==> Validating LAB-GLB-01: GitLab CI Pipeline..."
-if [ -f .gitlab-ci.yml ] && grep -q "unit-tests:" .gitlab-ci.yml && [ -f app/package.json ]; then
-    node app/test.js
-    echo "[PASS] LAB-GLB-01 GitLab CI configuration verified."
-    exit 0
-else
-    echo "[FAIL] LAB-GLB-01 GitLab CI config missing or invalid."
-    exit 1
-fi
-LAB_FILE_EOF_7
-chmod +x scripts/validate.sh
-```
-
-Başlangıç dosyalarını çalışma dizinine alın:
-
-```bash
-cp -a starter/. .
-```
+> [!TIP]
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-GLB-01.zip)](/downloads/LAB-GLB-01.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 
+> **Terminalde çalışma ortamını hazırlayın:**
+> ```bash
+> mkdir -p ~/labs/LAB-GLB-01
+> cd ~/labs/LAB-GLB-01
+> ```
 
 
 ## 1. Lab Senaryosu

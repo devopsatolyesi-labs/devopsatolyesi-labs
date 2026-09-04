@@ -1,77 +1,17 @@
 # LAB-LNX-01 — Linux Preflight & Systemd Service Inspection
 
-> [Bu labın başlangıç dosyalarını indir (ZIP)](/downloads/LAB-LNX-01.zip) — paket README, starter ve doğrulama scriptlerini içerir; çözüm içermez.
+| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
+| :--- | :--- | :--- | :--- |
+| 🟢 **CORE** (Temel Seviye) | ⏱️ 30 dakika | `docker` | `22` |
 
-
-İndirdikten sonra terminalde: `unzip LAB-LNX-01.zip && cd LAB-LNX-01`
-
-## ZIP İndirmeden Dosyaları Oluşturma
-
-Aşağıdaki bloklar ZIP paketiyle birebir aynı dosyaları oluşturur.
-
-```bash
-mkdir -p ~/labs/LAB-LNX-01
-cd ~/labs/LAB-LNX-01
-```
-
-### `starter/preflight_check.sh`
-
-```bash
-mkdir -p "$(dirname -- starter/preflight_check.sh)"
-cat > starter/preflight_check.sh <<'LAB_FILE_EOF_1'
-#!/usr/bin/env bash
-set -euo pipefail
-# TODO: Implement Linux preflight report for CPU, RAM, Disk, and Docker
-echo "Running preflight..."
-LAB_FILE_EOF_1
-```
-
-### `scripts/cleanup.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/cleanup.sh)"
-cat > scripts/cleanup.sh <<'LAB_FILE_EOF_2'
-#!/usr/bin/env bash
-echo "Cleanup completed for LAB-LNX-01."
-LAB_FILE_EOF_2
-chmod +x scripts/cleanup.sh
-```
-
-### `scripts/reset.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/reset.sh)"
-cat > scripts/reset.sh <<'LAB_FILE_EOF_3'
-#!/usr/bin/env bash
-set -euo pipefail
-lab_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
-echo "Resetting workspace for LAB-LNX-01..."
-bash "$lab_dir/scripts/cleanup.sh"
-cp -r "$lab_dir/starter"/. .
-echo "Workspace reset to starter state for LAB-LNX-01."
-LAB_FILE_EOF_3
-chmod +x scripts/reset.sh
-```
-
-### `scripts/validate.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/validate.sh)"
-cat > scripts/validate.sh <<'LAB_FILE_EOF_4'
-#!/usr/bin/env bash
-set -euo pipefail
-echo "==> Validating LAB-LNX-01: Linux Preflight..."
-bash preflight_check.sh >/dev/null
-echo "[PASS] LAB-LNX-01 Preflight check executed with exit code 0."
-LAB_FILE_EOF_4
-chmod +x scripts/validate.sh
-```
-
-Başlangıç dosyalarını çalışma dizinine alın:
-
-```bash
-cp -a starter/. .
-```
+> [!TIP]
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-LNX-01.zip)](/downloads/LAB-LNX-01.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 
+> **Terminalde çalışma ortamını hazırlayın:**
+> ```bash
+> mkdir -p ~/labs/LAB-LNX-01
+> cd ~/labs/LAB-LNX-01
+> ```
 
 
 ## 1. Lab Senaryosu

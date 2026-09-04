@@ -1,142 +1,17 @@
 # LAB-CAP-01 — Final Integrated DevOps Delivery Pipeline: Code to Observability
 
-> [Bu labın başlangıç dosyalarını indir (ZIP)](/downloads/LAB-CAP-01.zip) — paket README, starter ve doğrulama scriptlerini içerir; çözüm içermez.
+| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
+| :--- | :--- | :--- | :--- |
+| 🔴 **ADVANCED** (İleri Seviye) | ⏱️ 90 dakika | `secure-ci, harbor, kubernetes, argocd, monitoring` | `3000, 8000, 8082, 8085, 9090` |
 
-
-İndirdikten sonra terminalde: `unzip LAB-CAP-01.zip && cd LAB-CAP-01`
-
-## ZIP İndirmeden Dosyaları Oluşturma
-
-Aşağıdaki bloklar ZIP paketiyle birebir aynı dosyaları oluşturur.
-
-```bash
-mkdir -p ~/labs/LAB-CAP-01
-cd ~/labs/LAB-CAP-01
-```
-
-### `starter/app/main.py`
-
-```bash
-mkdir -p "$(dirname -- starter/app/main.py)"
-cat > starter/app/main.py <<'LAB_FILE_EOF_1'
-from http.server import HTTPServer, BaseHTTPRequestHandler
-import json
-
-class CapstoneHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        if self.path == '/healthz':
-            self.send_response(200)
-            self.send_header('Content-Type', 'application/json')
-            self.end_headers()
-            self.wfile.write(b'{"status":"HEALTHY"}')
-        elif self.path == '/metrics':
-            self.send_response(200)
-            self.send_header('Content-Type', 'text/plain')
-            self.end_headers()
-            self.wfile.write(b'# HELP requests_total Total requests\nrequests_total 1\n')
-        else:
-            self.send_response(200)
-            self.send_header('Content-Type', 'application/json')
-            self.end_headers()
-            self.wfile.write(b'{"message":"Capstone Order Service v2.0.0"}')
-
-if __name__ == '__main__':
-    server = HTTPServer(('0.0.0.0', 8000), CapstoneHandler)
-    server.serve_forever()
-LAB_FILE_EOF_1
-```
-
-### `starter/gitops-manifests/deployment.yaml`
-
-```bash
-mkdir -p "$(dirname -- starter/gitops-manifests/deployment.yaml)"
-cat > starter/gitops-manifests/deployment.yaml <<'LAB_FILE_EOF_2'
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: capstone-order-service
-  namespace: capstone-prod
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: capstone-order-service
-  template:
-    metadata:
-      labels:
-        app: capstone-order-service
-    spec:
-      containers:
-        - name: order-api
-          image: order-service:v2.0.0
-          ports:
-            - containerPort: 8000
-LAB_FILE_EOF_2
-```
-
-### `starter/scripts/ci_pipeline_runner.sh`
-
-```bash
-mkdir -p "$(dirname -- starter/scripts/ci_pipeline_runner.sh)"
-cat > starter/scripts/ci_pipeline_runner.sh <<'LAB_FILE_EOF_3'
-#!/usr/bin/env bash
-set -euo pipefail
-echo "==> Running Capstone Integrated Delivery Pipeline..."
-echo "[1/5] Running Unit Tests..."
-echo "[2/5] Hardened Multi-stage Container Build..."
-echo "[3/5] Shift-Left Trivy Security Gate (0 CRITICAL)..."
-echo "[4/5] Kubernetes GitOps RollingUpdate Deployment..."
-echo "[5/5] Observability & Prometheus Metrics Ingestion..."
-echo "==> Capstone Pipeline Execution Completed: SUCCESS"
-LAB_FILE_EOF_3
-```
-
-### `scripts/cleanup.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/cleanup.sh)"
-cat > scripts/cleanup.sh <<'LAB_FILE_EOF_4'
-#!/usr/bin/env bash
-echo "Cleanup completed for LAB-CAP-01."
-LAB_FILE_EOF_4
-chmod +x scripts/cleanup.sh
-```
-
-### `scripts/reset.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/reset.sh)"
-cat > scripts/reset.sh <<'LAB_FILE_EOF_5'
-#!/usr/bin/env bash
-set -euo pipefail
-lab_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
-echo "Resetting workspace for LAB-CAP-01..."
-bash "$lab_dir/scripts/cleanup.sh"
-cp -r "$lab_dir/starter"/. .
-echo "Workspace reset to starter state for LAB-CAP-01."
-LAB_FILE_EOF_5
-chmod +x scripts/reset.sh
-```
-
-### `scripts/validate.sh`
-
-```bash
-mkdir -p "$(dirname -- scripts/validate.sh)"
-cat > scripts/validate.sh <<'LAB_FILE_EOF_6'
-#!/usr/bin/env bash
-set -euo pipefail
-echo "==> Validating LAB-CAP-01: Capstone Pipeline..."
-bash scripts/ci_pipeline_runner.sh
-echo "[PASS] LAB-CAP-01 End-to-End pipeline runner validated."
-LAB_FILE_EOF_6
-chmod +x scripts/validate.sh
-```
-
-Başlangıç dosyalarını çalışma dizinine alın:
-
-```bash
-cp -a starter/. .
-```
+> [!TIP]
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-CAP-01.zip)](/downloads/LAB-CAP-01.zip) — paket README, starter ve test scriptlerini içerir; çözüm içermez.
+> 
+> **Terminalde çalışma ortamını hazırlayın:**
+> ```bash
+> mkdir -p ~/labs/LAB-CAP-01
+> cd ~/labs/LAB-CAP-01
+> ```
 
 
 ## 1. Lab Senaryosu
