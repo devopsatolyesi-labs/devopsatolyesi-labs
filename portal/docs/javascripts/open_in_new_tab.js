@@ -65,13 +65,22 @@ document.addEventListener("DOMContentLoaded", function() {
     installAdminButton();
     installLogoutButton();
     if (accessRole === "admin") return;
-    var links = document.querySelectorAll("a.md-nav__link[href]");
+    // Material renders the drawer/sidebar and desktop tabs as separate menus.
+    // Filter both so a student never sees a link that the edge would reject.
+    var links = document.querySelectorAll("a.md-nav__link[href], a.md-tabs__link[href]");
     for (var i = 0; i < links.length; i++) {
       var path = new URL(links[i].href, window.location.origin).pathname;
       if (!canOpen(path)) {
-        var item = links[i].closest("li.md-nav__item");
+        var item = links[i].closest("li.md-nav__item, li.md-tabs__item");
         if (item) item.remove();
       }
+    }
+
+    // Do not leave an empty topic heading behind after its forbidden labs have
+    // been removed from the student navigation.
+    var sections = document.querySelectorAll("li.md-nav__item--nested");
+    for (var j = sections.length - 1; j >= 0; j--) {
+      if (!sections[j].querySelector("a.md-nav__link[href]")) sections[j].remove();
     }
     var search = document.querySelector('[data-md-component="search"]');
     if (search) search.remove();
