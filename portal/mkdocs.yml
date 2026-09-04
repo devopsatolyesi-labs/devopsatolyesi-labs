@@ -84,6 +84,8 @@ nav:
       - LAB-ENV-00 - Çevre Kurulumu: env/LAB-ENV-00-environment-setup.md
   - Temeller:
       - LAB-LNX-01 - Linux Preflight: day1/LAB-LNX-01-linux-preflight.md
+      - LAB-LNX-02 - Nginx Let's Encrypt SSL: day1/LAB-LNX-02-nginx-letsencrypt-ssl.md
+      - LAB-LNX-03 - SSH Tunneling MySQL: day1/LAB-LNX-03-ssh-tunnel-mysql.md
       - LAB-GIT-01 - Git Workflow: day1/LAB-GIT-01-git-workflow.md
   - Docker:
       - LAB-DOC-01 - İlk Docker Konteyneri: day1/LAB-DOC-01-docker-first-container.md
@@ -91,6 +93,8 @@ nav:
       - LAB-DOC-03 - Dockerfile Optimizasyonu: day2/LAB-DOC-03-dockerfile-optimization.md
       - LAB-DOC-09 - Docker Network ve DNS: day2/LAB-DOC-09-docker-networks-dns.md
       - LAB-DOC-04 - Multi-Stage Build: day2/LAB-DOC-04-docker-multistage-hardening.md
+      - LAB-DOC-07 - Java Spring Boot: day2/LAB-DOC-07-docker-java-spring-boot.md
+      - LAB-DOC-08 - React ve Nginx Frontend: day2/LAB-DOC-08-docker-react-nginx.md
       - LAB-DOC-05 - Docker Compose Çok Katmanlı Mimari: day2/LAB-DOC-05-docker-compose-multitier.md
       - LAB-DOC-06 - Trivy ve Harbor Entegrasyonu: day2/LAB-DOC-06-trivy-harbor-integration.md
       - LAB-DOC-10 - İmaj ve Volume Yedekleme: day2/LAB-DOC-10-docker-backup-restore.md
@@ -99,6 +103,7 @@ nav:
       - LAB-JNK-01 - Jenkins Declarative Pipeline: day3/LAB-JNK-01-jenkins-declarative-pipeline.md
       - LAB-JNK-02 - Jenkins Güvenli Pipeline: day3/LAB-JNK-02-jenkins-secure-pipeline.md
       - LAB-GLB-01 - GitLab CI/CD Pipeline: day3/LAB-GLB-01-gitlab-ci-pipeline.md
+      - LAB-GHA-01 - GitHub Actions CI: day3/LAB-GHA-01-github-actions-ci.md
   - Infrastructure as Code:
       - LAB-TF-01 - Terraform Docker Provider: day3/LAB-TF-01-terraform-docker-provider.md
       - LAB-TF-04 - Terraform Helm Centralized Monitoring: day3/LAB-TF-04-terraform-helm-centralized-monitoring.md

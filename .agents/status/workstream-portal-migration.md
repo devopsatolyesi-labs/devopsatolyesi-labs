@@ -1,0 +1,25 @@
+# Workstream Status: Portal Content Migration & Standardization
+
+- **Workstream ID:** `workstream-portal-migration`
+- **Owner:** DevOps Training Platform AI Agent
+- **Target Repository:** `devopsatolyesi-labs`
+- **Current Branch:** `main`
+- **Status:** In Progress
+- **Rules Adherence:**
+  - Standard work directory: `~/labs/<LAB-ID>`
+  - Source material: ONLY Hakan Bayraktar Medium articles and GitHub repositories
+  - No `## Metadata` on student pages (kept only in `training-content/catalog.json`)
+  - Web copy-paste / ZIP parity maintained via `portal/scripts/stage-content.py`
+  - No `solution/` in student `.zip` archives
+  - Interactive challenge questions with collapsible `??? tip "💡 Çözümü Göster"`
+  - Centralized setup hub in `portal/docs/setup/` with 2-line preflight links in lab guides
+- **Completed Components:**
+  - Setup Hub (`setup/`): Docker Engine, kind cluster, Kubeadm cluster, Kubeconfig merge, Dynamic NFS, Jenkins, Harbor, Prometheus-Grafana, ELK, ArgoCD
+  - Core Docker Labs: `LAB-DOC-01`, `LAB-DOC-02`, `LAB-DOC-03`, `LAB-DOC-09`, `LAB-DOC-04`, `LAB-DOC-05`, `LAB-DOC-06`, `LAB-DOC-10`, `LAB-DOC-13`
+- **Current Task:**
+  - Implementing remaining lab materials autonomously without interruption:
+    - Linux Labs: `LAB-LNX-02` (Let's Encrypt SSL on Nginx), `LAB-LNX-03` (SSH Tunnel MySQL)
+    - Additional Language Docker Labs: `LAB-DOC-07` (Java Spring Boot), `LAB-DOC-08` (React / Static Frontend)
+    - CI/CD Standardization: `LAB-JNK-01`, `LAB-JNK-02` (Flask to K8s with Jenkins), `LAB-GLB-01`, `LAB-GHA-01`
+    - Kubernetes & GitOps: `LAB-K8S-01`, `LAB-K8S-02`, `LAB-K8S-03`, `LAB-HLM-01`, `LAB-ARG-01`
+    - Observability & Troubleshooting: `LAB-MON-01`, `LAB-MON-02`, `LAB-LOG-01`, `LAB-LOG-02`, `LAB-INC-01`

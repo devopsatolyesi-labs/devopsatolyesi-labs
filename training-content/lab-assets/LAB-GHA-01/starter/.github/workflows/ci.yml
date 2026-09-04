@@ -1,0 +1,11 @@
+name: Python Application CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # TODO: Python test ve lint adımlarını içeren bir test job'ı tanımlayın
+  # TODO: Docker build ve Trivy güvenlik taraması içeren bir build job'ı tanımlayın
