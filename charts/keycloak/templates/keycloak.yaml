@@ -46,14 +46,14 @@ spec:
             - name: KC_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: keycloak-secrets
+                  name: {{ .Values.secret.existingSecret | quote }}
                   key: postgres-password
             - name: KC_BOOTSTRAP_ADMIN_USERNAME
               value: {{ .Values.admin.username | quote }}
             - name: KC_BOOTSTRAP_ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: keycloak-secrets
+                  name: {{ .Values.secret.existingSecret | quote }}
                   key: admin-password
           volumeMounts:
             - name: realm

@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/devopsatolyesi-labs/devopsatolyesi-training-platform.git
+    repoURL: https://github.com/devopsatolyesi-labs/devopsatolyesi-labs.git
     targetRevision: HEAD
     path: labs/kubernetes
   destination:

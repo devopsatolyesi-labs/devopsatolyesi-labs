@@ -43,13 +43,13 @@ spec:
               value: {{ .Values.admin.username | quote }}
             - name: BOOTSTRAP_PASSWORD
               valueFrom:
-                secretKeyRef: {name: keycloak-secrets, key: admin-password}
+                secretKeyRef: {name: {{ .Values.secret.existingSecret | quote }}, key: admin-password}
             - name: REALM_ADMIN_PASSWORD
               valueFrom:
-                secretKeyRef: {name: keycloak-secrets, key: realm-admin-password}
+                secretKeyRef: {name: {{ .Values.secret.existingSecret | quote }}, key: realm-admin-password}
             - name: DEVOPS_PASSWORD
               valueFrom:
-                secretKeyRef: {name: keycloak-secrets, key: devops-password}
+                secretKeyRef: {name: {{ .Values.secret.existingSecret | quote }}, key: devops-password}
             - name: KUBERNETES_PASSWORD
               valueFrom:
-                secretKeyRef: {name: keycloak-secrets, key: kubernetes-password}
+                secretKeyRef: {name: {{ .Values.secret.existingSecret | quote }}, key: kubernetes-password}

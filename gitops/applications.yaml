@@ -1,0 +1,48 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: labs-keycloak
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: harbor.devopsatolyesi.com/library
+    chart: devops-atolyesi-keycloak
+    targetRevision: ">=0.1.0-0"
+    helm:
+      values: |
+        secret:
+          create: false
+          existingSecret: keycloak-secrets
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: identity-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PruneLast=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: labs-portal
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: harbor.devopsatolyesi.com/library
+    chart: devops-atolyesi-labs-portal
+    targetRevision: ">=0.1.0-0"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: labs-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PruneLast=true

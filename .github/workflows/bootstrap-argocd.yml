@@ -1,0 +1,54 @@
+name: Bootstrap Argo CD access
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    env:
+      GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+      GCP_ZONE: ${{ vars.GCP_ZONE }}
+      INSTANCE: training-runtime-01
+      DEPLOY_USER: devopsadmin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
+          service_account: ${{ vars.GCP_TERRAFORM_SERVICE_ACCOUNT }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - name: Apply private repository and registry access through IAP
+        env:
+          HARBOR_ROBOT_USERNAME: ${{ secrets.HARBOR_ROBOT_USERNAME }}
+          HARBOR_ROBOT_PASSWORD: ${{ secrets.HARBOR_ROBOT_PASSWORD }}
+          KEYCLOAK_DB_PASSWORD: ${{ secrets.KEYCLOAK_DB_PASSWORD }}
+          PLATFORM_ADMIN_PASSWORD: ${{ secrets.PLATFORM_ADMIN_PASSWORD }}
+          LABS_ADMIN_PASSWORD: ${{ secrets.LABS_ADMIN_PASSWORD }}
+          LABS_DEVOPS_PASSWORD: ${{ secrets.LABS_DEVOPS_PASSWORD }}
+          LABS_KUBERNETES_PASSWORD: ${{ secrets.LABS_KUBERNETES_PASSWORD }}
+        run: |
+          ssh-keygen -q -t ed25519 -N '' -f "$RUNNER_TEMP/deploy_key"
+          install -m 700 -d "$RUNNER_TEMP/bootstrap"
+          install -m 700 scripts/bootstrap-argocd.sh "$RUNNER_TEMP/bootstrap/bootstrap-argocd.sh"
+          install -m 600 gitops/applications.yaml "$RUNNER_TEMP/bootstrap/applications.yaml"
+          umask 077
+          {
+            printf 'HARBOR_ROBOT_USERNAME=%q\n' "$HARBOR_ROBOT_USERNAME"
+            printf 'HARBOR_ROBOT_PASSWORD=%q\n' "$HARBOR_ROBOT_PASSWORD"
+            printf 'KEYCLOAK_DB_PASSWORD=%q\n' "$KEYCLOAK_DB_PASSWORD"
+            printf 'PLATFORM_ADMIN_PASSWORD=%q\n' "$PLATFORM_ADMIN_PASSWORD"
+            printf 'LABS_ADMIN_PASSWORD=%q\n' "$LABS_ADMIN_PASSWORD"
+            printf 'LABS_DEVOPS_PASSWORD=%q\n' "$LABS_DEVOPS_PASSWORD"
+            printf 'LABS_KUBERNETES_PASSWORD=%q\n' "$LABS_KUBERNETES_PASSWORD"
+          } > "$RUNNER_TEMP/bootstrap/secrets.env"
+          gcloud compute scp --recurse "$RUNNER_TEMP/bootstrap" "$DEPLOY_USER@$INSTANCE:/tmp/devopsatolyesi-labs-bootstrap" \
+            --project "$GCP_PROJECT_ID" --zone "$GCP_ZONE" --tunnel-through-iap --quiet \
+            --ssh-key-file "$RUNNER_TEMP/deploy_key"
+          gcloud compute ssh "$DEPLOY_USER@$INSTANCE" --project "$GCP_PROJECT_ID" --zone "$GCP_ZONE" \
+            --tunnel-through-iap --quiet --ssh-key-file "$RUNNER_TEMP/deploy_key" \
+            --command "set -eu; cd /tmp/devopsatolyesi-labs-bootstrap; . ./secrets.env; export HARBOR_ROBOT_USERNAME HARBOR_ROBOT_PASSWORD KEYCLOAK_DB_PASSWORD PLATFORM_ADMIN_PASSWORD LABS_ADMIN_PASSWORD LABS_DEVOPS_PASSWORD LABS_KUBERNETES_PASSWORD; install -d gitops; mv applications.yaml gitops/applications.yaml; ./bootstrap-argocd.sh; rm -f secrets.env"

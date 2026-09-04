@@ -2,6 +2,9 @@ image:
   repository: quay.io/keycloak/keycloak
   tag: 26.7.3
   pullPolicy: IfNotPresent
+secret:
+  create: true
+  existingSecret: keycloak-secrets
 postgres:
   image: postgres:16.10-alpine
   storage: 20Gi

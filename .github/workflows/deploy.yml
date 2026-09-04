@@ -1,4 +1,4 @@
-name: Deploy Labs and Keycloak
+name: Publish Labs image for Argo CD
 
 on:
   workflow_dispatch:
@@ -7,64 +7,45 @@ on:
     paths:
       - portal/**
       - training-content/**
-      - charts/**
+      - .dockerignore
 
 permissions:
   contents: read
-  id-token: write
 
 concurrency:
-  group: labs-production
+  group: labs-image-production
   cancel-in-progress: false
 
 jobs:
-  deploy:
+  publish:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     env:
-      GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
-      GCP_ZONE: ${{ vars.GCP_ZONE }}
-      INSTANCE: training-runtime-01
-      DEPLOY_USER: devopsadmin
+      REGISTRY: harbor.devopsatolyesi.com
+      IMAGE: harbor.devopsatolyesi.com/library/labs-portal
     steps:
       - uses: actions/checkout@v4
-      - uses: google-github-actions/auth@v2
+      - name: Authenticate to private Harbor
+        uses: docker/login-action@v3
         with:
-          workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
-          service_account: ${{ vars.GCP_TERRAFORM_SERVICE_ACCOUNT }}
-      - uses: google-github-actions/setup-gcloud@v2
-      - name: Build immutable AMD64 portal image archive
-        run: |
-          tag="${GITHUB_SHA::12}"
-          docker build --platform linux/amd64 -t "devops-atolyesi/labs-portal:$tag" -f portal/Dockerfile .
-          docker save "devops-atolyesi/labs-portal:$tag" | gzip > "$RUNNER_TEMP/labs-portal.tar.gz"
-          echo "LABS_IMAGE_TAG=$tag" >> "$GITHUB_ENV"
-      - name: Start runtime and register short-lived IAP key
-        run: |
-          status=$(gcloud compute instances describe "$INSTANCE" --project "$GCP_PROJECT_ID" --zone "$GCP_ZONE" --format='value(status)')
-          [[ $status == RUNNING ]] || gcloud compute instances start "$INSTANCE" --project "$GCP_PROJECT_ID" --zone "$GCP_ZONE" --quiet
-          ssh-keygen -q -t ed25519 -N '' -f "$RUNNER_TEMP/deploy_key"
-          gcloud compute ssh "$DEPLOY_USER@$INSTANCE" --project "$GCP_PROJECT_ID" --zone "$GCP_ZONE" --tunnel-through-iap --quiet --ssh-key-file "$RUNNER_TEMP/deploy_key" --command true
-      - name: Transfer release artifacts
-        run: |
-          gcloud compute scp "$RUNNER_TEMP/labs-portal.tar.gz" "$DEPLOY_USER@$INSTANCE:/tmp/labs-portal.tar.gz" --project "$GCP_PROJECT_ID" --zone "$GCP_ZONE" --tunnel-through-iap --quiet --ssh-key-file "$RUNNER_TEMP/deploy_key"
-          gcloud compute scp --recurse charts "$DEPLOY_USER@$INSTANCE:/tmp/devopsatolyesi-labs-charts" --project "$GCP_PROJECT_ID" --zone "$GCP_ZONE" --tunnel-through-iap --quiet --ssh-key-file "$RUNNER_TEMP/deploy_key"
-      - name: Reconcile Helm releases and verify endpoints
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.HARBOR_ROBOT_USERNAME }}
+          password: ${{ secrets.HARBOR_ROBOT_PASSWORD }}
+      - name: Build and publish immutable image
         env:
-          PLATFORM_ADMIN_PASSWORD: ${{ secrets.PLATFORM_ADMIN_PASSWORD }}
-          KEYCLOAK_DB_PASSWORD: ${{ secrets.KEYCLOAK_DB_PASSWORD }}
-          LABS_ADMIN_PASSWORD: ${{ secrets.LABS_ADMIN_PASSWORD }}
-          LABS_DEVOPS_PASSWORD: ${{ secrets.LABS_DEVOPS_PASSWORD }}
-          LABS_KUBERNETES_PASSWORD: ${{ secrets.LABS_KUBERNETES_PASSWORD }}
+          IMAGE_TAG: ${{ github.sha }}
         run: |
-          printf '%s\n' "$PLATFORM_ADMIN_PASSWORD" "$KEYCLOAK_DB_PASSWORD" "$LABS_ADMIN_PASSWORD" "$LABS_DEVOPS_PASSWORD" "$LABS_KUBERNETES_PASSWORD" | grep -q '^$' && exit 64 || true
-          remote=/tmp/devopsatolyesi-labs-secrets.env
-          umask 077
-          {
-            printf 'PLATFORM_ADMIN_PASSWORD=%q\n' "$PLATFORM_ADMIN_PASSWORD"
-            printf 'KEYCLOAK_DB_PASSWORD=%q\n' "$KEYCLOAK_DB_PASSWORD"
-            printf 'LABS_ADMIN_PASSWORD=%q\n' "$LABS_ADMIN_PASSWORD"
-            printf 'LABS_DEVOPS_PASSWORD=%q\n' "$LABS_DEVOPS_PASSWORD"
-            printf 'LABS_KUBERNETES_PASSWORD=%q\n' "$LABS_KUBERNETES_PASSWORD"
-          } > "$RUNNER_TEMP/secrets.env"
-          gcloud compute scp "$RUNNER_TEMP/secrets.env" "$DEPLOY_USER@$INSTANCE:$remote" --project "$GCP_PROJECT_ID" --zone "$GCP_ZONE" --tunnel-through-iap --quiet --ssh-key-file "$RUNNER_TEMP/deploy_key"
-          gcloud compute ssh "$DEPLOY_USER@$INSTANCE" --project "$GCP_PROJECT_ID" --zone "$GCP_ZONE" --tunnel-through-iap --quiet --ssh-key-file "$RUNNER_TEMP/deploy_key" --command "set -eu; . $remote; gunzip -c /tmp/labs-portal.tar.gz | docker load >/dev/null; kind load docker-image devops-atolyesi/labs-portal:$LABS_IMAGE_TAG --name devops-cluster >/dev/null; helm upgrade --install keycloak /tmp/devopsatolyesi-labs-charts/keycloak --namespace identity-system --create-namespace --set-string postgres.password=\"\$KEYCLOAK_DB_PASSWORD\" --set-string admin.password=\"\$PLATFORM_ADMIN_PASSWORD\" --set-string users.admin.password=\"\$LABS_ADMIN_PASSWORD\" --set-string users.devops.password=\"\$LABS_DEVOPS_PASSWORD\" --set-string users.kubernetes.password=\"\$LABS_KUBERNETES_PASSWORD\" --wait --timeout 10m; helm upgrade --install labs-portal /tmp/devopsatolyesi-labs-charts/labs-portal --namespace labs-system --create-namespace --set-string image.repository=devops-atolyesi/labs-portal --set-string image.tag=$LABS_IMAGE_TAG --set-string image.pullPolicy=IfNotPresent --wait --timeout 5m; curl -fsS -o /dev/null -H 'Host: labs.devopsatolyesi.com' http://127.0.0.1:8080/; curl -fsS -o /dev/null -H 'Host: auth.devopsatolyesi.com' http://127.0.0.1:8080/realms/devops-atolyesi/.well-known/openid-configuration; rm -f $remote /tmp/labs-portal.tar.gz"
+          short_tag=${IMAGE_TAG::12}
+          docker build --platform linux/amd64 -t "$IMAGE:$short_tag" -f portal/Dockerfile .
+          docker push "$IMAGE:$short_tag"
+          printf 'IMAGE_TAG=%s\n' "$short_tag" >> "$GITHUB_ENV"
+      - uses: azure/setup-helm@v4
+      - name: Publish versioned Helm charts for Argo CD
+        run: |
+          chart_version="0.1.${GITHUB_RUN_NUMBER}"
+          sed -i -E "s/^  tag: .*/  tag: ${IMAGE_TAG}/" charts/labs-portal/values.yaml
+          helm package charts/labs-portal --version "$chart_version" --app-version "$IMAGE_TAG" --destination "$RUNNER_TEMP"
+          helm package charts/keycloak --version "$chart_version" --destination "$RUNNER_TEMP"
+          helm registry login "$REGISTRY" --username "${{ secrets.HARBOR_ROBOT_USERNAME }}" --password-stdin <<<"${{ secrets.HARBOR_ROBOT_PASSWORD }}"
+          helm push "$RUNNER_TEMP/devops-atolyesi-labs-portal-${chart_version}.tgz" "oci://$REGISTRY/library"
+          helm push "$RUNNER_TEMP/devops-atolyesi-keycloak-${chart_version}.tgz" "oci://$REGISTRY/library"

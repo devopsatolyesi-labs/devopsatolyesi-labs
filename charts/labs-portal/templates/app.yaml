@@ -26,6 +26,8 @@ spec:
       labels:
         app.kubernetes.io/name: labs-portal
     spec:
+      imagePullSecrets:
+        {{- toYaml .Values.imagePullSecrets | nindent 8 }}
       containers:
         - name: portal
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

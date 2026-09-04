@@ -1,7 +1,9 @@
 image:
-  repository: devops-atolyesi/labs-portal
-  tag: latest
-  pullPolicy: IfNotPresent
+  repository: harbor.devopsatolyesi.com/library/labs-portal
+  tag: feabe7b9bba0
+  pullPolicy: Always
+imagePullSecrets:
+  - name: harbor-registry
 replicas: 2
 hostname: labs.devopsatolyesi.com
 ingressClassName: nginx

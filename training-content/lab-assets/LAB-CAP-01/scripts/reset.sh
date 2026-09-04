@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
+lab_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
 echo "Resetting workspace for LAB-CAP-01..."
-bash "/Users/hakan/devops-workspace/devopsatolyesi-training-platform-bootstrap/training-content/lab-assets/LAB-CAP-01/scripts/cleanup.sh"
-cp -r "/Users/hakan/devops-workspace/devopsatolyesi-training-platform-bootstrap/training-content/lab-assets/LAB-CAP-01/starter"/* . 2>/dev/null || true
+bash "$lab_dir/scripts/cleanup.sh"
+cp -r "$lab_dir/starter"/. .
 echo "Workspace reset to starter state for LAB-CAP-01."
