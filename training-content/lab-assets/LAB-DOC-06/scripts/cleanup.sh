@@ -1,2 +1,5 @@
 #!/usr/bin/env bash
-echo "Cleanup completed for LAB-DOC-06."
+set -euo pipefail
+
+echo "==> [LAB-DOC-06] Temizleniyor..."
+echo "[BİLGİ] LAB-DOC-06 kaynakları temizlendi."

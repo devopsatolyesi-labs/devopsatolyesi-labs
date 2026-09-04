@@ -5,15 +5,48 @@
     "identity_provider": "keycloak",
     "course_membership_source": "portal_database",
     "roles": {
-      "admin": {"can_view_all": true, "can_download_solutions": true},
-      "instructor": {"can_view_all": false, "can_download_solutions": true},
-      "student": {"can_view_all": false, "can_download_solutions": false}
+      "admin": {
+        "can_view_all": true,
+        "can_download_solutions": true
+      },
+      "instructor": {
+        "can_view_all": false,
+        "can_download_solutions": true
+      },
+      "student": {
+        "can_view_all": false,
+        "can_download_solutions": false
+      }
     },
     "seed_principals": [
-      {"username": "admin", "role": "admin", "enrollments": ["*"]},
-      {"username": "devops", "role": "student", "enrollments": ["devops-practitioner-5-day"]},
-      {"username": "kubernetes", "role": "student", "enrollments": ["docker-kubernetes-2-day"]},
-      {"username": "docker", "role": "student", "enrollments": ["docker-kubernetes-2-day"]}
+      {
+        "username": "admin",
+        "role": "admin",
+        "enrollments": [
+          "*"
+        ]
+      },
+      {
+        "username": "devops",
+        "role": "student",
+        "enrollments": [
+          "devops-practitioner-5-day"
+        ]
+      },
+      {
+        "username": "kubernetes",
+        "role": "student",
+        "enrollments": [
+          "docker-kubernetes-2-day"
+        ]
+      },
+      {
+        "username": "docker",
+        "role": "student",
+        "enrollments": [
+          "docker-kubernetes-2-day"
+        ]
+      }
     ]
   },
   "courses": [
@@ -25,13 +58,69 @@
       "curriculum": "training-content/curriculum/01_5_DAY_CURRICULUM.md",
       "status": "published",
       "modules": [
-        {"id":"foundation","labs":["LAB-LNX-01","LAB-GIT-01"]},
-        {"id":"docker","labs":["LAB-DOC-01","LAB-DOC-02","LAB-DOC-03","LAB-DOC-09","LAB-DOC-04","LAB-DOC-06","LAB-DOC-05","LAB-DOC-13"]},
-        {"id":"ci-cd","labs":["LAB-JNK-01","LAB-JNK-02","LAB-GLB-01"]},
-        {"id":"infrastructure-as-code","labs":["LAB-TF-01","LAB-TF-08","LAB-TF-04"]},
-        {"id":"kubernetes-gitops","labs":["LAB-K8S-01","LAB-K8S-02","LAB-K8S-03","LAB-HLM-01","LAB-ARG-01"]},
-        {"id":"observability-incident","labs":["LAB-MON-01","LAB-MON-02","LAB-LOG-01","LAB-LOG-02","LAB-INC-01"]},
-        {"id":"capstone","labs":["LAB-CAP-01"]}
+        {
+          "id": "foundation",
+          "labs": [
+            "LAB-LNX-01",
+            "LAB-GIT-01"
+          ]
+        },
+        {
+          "id": "docker",
+          "labs": [
+            "LAB-DOC-01",
+            "LAB-DOC-02",
+            "LAB-DOC-03",
+            "LAB-DOC-09",
+            "LAB-DOC-04",
+            "LAB-DOC-06",
+            "LAB-DOC-05",
+            "LAB-DOC-13",
+            "LAB-DOC-10"
+          ]
+        },
+        {
+          "id": "ci-cd",
+          "labs": [
+            "LAB-JNK-01",
+            "LAB-JNK-02",
+            "LAB-GLB-01"
+          ]
+        },
+        {
+          "id": "infrastructure-as-code",
+          "labs": [
+            "LAB-TF-01",
+            "LAB-TF-08",
+            "LAB-TF-04"
+          ]
+        },
+        {
+          "id": "kubernetes-gitops",
+          "labs": [
+            "LAB-K8S-01",
+            "LAB-K8S-02",
+            "LAB-K8S-03",
+            "LAB-HLM-01",
+            "LAB-ARG-01"
+          ]
+        },
+        {
+          "id": "observability-incident",
+          "labs": [
+            "LAB-MON-01",
+            "LAB-MON-02",
+            "LAB-LOG-01",
+            "LAB-LOG-02",
+            "LAB-INC-01"
+          ]
+        },
+        {
+          "id": "capstone",
+          "labs": [
+            "LAB-CAP-01"
+          ]
+        }
       ]
     },
     {
@@ -42,44 +131,756 @@
       "curriculum": "training-content/curriculum/02_2_DAY_DOCKER_KUBERNETES.md",
       "status": "published",
       "modules": [
-        {"id":"docker","labs":["LAB-DOC-01","LAB-DOC-02","LAB-DOC-03","LAB-DOC-09","LAB-DOC-05"]},
-        {"id":"kubernetes","labs":["LAB-K8S-01","LAB-K8S-02","LAB-K8S-03"]}
+        {
+          "id": "docker",
+          "labs": [
+            "LAB-DOC-01",
+            "LAB-DOC-02",
+            "LAB-DOC-03",
+            "LAB-DOC-09",
+            "LAB-DOC-05",
+            "LAB-DOC-10"
+          ]
+        },
+        {
+          "id": "kubernetes",
+          "labs": [
+            "LAB-K8S-01",
+            "LAB-K8S-02",
+            "LAB-K8S-03"
+          ]
+        }
       ]
     }
   ],
   "labs": [
-    {"id":"LAB-ENV-00","title":"Ubuntu Server 24.04 DevOps Ortamı Kurulumu ve Doğrulama","topic":"environment","difficulty":100,"estimated_minutes":90,"profiles":["base"],"ports":[],"prerequisites":[],"courses":[],"guide":"training-content/labs/env/LAB-ENV-00-environment-setup.md","assets":"training-content/lab-assets/LAB-ENV-00","status":"published","package_contract":"environment"},
-    {"id":"LAB-LNX-01","title":"Linux Preflight ve Systemd Servis İncelemesi","topic":"linux","difficulty":100,"estimated_minutes":30,"profiles":["docker"],"ports":[22],"prerequisites":["LAB-ENV-00"],"courses":["devops-practitioner-5-day"],"guide":"training-content/labs/linux/LAB-LNX-01-linux-preflight.md","assets":"training-content/lab-assets/LAB-LNX-01","status":"published","package_contract":"standard"},
-    {"id":"LAB-GIT-01","title":"Git Workflow, Branching ve Conflict Resolution","topic":"git","difficulty":100,"estimated_minutes":45,"profiles":["docker"],"ports":[],"prerequisites":["LAB-ENV-00"],"courses":["devops-practitioner-5-day"],"guide":"training-content/labs/git/LAB-GIT-01-git-workflow.md","assets":"training-content/lab-assets/LAB-GIT-01","status":"published","package_contract":"standard"},
-    {"id":"LAB-DOC-01","title":"İlk Docker Konteyneri ve Port Mapping","topic":"docker","difficulty":100,"estimated_minutes":30,"profiles":["docker"],"ports":[8080],"prerequisites":["LAB-ENV-00"],"courses":["devops-practitioner-5-day","docker-kubernetes-2-day"],"guide":"training-content/labs/docker/LAB-DOC-01-docker-first-container.md","assets":"training-content/lab-assets/LAB-DOC-01","status":"published","package_contract":"standard"},
-    {"id":"LAB-DOC-02","title":"Container Lifecycle, Env ve Volume Persistence","topic":"docker","difficulty":100,"estimated_minutes":40,"profiles":["docker"],"ports":[5432],"prerequisites":["LAB-DOC-01"],"courses":["devops-practitioner-5-day","docker-kubernetes-2-day"],"guide":"training-content/labs/docker/LAB-DOC-02-docker-volumes-env.md","assets":"training-content/lab-assets/LAB-DOC-02","status":"published","package_contract":"standard"},
-    {"id":"LAB-DOC-03","title":"Docker İmaj Optimizasyonu ve Registry Dağıtımı","topic":"docker","difficulty":200,"estimated_minutes":60,"profiles":["docker","harbor"],"ports":[8000,8082],"prerequisites":[],"courses":["devops-practitioner-5-day","docker-kubernetes-2-day"],"guide":"training-content/labs/docker/LAB-DOC-03-dockerfile-optimization.md","assets":"training-content/lab-assets/LAB-DOC-03","status":"published","package_contract":"standard"},
-    {"id":"LAB-DOC-09","title":"User-Defined Docker Network ve Container DNS","topic":"docker","difficulty":200,"estimated_minutes":45,"profiles":["docker"],"ports":[8080],"prerequisites":["LAB-DOC-01"],"courses":["devops-practitioner-5-day","docker-kubernetes-2-day"],"guide":"training-content/labs/docker/LAB-DOC-09-docker-networks-dns.md","assets":"training-content/lab-assets/LAB-DOC-09","status":"published","package_contract":"standard"},
-    {"id":"LAB-DOC-04","title":"Multi-Stage Build, Non-Root ve Image Hardening","topic":"docker","difficulty":200,"estimated_minutes":45,"profiles":["docker"],"ports":[],"prerequisites":["LAB-DOC-03"],"courses":["devops-practitioner-5-day"],"guide":"training-content/labs/docker/LAB-DOC-04-docker-multistage-hardening.md","assets":"training-content/lab-assets/LAB-DOC-04","status":"published","package_contract":"standard"},
-    {"id":"LAB-DOC-05","title":"Docker Compose Multi-Tier Orchestration","topic":"docker","difficulty":200,"estimated_minutes":60,"profiles":["docker"],"ports":[8080],"prerequisites":["LAB-DOC-02"],"courses":["devops-practitioner-5-day","docker-kubernetes-2-day"],"guide":"training-content/labs/docker/LAB-DOC-05-docker-compose-multitier.md","assets":"training-content/lab-assets/LAB-DOC-05","status":"published","package_contract":"standard"},
-    {"id":"LAB-DOC-06","title":"Trivy Container Security Gate","topic":"container-security","difficulty":200,"estimated_minutes":30,"profiles":["docker"],"ports":[],"prerequisites":["LAB-DOC-03"],"courses":["devops-practitioner-5-day"],"guide":"training-content/labs/docker/LAB-DOC-06-trivy-harbor-integration.md","assets":"training-content/lab-assets/LAB-DOC-06","status":"published","package_contract":"standard"},
-    {"id":"LAB-DOC-13","title":"Production-Ready Docker Compose Patterns","topic":"docker","difficulty":300,"estimated_minutes":60,"profiles":["docker"],"ports":[8080],"prerequisites":["LAB-DOC-05"],"courses":["devops-practitioner-5-day"],"guide":"training-content/labs/docker/LAB-DOC-13-docker-compose-production-patterns.md","assets":"training-content/lab-assets/LAB-DOC-13","status":"published","package_contract":"standard"},
-    {"id":"LAB-JNK-01","title":"Jenkins Declarative Pipeline","topic":"jenkins","difficulty":100,"estimated_minutes":45,"profiles":["secure-ci"],"ports":[8080],"prerequisites":[],"courses":["devops-practitioner-5-day"],"guide":"training-content/labs/jenkins/LAB-JNK-01-jenkins-declarative-pipeline.md","assets":"training-content/lab-assets/LAB-JNK-01","status":"published","package_contract":"standard"},
-    {"id":"LAB-JNK-02","title":"Jenkins Secure Pipeline, SonarQube, Trivy ve Harbor","topic":"jenkins","difficulty":200,"estimated_minutes":60,"profiles":["secure-ci","harbor"],"ports":[8080,8082,9000],"prerequisites":["LAB-JNK-01","LAB-DOC-06"],"courses":["devops-practitioner-5-day"],"guide":"training-content/labs/jenkins/LAB-JNK-02-jenkins-secure-pipeline.md","assets":"training-content/lab-assets/LAB-JNK-02","status":"published","package_contract":"standard"},
-    {"id":"LAB-GLB-01","title":"GitLab CI/CD Fundamentals","topic":"gitlab-ci","difficulty":200,"estimated_minutes":45,"profiles":["gitlab-ci"],"ports":[8081],"prerequisites":["LAB-DOC-03"],"courses":["devops-practitioner-5-day"],"guide":"training-content/labs/gitlab/LAB-GLB-01-gitlab-ci-pipeline.md","assets":"training-content/lab-assets/LAB-GLB-01","status":"published","package_contract":"standard"},
-    {"id":"LAB-TF-01","title":"Terraform Docker Provider ve State Lifecycle","topic":"terraform","difficulty":100,"estimated_minutes":45,"profiles":["docker"],"ports":[8090],"prerequisites":["LAB-DOC-01"],"courses":["devops-practitioner-5-day"],"guide":"training-content/labs/terraform/LAB-TF-01-terraform-docker-provider.md","assets":"training-content/lab-assets/LAB-TF-01","status":"published","package_contract":"standard"},
-    {"id":"LAB-TF-04","title":"Terraform ve Helm ile Merkezi Kubernetes İzleme","topic":"terraform","difficulty":300,"estimated_minutes":60,"profiles":["kubernetes","monitoring"],"ports":[],"prerequisites":["LAB-K8S-01","LAB-HLM-01"],"courses":["devops-practitioner-5-day"],"guide":"training-content/labs/terraform/LAB-TF-04-terraform-helm-centralized-monitoring.md","assets":"training-content/lab-assets/LAB-TF-04","status":"published","package_contract":"standard"},
-    {"id":"LAB-TF-08","title":"Terraform ile Production AWS VPC","topic":"terraform","difficulty":300,"estimated_minutes":75,"profiles":["docker","localstack"],"ports":[4566],"prerequisites":["LAB-TF-01"],"courses":["devops-practitioner-5-day"],"guide":"training-content/labs/terraform/LAB-TF-08-terraform-aws-vpc-architecture.md","assets":"training-content/lab-assets/LAB-TF-08","status":"published","package_contract":"standard"},
-    {"id":"LAB-K8S-01","title":"kind Multi-Node Cluster ve kubectl Preflight","topic":"kubernetes","difficulty":100,"estimated_minutes":45,"profiles":["kubernetes"],"ports":[80,443],"prerequisites":["LAB-ENV-00"],"courses":["devops-practitioner-5-day","docker-kubernetes-2-day"],"guide":"training-content/labs/kubernetes/LAB-K8S-01-kind-pods-deployments.md","assets":"training-content/lab-assets/LAB-K8S-01","status":"published","package_contract":"standard"},
-    {"id":"LAB-K8S-02","title":"Services, ConfigMaps ve Secrets","topic":"kubernetes","difficulty":100,"estimated_minutes":45,"profiles":["kubernetes"],"ports":[],"prerequisites":["LAB-K8S-01"],"courses":["devops-practitioner-5-day","docker-kubernetes-2-day"],"guide":"training-content/labs/kubernetes/LAB-K8S-02-services-config-secrets.md","assets":"training-content/lab-assets/LAB-K8S-02","status":"published","package_contract":"standard"},
-    {"id":"LAB-K8S-03","title":"Production Workloads, Probes, Rollouts ve PVC","topic":"kubernetes","difficulty":200,"estimated_minutes":60,"profiles":["kubernetes"],"ports":[],"prerequisites":["LAB-K8S-02"],"courses":["devops-practitioner-5-day","docker-kubernetes-2-day"],"guide":"training-content/labs/kubernetes/LAB-K8S-03-production-workloads.md","assets":"training-content/lab-assets/LAB-K8S-03","status":"published","package_contract":"standard"},
-    {"id":"LAB-HLM-01","title":"Helm Chart Deployment","topic":"helm","difficulty":200,"estimated_minutes":45,"profiles":["kubernetes"],"ports":[],"prerequisites":["LAB-K8S-01"],"courses":["devops-practitioner-5-day"],"guide":"training-content/labs/helm/LAB-HLM-01-helm-chart-deployment.md","assets":"training-content/lab-assets/LAB-HLM-01","status":"published","package_contract":"standard"},
-    {"id":"LAB-ARG-01","title":"Argo CD GitOps Sync ve Self-Healing","topic":"gitops","difficulty":200,"estimated_minutes":45,"profiles":["kubernetes","argocd"],"ports":[8085],"prerequisites":["LAB-K8S-01"],"courses":["devops-practitioner-5-day"],"guide":"training-content/labs/gitops/LAB-ARG-01-argocd-gitops-sync.md","assets":"training-content/lab-assets/LAB-ARG-01","status":"published","package_contract":"standard"},
-    {"id":"LAB-MON-01","title":"Prometheus ve Grafana Metrics","topic":"monitoring","difficulty":200,"estimated_minutes":45,"profiles":["monitoring"],"ports":[3000,8000,9090,9100],"prerequisites":["LAB-DOC-05"],"courses":["devops-practitioner-5-day"],"guide":"training-content/labs/monitoring/LAB-MON-01-prometheus-grafana-metrics.md","assets":"training-content/lab-assets/LAB-MON-01","status":"published","package_contract":"standard"},
-    {"id":"LAB-MON-02","title":"Prometheus Alertmanager Kuralları","topic":"monitoring","difficulty":200,"estimated_minutes":45,"profiles":["monitoring"],"ports":[9090,9093],"prerequisites":["LAB-MON-01"],"courses":["devops-practitioner-5-day"],"guide":"training-content/labs/monitoring/LAB-MON-02-alertmanager-rules.md","assets":"training-content/lab-assets/LAB-MON-02","status":"published","package_contract":"standard"},
-    {"id":"LAB-LOG-01","title":"ELK ile Nginx Loglarını Merkezileştirme","topic":"logging","difficulty":200,"estimated_minutes":75,"profiles":["logging"],"ports":[],"prerequisites":["LAB-DOC-05"],"courses":["devops-practitioner-5-day"],"guide":"training-content/labs/logging/LAB-LOG-01-centralized-logging.md","assets":"training-content/lab-assets/LAB-LOG-01","status":"published","package_contract":"standard"},
-    {"id":"LAB-LOG-02","title":"İleri ELK Gözlemlenebilirliği","topic":"logging","difficulty":300,"estimated_minutes":90,"profiles":["logging","kubernetes"],"ports":[],"prerequisites":["LAB-LOG-01","LAB-K8S-01"],"courses":["devops-practitioner-5-day"],"guide":"training-content/labs/logging/LAB-LOG-02-elk-centralized-logging.md","assets":"training-content/lab-assets/LAB-LOG-02","status":"published","package_contract":"standard"},
-    {"id":"LAB-INC-01","title":"Kubernetes War Room ve Postmortem","topic":"incident-response","difficulty":300,"estimated_minutes":45,"profiles":["kubernetes"],"ports":[],"prerequisites":["LAB-K8S-03"],"courses":["devops-practitioner-5-day"],"guide":"training-content/labs/incident/LAB-INC-01-k8s-crashloop-postmortem.md","assets":"training-content/lab-assets/LAB-INC-01","status":"published","package_contract":"standard"},
-    {"id":"LAB-CAP-01","title":"Code to Observability DevOps Capstone","topic":"capstone","difficulty":300,"estimated_minutes":90,"profiles":["secure-ci","harbor","kubernetes","argocd","monitoring"],"ports":[3000,8000,8082,8085,9090],"prerequisites":["LAB-JNK-02","LAB-ARG-01","LAB-MON-01"],"courses":["devops-practitioner-5-day"],"guide":"training-content/labs/capstone/LAB-CAP-01-end-to-end-devops.md","assets":"training-content/lab-assets/LAB-CAP-01","status":"published","package_contract":"standard"}
+    {
+      "id": "LAB-ENV-00",
+      "title": "Ubuntu Server 24.04 DevOps Ortamı Kurulumu ve Doğrulama",
+      "topic": "environment",
+      "difficulty": 100,
+      "estimated_minutes": 90,
+      "profiles": [
+        "base"
+      ],
+      "ports": [],
+      "prerequisites": [],
+      "courses": [],
+      "guide": "training-content/labs/env/LAB-ENV-00-environment-setup.md",
+      "assets": "training-content/lab-assets/LAB-ENV-00",
+      "status": "published",
+      "package_contract": "environment"
+    },
+    {
+      "id": "LAB-LNX-01",
+      "title": "Linux Preflight ve Systemd Servis İncelemesi",
+      "topic": "linux",
+      "difficulty": 100,
+      "estimated_minutes": 30,
+      "profiles": [
+        "docker"
+      ],
+      "ports": [
+        22
+      ],
+      "prerequisites": [
+        "LAB-ENV-00"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/linux/LAB-LNX-01-linux-preflight.md",
+      "assets": "training-content/lab-assets/LAB-LNX-01",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-GIT-01",
+      "title": "Git Workflow, Branching ve Conflict Resolution",
+      "topic": "git",
+      "difficulty": 100,
+      "estimated_minutes": 45,
+      "profiles": [
+        "docker"
+      ],
+      "ports": [],
+      "prerequisites": [
+        "LAB-ENV-00"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/git/LAB-GIT-01-git-workflow.md",
+      "assets": "training-content/lab-assets/LAB-GIT-01",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-DOC-01",
+      "title": "İlk Docker Konteyneri ve Port Mapping",
+      "topic": "docker",
+      "difficulty": 100,
+      "estimated_minutes": 30,
+      "profiles": [
+        "docker"
+      ],
+      "ports": [
+        8080
+      ],
+      "prerequisites": [
+        "LAB-ENV-00"
+      ],
+      "courses": [
+        "devops-practitioner-5-day",
+        "docker-kubernetes-2-day"
+      ],
+      "guide": "training-content/labs/docker/LAB-DOC-01-docker-first-container.md",
+      "assets": "training-content/lab-assets/LAB-DOC-01",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-DOC-02",
+      "title": "Container Lifecycle, Env ve Volume Persistence",
+      "topic": "docker",
+      "difficulty": 100,
+      "estimated_minutes": 40,
+      "profiles": [
+        "docker"
+      ],
+      "ports": [
+        5432
+      ],
+      "prerequisites": [
+        "LAB-DOC-01"
+      ],
+      "courses": [
+        "devops-practitioner-5-day",
+        "docker-kubernetes-2-day"
+      ],
+      "guide": "training-content/labs/docker/LAB-DOC-02-docker-volumes-env.md",
+      "assets": "training-content/lab-assets/LAB-DOC-02",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-DOC-03",
+      "title": "Docker İmaj Optimizasyonu ve Registry Dağıtımı",
+      "topic": "docker",
+      "difficulty": 200,
+      "estimated_minutes": 60,
+      "profiles": [
+        "docker",
+        "harbor"
+      ],
+      "ports": [
+        8000,
+        8082
+      ],
+      "prerequisites": [],
+      "courses": [
+        "devops-practitioner-5-day",
+        "docker-kubernetes-2-day"
+      ],
+      "guide": "training-content/labs/docker/LAB-DOC-03-dockerfile-optimization.md",
+      "assets": "training-content/lab-assets/LAB-DOC-03",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-DOC-09",
+      "title": "User-Defined Docker Network ve Container DNS",
+      "topic": "docker",
+      "difficulty": 200,
+      "estimated_minutes": 45,
+      "profiles": [
+        "docker"
+      ],
+      "ports": [
+        8080
+      ],
+      "prerequisites": [
+        "LAB-DOC-01"
+      ],
+      "courses": [
+        "devops-practitioner-5-day",
+        "docker-kubernetes-2-day"
+      ],
+      "guide": "training-content/labs/docker/LAB-DOC-09-docker-networks-dns.md",
+      "assets": "training-content/lab-assets/LAB-DOC-09",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-DOC-04",
+      "title": "Multi-Stage Build, Non-Root ve Image Hardening",
+      "topic": "docker",
+      "difficulty": 200,
+      "estimated_minutes": 45,
+      "profiles": [
+        "docker"
+      ],
+      "ports": [],
+      "prerequisites": [
+        "LAB-DOC-03"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/docker/LAB-DOC-04-docker-multistage-hardening.md",
+      "assets": "training-content/lab-assets/LAB-DOC-04",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-DOC-05",
+      "title": "Docker Compose Multi-Tier Orchestration",
+      "topic": "docker",
+      "difficulty": 200,
+      "estimated_minutes": 60,
+      "profiles": [
+        "docker"
+      ],
+      "ports": [
+        8080
+      ],
+      "prerequisites": [
+        "LAB-DOC-02"
+      ],
+      "courses": [
+        "devops-practitioner-5-day",
+        "docker-kubernetes-2-day"
+      ],
+      "guide": "training-content/labs/docker/LAB-DOC-05-docker-compose-multitier.md",
+      "assets": "training-content/lab-assets/LAB-DOC-05",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-DOC-06",
+      "title": "Trivy Container Security Gate",
+      "topic": "container-security",
+      "difficulty": 200,
+      "estimated_minutes": 30,
+      "profiles": [
+        "docker"
+      ],
+      "ports": [],
+      "prerequisites": [
+        "LAB-DOC-03"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/docker/LAB-DOC-06-trivy-harbor-integration.md",
+      "assets": "training-content/lab-assets/LAB-DOC-06",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-DOC-13",
+      "title": "Production-Ready Docker Compose Patterns",
+      "topic": "docker",
+      "difficulty": 300,
+      "estimated_minutes": 60,
+      "profiles": [
+        "docker"
+      ],
+      "ports": [
+        8080
+      ],
+      "prerequisites": [
+        "LAB-DOC-05"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/docker/LAB-DOC-13-docker-compose-production-patterns.md",
+      "assets": "training-content/lab-assets/LAB-DOC-13",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-JNK-01",
+      "title": "Jenkins Declarative Pipeline",
+      "topic": "jenkins",
+      "difficulty": 100,
+      "estimated_minutes": 45,
+      "profiles": [
+        "secure-ci"
+      ],
+      "ports": [
+        8080
+      ],
+      "prerequisites": [],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/jenkins/LAB-JNK-01-jenkins-declarative-pipeline.md",
+      "assets": "training-content/lab-assets/LAB-JNK-01",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-JNK-02",
+      "title": "Jenkins Secure Pipeline, SonarQube, Trivy ve Harbor",
+      "topic": "jenkins",
+      "difficulty": 200,
+      "estimated_minutes": 60,
+      "profiles": [
+        "secure-ci",
+        "harbor"
+      ],
+      "ports": [
+        8080,
+        8082,
+        9000
+      ],
+      "prerequisites": [
+        "LAB-JNK-01",
+        "LAB-DOC-06"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/jenkins/LAB-JNK-02-jenkins-secure-pipeline.md",
+      "assets": "training-content/lab-assets/LAB-JNK-02",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-GLB-01",
+      "title": "GitLab CI/CD Fundamentals",
+      "topic": "gitlab-ci",
+      "difficulty": 200,
+      "estimated_minutes": 45,
+      "profiles": [
+        "gitlab-ci"
+      ],
+      "ports": [
+        8081
+      ],
+      "prerequisites": [
+        "LAB-DOC-03"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/gitlab/LAB-GLB-01-gitlab-ci-pipeline.md",
+      "assets": "training-content/lab-assets/LAB-GLB-01",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-TF-01",
+      "title": "Terraform Docker Provider ve State Lifecycle",
+      "topic": "terraform",
+      "difficulty": 100,
+      "estimated_minutes": 45,
+      "profiles": [
+        "docker"
+      ],
+      "ports": [
+        8090
+      ],
+      "prerequisites": [
+        "LAB-DOC-01"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/terraform/LAB-TF-01-terraform-docker-provider.md",
+      "assets": "training-content/lab-assets/LAB-TF-01",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-TF-04",
+      "title": "Terraform ve Helm ile Merkezi Kubernetes İzleme",
+      "topic": "terraform",
+      "difficulty": 300,
+      "estimated_minutes": 60,
+      "profiles": [
+        "kubernetes",
+        "monitoring"
+      ],
+      "ports": [],
+      "prerequisites": [
+        "LAB-K8S-01",
+        "LAB-HLM-01"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/terraform/LAB-TF-04-terraform-helm-centralized-monitoring.md",
+      "assets": "training-content/lab-assets/LAB-TF-04",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-TF-08",
+      "title": "Terraform ile Production AWS VPC",
+      "topic": "terraform",
+      "difficulty": 300,
+      "estimated_minutes": 75,
+      "profiles": [
+        "docker",
+        "localstack"
+      ],
+      "ports": [
+        4566
+      ],
+      "prerequisites": [
+        "LAB-TF-01"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/terraform/LAB-TF-08-terraform-aws-vpc-architecture.md",
+      "assets": "training-content/lab-assets/LAB-TF-08",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-K8S-01",
+      "title": "kind Multi-Node Cluster ve kubectl Preflight",
+      "topic": "kubernetes",
+      "difficulty": 100,
+      "estimated_minutes": 45,
+      "profiles": [
+        "kubernetes"
+      ],
+      "ports": [
+        80,
+        443
+      ],
+      "prerequisites": [
+        "LAB-ENV-00"
+      ],
+      "courses": [
+        "devops-practitioner-5-day",
+        "docker-kubernetes-2-day"
+      ],
+      "guide": "training-content/labs/kubernetes/LAB-K8S-01-kind-pods-deployments.md",
+      "assets": "training-content/lab-assets/LAB-K8S-01",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-K8S-02",
+      "title": "Services, ConfigMaps ve Secrets",
+      "topic": "kubernetes",
+      "difficulty": 100,
+      "estimated_minutes": 45,
+      "profiles": [
+        "kubernetes"
+      ],
+      "ports": [],
+      "prerequisites": [
+        "LAB-K8S-01"
+      ],
+      "courses": [
+        "devops-practitioner-5-day",
+        "docker-kubernetes-2-day"
+      ],
+      "guide": "training-content/labs/kubernetes/LAB-K8S-02-services-config-secrets.md",
+      "assets": "training-content/lab-assets/LAB-K8S-02",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-K8S-03",
+      "title": "Production Workloads, Probes, Rollouts ve PVC",
+      "topic": "kubernetes",
+      "difficulty": 200,
+      "estimated_minutes": 60,
+      "profiles": [
+        "kubernetes"
+      ],
+      "ports": [],
+      "prerequisites": [
+        "LAB-K8S-02"
+      ],
+      "courses": [
+        "devops-practitioner-5-day",
+        "docker-kubernetes-2-day"
+      ],
+      "guide": "training-content/labs/kubernetes/LAB-K8S-03-production-workloads.md",
+      "assets": "training-content/lab-assets/LAB-K8S-03",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-HLM-01",
+      "title": "Helm Chart Deployment",
+      "topic": "helm",
+      "difficulty": 200,
+      "estimated_minutes": 45,
+      "profiles": [
+        "kubernetes"
+      ],
+      "ports": [],
+      "prerequisites": [
+        "LAB-K8S-01"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/helm/LAB-HLM-01-helm-chart-deployment.md",
+      "assets": "training-content/lab-assets/LAB-HLM-01",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-ARG-01",
+      "title": "Argo CD GitOps Sync ve Self-Healing",
+      "topic": "gitops",
+      "difficulty": 200,
+      "estimated_minutes": 45,
+      "profiles": [
+        "kubernetes",
+        "argocd"
+      ],
+      "ports": [
+        8085
+      ],
+      "prerequisites": [
+        "LAB-K8S-01"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/gitops/LAB-ARG-01-argocd-gitops-sync.md",
+      "assets": "training-content/lab-assets/LAB-ARG-01",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-MON-01",
+      "title": "Prometheus ve Grafana Metrics",
+      "topic": "monitoring",
+      "difficulty": 200,
+      "estimated_minutes": 45,
+      "profiles": [
+        "monitoring"
+      ],
+      "ports": [
+        3000,
+        8000,
+        9090,
+        9100
+      ],
+      "prerequisites": [
+        "LAB-DOC-05"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/monitoring/LAB-MON-01-prometheus-grafana-metrics.md",
+      "assets": "training-content/lab-assets/LAB-MON-01",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-MON-02",
+      "title": "Prometheus Alertmanager Kuralları",
+      "topic": "monitoring",
+      "difficulty": 200,
+      "estimated_minutes": 45,
+      "profiles": [
+        "monitoring"
+      ],
+      "ports": [
+        9090,
+        9093
+      ],
+      "prerequisites": [
+        "LAB-MON-01"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/monitoring/LAB-MON-02-alertmanager-rules.md",
+      "assets": "training-content/lab-assets/LAB-MON-02",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-LOG-01",
+      "title": "ELK ile Nginx Loglarını Merkezileştirme",
+      "topic": "logging",
+      "difficulty": 200,
+      "estimated_minutes": 75,
+      "profiles": [
+        "logging"
+      ],
+      "ports": [],
+      "prerequisites": [
+        "LAB-DOC-05"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/logging/LAB-LOG-01-centralized-logging.md",
+      "assets": "training-content/lab-assets/LAB-LOG-01",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-LOG-02",
+      "title": "İleri ELK Gözlemlenebilirliği",
+      "topic": "logging",
+      "difficulty": 300,
+      "estimated_minutes": 90,
+      "profiles": [
+        "logging",
+        "kubernetes"
+      ],
+      "ports": [],
+      "prerequisites": [
+        "LAB-LOG-01",
+        "LAB-K8S-01"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/logging/LAB-LOG-02-elk-centralized-logging.md",
+      "assets": "training-content/lab-assets/LAB-LOG-02",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-INC-01",
+      "title": "Kubernetes War Room ve Postmortem",
+      "topic": "incident-response",
+      "difficulty": 300,
+      "estimated_minutes": 45,
+      "profiles": [
+        "kubernetes"
+      ],
+      "ports": [],
+      "prerequisites": [
+        "LAB-K8S-03"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/incident/LAB-INC-01-k8s-crashloop-postmortem.md",
+      "assets": "training-content/lab-assets/LAB-INC-01",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-CAP-01",
+      "title": "Code to Observability DevOps Capstone",
+      "topic": "capstone",
+      "difficulty": 300,
+      "estimated_minutes": 90,
+      "profiles": [
+        "secure-ci",
+        "harbor",
+        "kubernetes",
+        "argocd",
+        "monitoring"
+      ],
+      "ports": [
+        3000,
+        8000,
+        8082,
+        8085,
+        9090
+      ],
+      "prerequisites": [
+        "LAB-JNK-02",
+        "LAB-ARG-01",
+        "LAB-MON-01"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/capstone/LAB-CAP-01-end-to-end-devops.md",
+      "assets": "training-content/lab-assets/LAB-CAP-01",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-DOC-10",
+      "title": "Docker İmaj, Konteyner ve Volume Yedekleme / Geri Yükleme",
+      "topic": "docker",
+      "difficulty": 200,
+      "estimated_minutes": 40,
+      "profiles": [
+        "docker"
+      ],
+      "ports": [],
+      "prerequisites": [
+        "LAB-DOC-02"
+      ],
+      "courses": [
+        "devops-practitioner-5-day",
+        "docker-kubernetes-2-day"
+      ],
+      "guide": "training-content/labs/docker/LAB-DOC-10-docker-backup-restore.md",
+      "assets": "training-content/lab-assets/LAB-DOC-10",
+      "status": "published",
+      "package_contract": "standard"
+    }
   ],
   "project_roadmap": [
-    {"id":"MP-RETAIL-01","application":"AWS Retail Store Sample App","stack":["docker","kind","harbor","nexus","gitlab","argocd","prometheus","grafana","elk","kibana"],"courses":["devops-practitioner-5-day"],"status":"roadmap"},
-    {"id":"MP-BOUTIQUE-01","application":"Google Online Boutique","stack":["kind","harbor","gitlab","argocd","prometheus","grafana"],"courses":["devops-practitioner-5-day"],"status":"roadmap"},
-    {"id":"MP-HOTEL-01","application":"Hotel Reservation","stack":["docker","kind","harbor","gitlab","argocd","prometheus","grafana","elk","kibana"],"courses":["devops-practitioner-5-day"],"status":"roadmap"}
+    {
+      "id": "MP-RETAIL-01",
+      "application": "AWS Retail Store Sample App",
+      "stack": [
+        "docker",
+        "kind",
+        "harbor",
+        "nexus",
+        "gitlab",
+        "argocd",
+        "prometheus",
+        "grafana",
+        "elk",
+        "kibana"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "status": "roadmap"
+    },
+    {
+      "id": "MP-BOUTIQUE-01",
+      "application": "Google Online Boutique",
+      "stack": [
+        "kind",
+        "harbor",
+        "gitlab",
+        "argocd",
+        "prometheus",
+        "grafana"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "status": "roadmap"
+    },
+    {
+      "id": "MP-HOTEL-01",
+      "application": "Hotel Reservation",
+      "stack": [
+        "docker",
+        "kind",
+        "harbor",
+        "gitlab",
+        "argocd",
+        "prometheus",
+        "grafana",
+        "elk",
+        "kibana"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "status": "roadmap"
+    }
   ]
 }

@@ -66,8 +66,18 @@ nav:
       - Lab Kataloğu İndeksi: curriculum/02_LAB_CATALOG_INDEX.md
       - Zorunlu Lablar Planı: curriculum/03_MANDATORY_LABS_DETAILED.md
       - Demo Uygulama Haritası: curriculum/06_DEMO_APPLICATION_MAPPING.md
-  - Lab Ortamı Hazırlığı:
+  - Kurulum & Araç Hazırlığı:
       - Başlangıç ve Lab Dosyaları: setup/index.md
+      - Docker Engine ve Compose Kurulumu: setup/docker-engine.md
+      - kind ile Yerel Kubernetes Kümesi: setup/kind-cluster.md
+      - Kubeadm ile Multi-Node K8s Kümesi: setup/kubeadm-cluster.md
+      - Çoklu Kubeconfig Birleştirme: setup/kubeconfig-management.md
+      - Dynamic NFS StorageClass Kurulumu: setup/nfs-storageclass.md
+      - Jenkins Kurulumu (Docker & K8s): setup/jenkins-installation.md
+      - Harbor Private Registry ve TLS: setup/harbor-registry.md
+      - Prometheus & Grafana Monitoring: setup/prometheus-grafana.md
+      - ELK Stack Merkezi Loglama: setup/elk-stack.md
+      - Argo CD Kurulumu & Web UI: setup/argocd-setup.md
       - DevOps Practitioner Hazırlığı: setup/devops-practitioner.md
       - Docker ve Kubernetes Hazırlığı: setup/docker-kubernetes.md
   - Platform Ortamı Kurulumu (Admin):
@@ -83,6 +93,7 @@ nav:
       - LAB-DOC-04 - Multi-Stage Build: day2/LAB-DOC-04-docker-multistage-hardening.md
       - LAB-DOC-05 - Docker Compose Çok Katmanlı Mimari: day2/LAB-DOC-05-docker-compose-multitier.md
       - LAB-DOC-06 - Trivy ve Harbor Entegrasyonu: day2/LAB-DOC-06-trivy-harbor-integration.md
+      - LAB-DOC-10 - İmaj ve Volume Yedekleme: day2/LAB-DOC-10-docker-backup-restore.md
       - LAB-DOC-13 - Production Docker Compose Desenleri: day2/LAB-DOC-13-docker-compose-production-patterns.md
   - CI/CD:
       - LAB-JNK-01 - Jenkins Declarative Pipeline: day3/LAB-JNK-01-jenkins-declarative-pipeline.md
