@@ -6,7 +6,7 @@
 - **Tahmini Süre:** 45 dk
 - **Gerekli Profil:** `kubernetes`
 - **Host Portları:** - (Küme İçi Kriz Masası Simülasyonu)
-- **Çalışma Dizini:** `~/devops-workspace/labs/LAB-INC-01`
+- **Çalışma Dizini:** `~/labs/LAB-INC-01`
 
 ---
 
@@ -33,8 +33,8 @@ Kubernetes kümesinde eşzamanlı ortaya çıkan `CrashLoopBackOff`, `ImagePullB
 Aşağıdaki komutlarla başlangıç durumunu kontrol edin:
 ```bash
 kubectl get nodes
-mkdir -p ~/devops-workspace/labs/LAB-INC-01/broken-manifests ~/devops-workspace/labs/LAB-INC-01/reports
-cd ~/devops-workspace/labs/LAB-INC-01
+mkdir -p ~/labs/LAB-INC-01/broken-manifests ~/labs/LAB-INC-01/reports
+cd ~/labs/LAB-INC-01
 ```
 
 ## 5. Adım Adım Uygulama
@@ -257,7 +257,7 @@ kubectl logs -l app=payment-service -n production-incident --previous
 Olay ad alanını ve çalışma dizinini silin:
 ```bash
 kubectl delete namespace production-incident 2>/dev/null || true
-rm -rf ~/devops-workspace/labs/LAB-INC-01
+rm -rf ~/labs/LAB-INC-01
 ```
 
 ## 10. Production Notu

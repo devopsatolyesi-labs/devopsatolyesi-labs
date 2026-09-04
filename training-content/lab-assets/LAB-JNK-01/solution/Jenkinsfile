@@ -8,24 +8,34 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo "--> [1] Kaynak kod repodan cekiliyor..."
+                checkout scm
             }
         }
         stage('Linting') {
             steps {
                 echo "--> [2] Flake8 ile kod kalitesi denetleniyor..."
-                sh 'flake8 src/ --max-line-length=100'
+                sh '''
+                    python3 -m venv .venv
+                    . .venv/bin/activate
+                    pip install --no-cache-dir -r requirements.txt
+                    flake8 src/ --max-line-length=100
+                '''
             }
         }
         stage('Unit Tests') {
             steps {
                 echo "--> [3] Pytest calistiriliyor ve JUnit XML raporu uretiliyor..."
-                sh 'pytest --junitxml=reports/junit-report.xml tests/'
+                sh '''
+                    . .venv/bin/activate
+                    mkdir -p reports
+                    pytest --junitxml=reports/junit-report.xml --cov=src tests/
+                '''
             }
         }
         stage('Build Packaging') {
             steps {
                 echo "--> [4] Dagitim paketi olusturuluyor..."
-                sh 'tar -czf ${APP_NAME}.tar.gz src/'
+                sh 'tar -czf ${APP_NAME}-${BUILD_NUMBER}.tar.gz src/'
             }
         }
     }

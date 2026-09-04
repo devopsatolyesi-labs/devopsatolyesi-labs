@@ -97,8 +97,8 @@ Pod loglarının öğrenci hostundan okunabilmesi için her node'un `/var/log` d
 ```bash
 sudo mkdir -p /var/log/devops-kind/{control-plane,worker,worker2}
 sudo chmod -R 0755 /var/log/devops-kind
-mkdir -p ~/devops-workspace/labs/LAB-LOG-02
-cd ~/devops-workspace/labs/LAB-LOG-02
+mkdir -p ~/labs/LAB-LOG-02
+cd ~/labs/LAB-LOG-02
 nano kind-config.yaml
 ```
 
@@ -160,8 +160,8 @@ printf 'vm.max_map_count=262144\n' | sudo tee /etc/sysctl.d/99-elk2.conf
 Çalışma dizinlerini oluşturun:
 
 ```bash
-mkdir -p ~/devops-workspace/labs/LAB-LOG-02/{vector,metricbeat,filebeat}
-cd ~/devops-workspace/labs/LAB-LOG-02
+mkdir -p ~/labs/LAB-LOG-02/{vector,metricbeat,filebeat}
+cd ~/labs/LAB-LOG-02
 ```
 
 ## 4. Docker Compose dosyasını elle oluşturma
@@ -594,7 +594,7 @@ curl -s http://localhost:9200/_cluster/health | jq .
 Yalnız bu labın Compose kaynaklarını kaldırın:
 
 ```bash
-cd ~/devops-workspace/labs/LAB-LOG-02
+cd ~/labs/LAB-LOG-02
 docker compose down
 ```
 

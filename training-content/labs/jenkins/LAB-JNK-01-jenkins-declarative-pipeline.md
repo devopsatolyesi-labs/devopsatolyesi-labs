@@ -6,7 +6,7 @@
 - **Tahmini Süre:** 45 dk
 - **Gerekli Profil:** `secure-ci`
 - **Host Portları:** `8080:8080` (Jenkins Controller)
-- **Çalışma Dizini:** `~/devops-workspace/labs/LAB-JNK-01`
+- **Çalışma Dizini:** `~/labs/LAB-JNK-01`
 
 ---
 
@@ -36,12 +36,12 @@ Jenkins üzerinde Deklaratif Pipeline (`Jenkinsfile`) sözdizimi ile çok aşama
 - Jenkins Controller çalışır durumda olmalıdır (`http://localhost:8080`)
 - Merkezi referans platform için `https://devopsatolyesi.com/jenkins` adresini inceleyebilirsiniz
 - Python 3 ve `python3-venv` paketi kurulu olmalıdır
-- Önceden tamamlanması önerilen lab: `LAB-DOC-03`
-
-Aşağıdaki komutlarla çalışma ortamını hazırlayın:
+Aşağıdaki komutlarla Python ve çalışma ortamını kontrol edin:
 ```bash
-mkdir -p ~/devops-workspace/labs/LAB-JNK-01/src ~/devops-workspace/labs/LAB-JNK-01/tests
-cd ~/devops-workspace/labs/LAB-JNK-01
+python3 --version
+python3 -m venv --help >/dev/null
+mkdir -p ~/labs/LAB-JNK-01/src ~/labs/LAB-JNK-01/tests
+cd ~/labs/LAB-JNK-01
 ```
 
 ## 5. Adım Adım Uygulama
@@ -131,6 +131,7 @@ pipeline {
                 echo "--> [3] Pytest calistiriliyor ve JUnit XML raporu uretiliyor..."
                 sh '''
                     . .venv/bin/activate
+                    mkdir -p reports
                     pytest --junitxml=reports/junit-report.xml --cov=src tests/
                 '''
             }
@@ -226,7 +227,7 @@ Jenkins arayüzünde "Build Now" butonuna basarak veya terminalde test scriptini
 Geçici test dizinlerini ve sanal ortamı temizleyin:
 ```bash
 rm -rf .venv reports *.tar.gz
-rm -rf ~/devops-workspace/labs/LAB-JNK-01
+rm -rf ~/labs/LAB-JNK-01
 ```
 
 ## 10. Production Notu

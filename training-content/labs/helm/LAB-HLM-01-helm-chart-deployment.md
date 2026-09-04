@@ -6,7 +6,7 @@
 - **Tahmini Süre:** 45 dk
 - **Gerekli Profil:** `kubernetes`
 - **Host Portları:** - (Küme İçi Helm Release Dağıtımı)
-- **Çalışma Dizini:** `~/devops-workspace/labs/LAB-HLM-01`
+- **Çalışma Dizini:** `~/labs/LAB-HLM-01`
 
 ---
 
@@ -40,8 +40,8 @@ Aşağıdaki komutlarla başlangıç durumunu kontrol edin:
 ```bash
 helm version
 kubectl cluster-info
-mkdir -p ~/devops-workspace/labs/LAB-HLM-01
-cd ~/devops-workspace/labs/LAB-HLM-01
+mkdir -p ~/labs/LAB-HLM-01
+cd ~/labs/LAB-HLM-01
 ```
 
 ## 5. Adım Adım Uygulama
@@ -246,7 +246,7 @@ Release'i kaldırın, ad alanını silin ve çalışma dizinini temizleyin:
 ```bash
 helm uninstall prod-release -n production 2>/dev/null || true
 kubectl delete namespace production 2>/dev/null || true
-rm -rf devops-app ~/devops-workspace/labs/LAB-HLM-01
+rm -rf devops-app ~/labs/LAB-HLM-01
 ```
 
 ## 10. Production Notu

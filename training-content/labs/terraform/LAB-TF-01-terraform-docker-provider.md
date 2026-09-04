@@ -6,7 +6,7 @@
 - **Tahmini Süre:** 45 dk
 - **Gerekli Profil:** `docker`
 - **Host Portları:** `8090:80`
-- **Çalışma Dizini:** `~/devops-workspace/labs/LAB-TF-01`
+- **Çalışma Dizini:** `~/labs/LAB-TF-01`
 
 ---
 
@@ -40,8 +40,8 @@ Aşağıdaki komutlarla başlangıç durumunu kontrol edin:
 ```bash
 terraform version
 docker ps
-mkdir -p ~/devops-workspace/labs/LAB-TF-01
-cd ~/devops-workspace/labs/LAB-TF-01
+mkdir -p ~/labs/LAB-TF-01
+cd ~/labs/LAB-TF-01
 ```
 
 ## 5. Adım Adım Uygulama
@@ -223,7 +223,7 @@ Terraform tarafından yönetilen tüm kaynakları yok edin ve çalışma dizinin
 ```bash
 terraform destroy -auto-approve
 rm -rf .terraform .terraform.lock.hcl terraform.tfstate* tfplan
-rm -rf ~/devops-workspace/labs/LAB-TF-01
+rm -rf ~/labs/LAB-TF-01
 ```
 
 ## 10. Production Notu

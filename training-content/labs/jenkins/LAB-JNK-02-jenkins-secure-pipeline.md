@@ -6,7 +6,7 @@
 - **Tahmini Süre:** 60 dk
 - **Gerekli Profil:** `secure-ci`
 - **Host Portları:** `8080:8080` (Jenkins), `9000:9000` (SonarQube), `8082:8082` (Harbor)
-- **Çalışma Dizini:** `~/devops-workspace/labs/LAB-JNK-02`
+- **Çalışma Dizini:** `~/labs/LAB-JNK-02`
 
 ---
 
@@ -70,8 +70,8 @@ Aşağıdaki komutlarla servis durumlarını doğrulayın:
 curl -sf http://localhost:8080/login > /dev/null && echo "Jenkins: OK" || echo "Jenkins: Check Port 8080"
 curl -sf http://localhost:9000/api/system/status | grep -q "UP" && echo "SonarQube: OK" || echo "SonarQube: Check Port 9000"
 curl -sf http://localhost:8082/api/v2.0/ping && echo "Harbor: OK" || echo "Harbor: Check Port 8082"
-mkdir -p ~/devops-workspace/labs/LAB-JNK-02/app ~/devops-workspace/labs/LAB-JNK-02/tests
-cd ~/devops-workspace/labs/LAB-JNK-02
+mkdir -p ~/labs/LAB-JNK-02/app ~/labs/LAB-JNK-02/tests
+cd ~/labs/LAB-JNK-02
 ```
 
 ## 5. Adım Adım Uygulama
@@ -349,7 +349,7 @@ Test imajını ve geçici dosyaları temizleyin:
 ```bash
 docker rmi localhost:8082/devops/secure-payment-service:v1.2.0-manual 2>/dev/null || true
 rm -rf .venv coverage.xml junit-report.xml .pytest_cache
-rm -rf ~/devops-workspace/labs/LAB-JNK-02
+rm -rf ~/labs/LAB-JNK-02
 ```
 
 ## 10. Production Notu

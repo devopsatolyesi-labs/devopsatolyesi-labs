@@ -6,7 +6,7 @@
 - **Tahmini Süre:** 30 dk
 - **Gerekli Profil:** `docker`
 - **Host Portları:** 22 (SSH)
-- **Çalışma Dizini:** `~/devops-workspace/labs/LAB-LNX-01`
+- **Çalışma Dizini:** `~/labs/LAB-LNX-01`
 
 ---
 
@@ -44,8 +44,8 @@ hostnamectl
 ### Adım 1 — Çalışma Dizinini Hazırlama
 Çalışma dizinini ve script klasörünü oluşturun:
 ```bash
-mkdir -p ~/devops-workspace/labs/LAB-LNX-01/scripts
-cd ~/devops-workspace/labs/LAB-LNX-01
+mkdir -p ~/labs/LAB-LNX-01/scripts
+cd ~/labs/LAB-LNX-01
 ```
 
 ### Adım 2 — Sistem Kaynaklarını İnceleme
@@ -71,7 +71,7 @@ sudo ss -tulpn
 Sistem durumunu tek seferde raporlayan otomatik denetim scriptini oluşturun:
 
 ```bash
-cat <<'EOF' > ~/devops-workspace/labs/LAB-LNX-01/scripts/preflight_check.sh
+cat <<'EOF' > ~/labs/LAB-LNX-01/scripts/preflight_check.sh
 #!/usr/bin/env bash
 set -euo pipefail
 
@@ -109,13 +109,13 @@ echo -e "\n========================================="
 echo "  PREFLIGHT REPORT COMPLETED SUCCESSFUL  "
 echo "========================================="
 EOF
-chmod +x ~/devops-workspace/labs/LAB-LNX-01/scripts/preflight_check.sh
+chmod +x ~/labs/LAB-LNX-01/scripts/preflight_check.sh
 ```
 
 ## 6. Beklenen Sonuç
 Script çalıştırıldığında sistem donanımını, disk durumunu ve açık portları içeren şu çıktı üretilmelidir:
 ```bash
-~/devops-workspace/labs/LAB-LNX-01/scripts/preflight_check.sh
+~/labs/LAB-LNX-01/scripts/preflight_check.sh
 ```
 Çıktı:
 ```text
@@ -154,7 +154,7 @@ Filesystem      Size  Used Avail Use% Mounted on
 ## 7. Doğrulama
 Preflight scriptinin sıfır hata kodu ile sonlandığını teyit edin:
 ```bash
-if ~/devops-workspace/labs/LAB-LNX-01/scripts/preflight_check.sh > /dev/null; then
+if ~/labs/LAB-LNX-01/scripts/preflight_check.sh > /dev/null; then
     echo "VALIDATION SUCCESS: Preflight check completed with exit code 0."
 else
     echo "VALIDATION FAILED: Preflight script returned non-zero exit code." && exit 1
@@ -195,7 +195,7 @@ sudo ss -tulpn | grep :80
 ## 9. Temizlik / Sıfırlama
 Oluşturulan çalışma dizinini sıfırlamak için:
 ```bash
-rm -rf ~/devops-workspace/labs/LAB-LNX-01
+rm -rf ~/labs/LAB-LNX-01
 ```
 
 ## 10. Production Notu

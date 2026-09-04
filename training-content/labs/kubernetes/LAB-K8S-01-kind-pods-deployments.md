@@ -6,7 +6,7 @@
 - **Tahmini Süre:** 45 dk
 - **Gerekli Profil:** `kubernetes`
 - **Host Portları:** `80:80`, `443:443` (Ingress ExtraPortMappings)
-- **Çalışma Dizini:** `~/devops-workspace/labs/LAB-K8S-01`
+- **Çalışma Dizini:** `~/labs/LAB-K8S-01`
 
 ---
 
@@ -89,8 +89,8 @@ Aşağıdaki komutlarla başlangıç durumunu kontrol edin:
 kind version
 kubectl version --client --output=yaml
 docker ps
-mkdir -p ~/devops-workspace/labs/LAB-K8S-01/manifests
-cd ~/devops-workspace/labs/LAB-K8S-01
+mkdir -p ~/labs/LAB-K8S-01/manifests
+cd ~/labs/LAB-K8S-01
 ```
 
 ## 5. Adım Adım Uygulama
@@ -267,7 +267,7 @@ Oluşturulan Kubernetes kaynaklarını ve kind kümesini silin:
 ```bash
 kubectl delete -f manifests/deployment-resilient.yaml manifests/pod-basic.yaml 2>/dev/null || true
 kind delete cluster --name devops-cluster 2>/dev/null || true
-rm -rf ~/devops-workspace/labs/LAB-K8S-01
+rm -rf ~/labs/LAB-K8S-01
 ```
 
 ## 10. Production Notu

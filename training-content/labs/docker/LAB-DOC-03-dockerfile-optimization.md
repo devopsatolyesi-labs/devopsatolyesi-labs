@@ -15,7 +15,6 @@
 
 ## Ön Koşullar
 
-- `LAB-DOC-01` tamamlanmış olmalıdır.
 - Docker ve yerel Harbor çalışmalıdır.
 - Harbor'da `devops` projesi bulunmalıdır.
 

@@ -6,7 +6,7 @@
 - **Önerilen Gün:** Gün 4 (Kubernetes & IaC Entegrasyonu)
 - **Tahmini Süre:** 60 dk
 - **Gerekli Profil:** `kubernetes` (~3.0 GB RAM)
-- **Çalışma Dizini:** `~/devops-workspace/labs/LAB-TF-04`
+- **Çalışma Dizini:** `~/labs/LAB-TF-04`
 
 ---
 
@@ -92,8 +92,8 @@ kubectl get nodes
 
 Lab için izole çalışma dizini oluşturun:
 ```bash
-mkdir -p ~/devops-workspace/labs/LAB-TF-04
-cd ~/devops-workspace/labs/LAB-TF-04
+mkdir -p ~/labs/LAB-TF-04
+cd ~/labs/LAB-TF-04
 ```
 
 Eğer `kind-devops-cluster` henüz başlatılmadıysa, ortam profilini başlatın:
@@ -494,7 +494,7 @@ bash ~/devops-workspace/devops-practitioner-egitim-katalogu/outputs/lab-assets/L
 
 Veya manuel olarak:
 ```bash
-cd ~/devops-workspace/labs/LAB-TF-04
+cd ~/labs/LAB-TF-04
 terraform destroy -auto-approve
 kubectl delete -f sample-app.yaml --ignore-not-found=true
 ```

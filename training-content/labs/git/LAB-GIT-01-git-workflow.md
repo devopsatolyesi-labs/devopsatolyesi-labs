@@ -6,7 +6,7 @@
 - **Tahmini Süre:** 45 dk
 - **Gerekli Profil:** `docker`
 - **Host Portları:** -
-- **Çalışma Dizini:** `~/devops-workspace/labs/LAB-GIT-01`
+- **Çalışma Dizini:** `~/labs/LAB-GIT-01`
 
 ---
 
@@ -27,7 +27,7 @@ Git ortamında branch oluşturma, çakışan commitleri birleştirme (`git merge
 ## 4. Ön Koşullar
 - Git CLI (v2.40+) kurulu olmalıdır
 - `jq` komut satırı JSON ayrıştırıcısı kurulu olmalıdır
-- Çalışma dizini: `~/devops-workspace/labs/LAB-GIT-01`
+- Çalışma dizini: `~/labs/LAB-GIT-01`
 
 Aşağıdaki komutlarla Git kullanıcı yapılandırmasını doğrulayın:
 ```bash
@@ -41,8 +41,8 @@ git config --global user.email "engineer@devops.local"
 ### Adım 1 — Çalışma Ortamı ve Git Reposu Oluşturma
 Temiz bir Git deposu başlatın:
 ```bash
-mkdir -p ~/devops-workspace/labs/LAB-GIT-01/repo
-cd ~/devops-workspace/labs/LAB-GIT-01/repo
+mkdir -p ~/labs/LAB-GIT-01/repo
+cd ~/labs/LAB-GIT-01/repo
 git init -b main
 ```
 
@@ -161,7 +161,7 @@ Automatic merge failed; fix conflicts and then commit the result.
 ## 7. Doğrulama
 Yapılandırma dosyasının geçerli bir JSON olduğunu ve her iki değişikliğin birleştiğini doğrulayın:
 ```bash
-cd ~/devops-workspace/labs/LAB-GIT-01/repo
+cd ~/labs/LAB-GIT-01/repo
 PORT=$(jq -r .port app-config.json)
 AUTH=$(jq -r .features.auth app-config.json)
 
@@ -203,7 +203,7 @@ git branch --show-current
 ## 9. Temizlik / Sıfırlama
 Laboratuvar ortamını temizlemek ve sıfırlamak için:
 ```bash
-rm -rf ~/devops-workspace/labs/LAB-GIT-01
+rm -rf ~/labs/LAB-GIT-01
 ```
 
 ## 10. Production Notu

@@ -7,7 +7,7 @@
 - **Tahmini Süre:** 60–75 dk
 - **Gerekli Profil:** `docker` (LocalStack yerel modu) veya Geçerli AWS Hesabı (`aws configure`)
 - **Host Portları:** `4566` (LocalStack modu durumunda), SSH Bastion (22)
-- **Çalışma Dizini:** `~/devops-workspace/labs/LAB-TF-08`
+- **Çalışma Dizini:** `~/labs/LAB-TF-08`
 - **Hedef Repo Yolu:** `~/devops-workspace/projects/PROJECT-TF-VPC`
 - **Referans:** [Bryant Son — How to Build an AWS VPC with Public and Private Subnets using Terraform](https://bryantson.medium.com/how-to-build-an-aws-vpc-with-public-and-private-subnets-using-terraform-5eac1dc69b83)
 
@@ -169,8 +169,8 @@ Aşağıdaki komutlarla başlangıç ortamınızı kontrol edin:
 ```bash
 terraform version
 aws --version 2>/dev/null || echo "(AWS CLI kurulu değilse LocalStack veya Terraform yerel provider kullanılabilir)"
-mkdir -p ~/devops-workspace/labs/LAB-TF-08
-cd ~/devops-workspace/labs/LAB-TF-08
+mkdir -p ~/labs/LAB-TF-08
+cd ~/labs/LAB-TF-08
 ```
 
 ---
@@ -202,8 +202,8 @@ Geliştireceğimiz küçük Terraform projesi kurumsal modüler standartlara uyg
 
 Çalışma dizinine geçin:
 ```bash
-mkdir -p ~/devops-workspace/labs/LAB-TF-08
-cd ~/devops-workspace/labs/LAB-TF-08
+mkdir -p ~/labs/LAB-TF-08
+cd ~/labs/LAB-TF-08
 ```
 
 Terraform'un AWS provider, yerel dosya ve anahtar üretim sağlayıcılarını tanımlayan `providers.tf` dosyasını oluşturun:

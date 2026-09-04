@@ -7,7 +7,7 @@
 - **Önerilen Gün:** Gün 5
 - **Tahmini Süre:** 75 dakika
 - **Gerekli Profil:** `logging`
-- **Hedef Dizin:** `~/devops-workspace/labs/LAB-LOG-01`
+- **Hedef Dizin:** `~/labs/LAB-LOG-01`
 - **Portlar:** `5601` (Kibana), `8088` (lab Nginx), `127.0.0.1:9200` (Elasticsearch API)
 - **Canlı GCP Kibana:** `https://elk1.devopsatolyesi.com` (mevcut `devops`/`admin` Basic Auth hesabı)
 - **Kaynak:** [Prepare.sh — The Definitive Guide to the ELK Stack in 2026](https://prepare.sh/articles/the-definitive-guide-to-the-elk-stack-in-2026-from-zero-to-production-ready-observability)
@@ -108,8 +108,8 @@ sudo apt-get install -y ca-certificates curl jq docker.io docker-compose-v2
 sudo systemctl enable --now docker
 sudo sysctl -w vm.max_map_count=262144
 printf 'vm.max_map_count=262144\n' | sudo tee /etc/sysctl.d/99-lab-log-01.conf
-mkdir -p ~/devops-workspace/labs/LAB-LOG-01/{filebeat,logstash/config,logstash/pipeline,elasticsearch,nginx/html,runtime/nginx,runtime/host-nginx}
-cd ~/devops-workspace/labs/LAB-LOG-01
+mkdir -p ~/labs/LAB-LOG-01/{filebeat,logstash/config,logstash/pipeline,elasticsearch,nginx/html,runtime/nginx,runtime/host-nginx}
+cd ~/labs/LAB-LOG-01
 ```
 
 ### Adım 2 — Yapılandırma dosyalarını tek tek oluşturun
@@ -150,7 +150,7 @@ docker compose run --rm logstash \
 ### Adım 3 — Servisleri elle başlatın
 
 ```bash
-cd ~/devops-workspace/labs/LAB-LOG-01
+cd ~/labs/LAB-LOG-01
 sudo docker compose pull
 sudo docker compose up -d
 sudo docker compose ps
@@ -186,8 +186,8 @@ Tam Compose: [`../../lab-assets/LAB-LOG-01/solution/compose.yaml`](../../lab-ass
 curl -s http://localhost:8088/ >/dev/null
 curl -s http://localhost:8088/olmayan-sayfa >/dev/null
 curl -s http://localhost:8088/test-500 >/dev/null
-sudo tail -n 4 ~/devops-workspace/labs/LAB-LOG-01/runtime/nginx/access.log
-cat ~/devops-workspace/labs/LAB-LOG-01/.env
+sudo tail -n 4 ~/labs/LAB-LOG-01/runtime/nginx/access.log
+cat ~/labs/LAB-LOG-01/.env
 ```
 
 Beklenen loglar `200`, `404` ve `500` durum kodlarını içerir. Native Nginx varsa `.env` içinde şu değer görülür:
@@ -201,7 +201,7 @@ Native Nginx yoksa boş bir lab dizini kullanılır; lab Nginx kaynağı çalı�
 ### Adım 7 — Filebeat yapılandırmasını inceleyin
 
 ```bash
-sed -n '1,220p' ~/devops-workspace/labs/LAB-LOG-01/filebeat/filebeat.yml
+sed -n '1,220p' ~/labs/LAB-LOG-01/filebeat/filebeat.yml
 ```
 
 Tam dosya: [`../../lab-assets/LAB-LOG-01/solution/filebeat/filebeat.yml`](../../lab-assets/LAB-LOG-01/solution/filebeat/filebeat.yml)
@@ -211,7 +211,7 @@ Dört benzersiz `filestream` input, lab/host access ve error loglarını okur. `
 ### Adım 8 — Gerçek Nginx biçimine göre Grok filtresini inceleyin
 
 ```bash
-sed -n '1,240p' ~/devops-workspace/labs/LAB-LOG-01/logstash/pipeline/nginx.conf
+sed -n '1,240p' ~/labs/LAB-LOG-01/logstash/pipeline/nginx.conf
 ```
 
 Tam dosya: [`../../lab-assets/LAB-LOG-01/solution/logstash/pipeline/nginx.conf`](../../lab-assets/LAB-LOG-01/solution/logstash/pipeline/nginx.conf)
@@ -230,9 +230,9 @@ Tam dosya: [`../../lab-assets/LAB-LOG-01/solution/logstash/pipeline/nginx.conf`]
 ### Adım 9 — Persistent Queue, DLQ ve ILM'yi inceleyin
 
 ```bash
-cat ~/devops-workspace/labs/LAB-LOG-01/logstash/config/logstash.yml
-jq . ~/devops-workspace/labs/LAB-LOG-01/elasticsearch/ilm-policy.json
-jq . ~/devops-workspace/labs/LAB-LOG-01/elasticsearch/index-template.json
+cat ~/labs/LAB-LOG-01/logstash/config/logstash.yml
+jq . ~/labs/LAB-LOG-01/elasticsearch/ilm-policy.json
+jq . ~/labs/LAB-LOG-01/elasticsearch/index-template.json
 curl -s http://localhost:9200/_ilm/policy/devops-nginx-7d | jq .
 ```
 
@@ -312,7 +312,7 @@ Sayılar trafiğe göre değişir; alan yapısı ve sıfır Grok hatası kabul k
 ## 7. Doğrulama
 
 ```bash
-cd ~/devops-workspace/labs/LAB-LOG-01
+cd ~/labs/LAB-LOG-01
 curl -s http://localhost:8088/ >/dev/null
 curl -s http://localhost:8088/test-500 >/dev/null
 sleep 8
@@ -341,7 +341,7 @@ printf 'vm.max_map_count=262144\n' | sudo tee /etc/sysctl.d/99-lab-log-01.conf
 ### Logstash sağlıklı değil
 
 ```bash
-cd ~/devops-workspace/labs/LAB-LOG-01
+cd ~/labs/LAB-LOG-01
 sudo docker compose logs --tail=100 logstash
 sudo docker compose run --rm logstash \
   /usr/share/logstash/bin/logstash --config.test_and_exit \
@@ -372,7 +372,7 @@ Zaman aralığını genişletin ve `Nginx Logları` Data View'unu seçin.
 ## 9. Temizlik / Sıfırlama
 
 ```bash
-cd ~/devops-workspace/labs/LAB-LOG-01
+cd ~/labs/LAB-LOG-01
 sudo docker compose down
 ```
 
@@ -404,7 +404,7 @@ sudo docker compose down -v
 3. Elasticsearch'i iki dakika durdurup trafik üretin; yeniden açıldığında Persistent Queue kayıtlarının kaybolmadan indekslendiğini kanıtlayın:
 
 ```bash
-cd ~/devops-workspace/labs/LAB-LOG-01
+cd ~/labs/LAB-LOG-01
 sudo docker compose stop elasticsearch
 curl -s http://localhost:8088/ >/dev/null
 curl -s http://localhost:8088/test-500 >/dev/null

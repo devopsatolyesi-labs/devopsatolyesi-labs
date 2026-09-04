@@ -6,7 +6,7 @@
 - **Tahmini Süre:** 45 dk
 - **Gerekli Profil:** `kubernetes`
 - **Host Portları:** `8085:443` (Argo CD API & Web UI)
-- **Çalışma Dizini:** `~/devops-workspace/labs/LAB-ARG-01`
+- **Çalışma Dizini:** `~/labs/LAB-ARG-01`
 
 ---
 
@@ -82,8 +82,8 @@ flowchart TD
 Aşağıdaki komutlarla başlangıç durumunu kontrol edin:
 ```bash
 kubectl get nodes
-mkdir -p ~/devops-workspace/labs/LAB-ARG-01/gitops-repo
-cd ~/devops-workspace/labs/LAB-ARG-01
+mkdir -p ~/labs/LAB-ARG-01/gitops-repo
+cd ~/labs/LAB-ARG-01
 ```
 
 ## 5. Adım Adım Uygulama
@@ -272,7 +272,7 @@ Argo CD uygulamasını ve oluşturulan ad alanlarını silin:
 ```bash
 argocd app delete gitops-demo-app --cascade 2>/dev/null || true
 kubectl delete namespace gitops-prod argocd 2>/dev/null || true
-rm -rf ~/devops-workspace/labs/LAB-ARG-01
+rm -rf ~/labs/LAB-ARG-01
 ```
 
 ## 10. Production Notu

@@ -6,7 +6,7 @@
 - **Tahmini Süre:** 45 dk
 - **Gerekli Profil:** `kubernetes`
 - **Host Portları:** - (Küme İçi CoreDNS ve ClusterIP İletişimi)
-- **Çalışma Dizini:** `~/devops-workspace/labs/LAB-K8S-02`
+- **Çalışma Dizini:** `~/labs/LAB-K8S-02`
 
 ---
 
@@ -37,8 +37,8 @@ Kubernetes üzerinde `ecommerce` ad alanında (Namespace) ClusterIP Servisi olu�
 Aşağıdaki komutlarla başlangıç durumunu kontrol edin:
 ```bash
 kubectl cluster-info
-mkdir -p ~/devops-workspace/labs/LAB-K8S-02/manifests
-cd ~/devops-workspace/labs/LAB-K8S-02
+mkdir -p ~/labs/LAB-K8S-02/manifests
+cd ~/labs/LAB-K8S-02
 ```
 
 ## 5. Adım Adım Uygulama
@@ -218,7 +218,7 @@ kubectl get endpoints order-service -n ecommerce
 `ecommerce` ad alanını silerek tüm bağlı servis ve podları temizleyin:
 ```bash
 kubectl delete namespace ecommerce 2>/dev/null || true
-rm -rf ~/devops-workspace/labs/LAB-K8S-02
+rm -rf ~/labs/LAB-K8S-02
 ```
 
 ## 10. Production Notu

@@ -1,0 +1,39 @@
+# DevOps Practitioner Lab Hazırlığı
+
+Bu kontrol yalnız **DevOps Practitioner — 5 Gün** eğitimine aittir.
+
+## Sunucuda Bulunması Gereken Araçlar
+
+- Git, curl, jq ve unzip
+- Python 3, `python3-venv` ve pip
+- Docker Engine ve Docker Compose v2
+- Java 21, Jenkins ve GitLab Runner
+- Terraform
+- kind, kubectl ve Helm
+- Harbor erişimi
+- Argo CD CLI
+- Prometheus, Grafana ve ELK lablarını çalıştırabilecek en az 8 GB RAM
+
+## Ön Kontrol
+
+```bash
+set -u
+git --version
+curl --version | head -1
+jq --version
+unzip -v | head -1
+python3 --version
+python3 -m venv --help >/dev/null
+python3 -m pip --version
+docker version --format 'Docker Server: {{.Server.Version}}'
+docker compose version
+java -version
+terraform version | head -1
+kind version
+kubectl version --client
+helm version --short
+free -h
+df -h /
+```
+
+Her lab kendi ZIP paketini ve gereken komutları içerir. Başka bir labın dizininden dosya kopyalamayın.
