@@ -42,7 +42,8 @@ spec:
               client_id=$("$kcadm" get clients -r devops-atolyesi -q clientId=labs-portal --fields id --format csv --noquotes)
               "$kcadm" update "clients/${client_id}" -r devops-atolyesi \
                 -s publicClient=false -s clientAuthenticatorType=client-secret \
-                -s "secret=${OIDC_CLIENT_SECRET}"
+                -s "secret=${OIDC_CLIENT_SECRET}" \
+                -s 'attributes={"post.logout.redirect.uris":"https://labs.devopsatolyesi.com/*"}'
               if ! "$kcadm" get "clients/${client_id}/protocol-mappers/models" -r devops-atolyesi \
                 --fields name --format csv --noquotes | grep -qx groups; then
                 "$kcadm" create "clients/${client_id}/protocol-mappers/models" -r devops-atolyesi \

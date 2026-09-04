@@ -51,6 +51,23 @@ verilir; repoya yazılmaz:
 Mevcut Keycloak release güncellenirken parolalar mevcut Secret değerlerinden
 verilir; release geçmişi ve rollback Helm tarafından yönetilir.
 
+## Kullanıcı ve eğitim erişimi yönetimi
+
+Keycloak yönetim konsolu
+`https://auth.devopsatolyesi.com/admin/devops-atolyesi/console/` adresindedir.
+Yönetim hesabı `admin`, parolası `PLATFORM_ADMIN_PASSWORD` GitHub Actions
+secret'ıdır. Portal yöneticisi üst menüdeki **Kullanıcı Yönetimi** bağlantısıyla
+bu ekrana ulaşır.
+
+Öğrenci hesabı `Users` bölümünde oluşturulur. Erişim, kullanıcıyı aşağıdaki
+gruplardan birine ekleyerek verilir:
+
+- `devops-practitioner-5-day`
+- `docker-kubernetes-2-day`
+
+Portalın **Çıkış** bağlantısı önce OAuth2 Proxy çerezini, ardından Keycloak SSO
+oturumunu kapatır ve kullanıcıyı yeniden Labs girişine yönlendirir.
+
 ## Doğrulama
 
 ```bash
