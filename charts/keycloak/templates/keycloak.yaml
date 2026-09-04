@@ -30,7 +30,7 @@ spec:
         - name: keycloak
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          args: ["start", "--http-enabled=true", "--proxy-headers=xforwarded", "--hostname=https://{{ .Values.hostname }}", "--hostname-backchannel-dynamic=true", "--health-enabled=true", "--metrics-enabled=true", "--import-realm"]
+          args: ["start", "--http-enabled=true", "--proxy-headers=xforwarded", "--hostname=https://{{ .Values.hostname }}", "--hostname-backchannel-dynamic=false", "--health-enabled=true", "--metrics-enabled=true", "--import-realm"]
           ports:
             - name: http
               containerPort: 8080
