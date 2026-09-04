@@ -7,10 +7,24 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   function canOpen(pathname) {
+    if (!pathname) return true;
     if (accessRole === "admin") return true;
-    if (pathname.indexOf("/curriculum/") === 0 || pathname.indexOf("/env/") === 0 || pathname.indexOf("/lab-assets/") === 0 || pathname === "/devops-labs.zip") return false;
+
+    // Platform environment admin setup and raw master archives are strictly admin-only
+    if (pathname.indexOf("/env/") === 0 || pathname.indexOf("/lab-assets/") === 0 || pathname === "/devops-labs.zip") {
+      return false;
+    }
+
+    // Portal home, general setup, curriculum syllabi, reference, troubleshooting, and search are available to students
+    if (pathname === "/" || pathname === "/index.html" || pathname === "") return true;
     if (pathname.indexOf("/setup/") === 0) return true;
+    if (pathname.indexOf("/curriculum/") === 0) return true;
+    if (pathname.indexOf("/troubleshooting/") === 0) return true;
+    if (pathname.indexOf("/reference/") === 0) return true;
+    if (pathname.indexOf("/search/") === 0) return true;
+
     if (accessRole === "devops") {
+      if (pathname.indexOf("/projects/") === 0) return true;
       return isLabPage(pathname, /^\/day1\/LAB-(LNX-(01-linux-preflight|02-nginx-letsencrypt-ssl|03-ssh-tunnel-mysql)|GIT-01-git-workflow|DOC-(01-docker-first-container|02-docker-volumes-env))(\/|\.html)?$/) ||
         isLabPage(pathname, /^\/day2\/LAB-DOC-(03-dockerfile-optimization|04-docker-multistage-hardening|05-docker-compose-multitier|06-trivy-harbor-integration|07-docker-java-spring-boot|08-docker-react-nginx|09-docker-networks-dns|10-docker-backup-restore|13-docker-compose-production-patterns)(\/|\.html)?$/) ||
         isLabPage(pathname, /^\/day3\/LAB-(JNK-(01-jenkins-declarative-pipeline|02-jenkins-secure-pipeline)|GLB-01-gitlab-ci-pipeline|GHA-01-github-actions-ci|TF-(01-terraform-docker-provider|04-terraform-helm-centralized-monitoring|08-terraform-aws-vpc-architecture))(\/|\.html)?$/) ||
@@ -19,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     if (accessRole === "docker" || accessRole === "kubernetes") {
       return isLabPage(pathname, /^\/day1\/LAB-DOC-(01-docker-first-container|02-docker-volumes-env)(\/|\.html)?$/) ||
-        isLabPage(pathname, /^\/day2\/LAB-DOC-(03-dockerfile-optimization|05-docker-compose-multitier|08-docker-react-nginx|09-docker-networks-dns|10-docker-backup-restore)(\/|\.html)?$/) ||
+        isLabPage(pathname, /^\/day2\/LAB-DOC-(03-dockerfile-optimization|04-docker-multistage-hardening|05-docker-compose-multitier|06-trivy-harbor-integration|07-docker-java-spring-boot|08-docker-react-nginx|09-docker-networks-dns|10-docker-backup-restore|13-docker-compose-production-patterns)(\/|\.html)?$/) ||
         isLabPage(pathname, /^\/day4\/LAB-K8S-(01-kind-pods-deployments|02-services-config-secrets|03-production-workloads)(\/|\.html)?$/);
     }
     return false;
@@ -62,13 +76,41 @@ document.addEventListener("DOMContentLoaded", function() {
     if (header) header.appendChild(admin);
   }
 
+  function filterSearchResults() {
+    if (accessRole === "admin") return;
+    var resultItems = document.querySelectorAll(".md-search-result__item");
+    for (var i = 0; i < resultItems.length; i++) {
+      var a = resultItems[i].querySelector("a.md-search-result__link");
+      if (a) {
+        var path = new URL(a.href, window.location.origin).pathname;
+        if (!canOpen(path)) {
+          resultItems[i].style.display = "none";
+        } else {
+          resultItems[i].style.display = "";
+        }
+      }
+    }
+  }
+
+  function attachSearchFilter() {
+    var searchOutput = document.querySelector(".md-search__output");
+    if (searchOutput && !searchOutput.hasAttribute("data-filter-attached")) {
+      searchOutput.setAttribute("data-filter-attached", "true");
+      var observer = new MutationObserver(function() {
+        filterSearchResults();
+      });
+      observer.observe(searchOutput, { childList: true, subtree: true });
+    }
+  }
+
   function applyCourseNavigation() {
     if (!accessRole) return;
     installAdminButton();
     installLogoutButton();
+    attachSearchFilter();
     if (accessRole === "admin") return;
-    // Material renders the drawer/sidebar and desktop tabs as separate menus.
-    // Filter both so a student never sees a link that the edge would reject.
+
+    // Filter sidebar navigation links and top desktop tabs
     var links = document.querySelectorAll("a.md-nav__link[href], a.md-tabs__link[href]");
     for (var i = 0; i < links.length; i++) {
       var path = new URL(links[i].href, window.location.origin).pathname;
@@ -78,14 +120,11 @@ document.addEventListener("DOMContentLoaded", function() {
       }
     }
 
-    // Do not leave an empty topic heading behind after its forbidden labs have
-    // been removed from the student navigation.
+    // Do not leave empty nested section containers
     var sections = document.querySelectorAll("li.md-nav__item--nested");
     for (var j = sections.length - 1; j >= 0; j--) {
       if (!sections[j].querySelector("a.md-nav__link[href]")) sections[j].remove();
     }
-    var search = document.querySelector('[data-md-component="search"]');
-    if (search) search.remove();
   }
 
   function loadIdentity() {

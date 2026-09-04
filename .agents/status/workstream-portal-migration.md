@@ -14,12 +14,12 @@
   - Interactive challenge questions with collapsible `??? tip "💡 Çözümü Göster"`
   - Centralized setup hub in `portal/docs/setup/` with 2-line preflight links in lab guides
 - **Completed Components:**
+  - Search Bar & Navigation Filter Fix: Resolved student search icon removal, enabled dynamic search result filtering with MutationObserver, permitted `/search/search_index.json`, `/projects/`, `/curriculum/`, `/troubleshooting/`, and `/reference/` in Nginx and client script, and enriched the home page dashboard.
   - Setup Hub (`setup/`): Docker Engine, kind cluster, Kubeadm cluster, Kubeconfig merge, Dynamic NFS, Jenkins, Harbor, Prometheus-Grafana, ELK, ArgoCD
-  - Core Docker Labs: `LAB-DOC-01`, `LAB-DOC-02`, `LAB-DOC-03`, `LAB-DOC-09`, `LAB-DOC-04`, `LAB-DOC-05`, `LAB-DOC-06`, `LAB-DOC-10`, `LAB-DOC-13`
+  - Linux & Git Labs: `LAB-LNX-01` (Preflight & DevOps Cheat Sheet), `LAB-LNX-02` (Nginx Let's Encrypt SSL/TLS), `LAB-LNX-03` (SSH Tunnel MySQL), `LAB-GIT-01` (Git Workflow)
+  - Full Docker Labs Suite: `LAB-DOC-01`, `LAB-DOC-02`, `LAB-DOC-03`, `LAB-DOC-09`, `LAB-DOC-04`, `LAB-DOC-07`, `LAB-DOC-08`, `LAB-DOC-05`, `LAB-DOC-06`, `LAB-DOC-10`, `LAB-DOC-13`
+  - GitHub Actions CI: `LAB-GHA-01`
+  - Kubernetes Core: `LAB-K8S-01` (Kubectl Cheat Sheet & Kind Pods)
+  - Terraform Core: `LAB-TF-01` (CLI & State Cheat Sheet)
 - **Current Task:**
-  - Implementing remaining lab materials autonomously without interruption:
-    - Linux Labs: `LAB-LNX-02` (Let's Encrypt SSL on Nginx), `LAB-LNX-03` (SSH Tunnel MySQL)
-    - Additional Language Docker Labs: `LAB-DOC-07` (Java Spring Boot), `LAB-DOC-08` (React / Static Frontend)
-    - CI/CD Standardization: `LAB-JNK-01`, `LAB-JNK-02` (Flask to K8s with Jenkins), `LAB-GLB-01`, `LAB-GHA-01`
-    - Kubernetes & GitOps: `LAB-K8S-01`, `LAB-K8S-02`, `LAB-K8S-03`, `LAB-HLM-01`, `LAB-ARG-01`
-    - Observability & Troubleshooting: `LAB-MON-01`, `LAB-MON-02`, `LAB-LOG-01`, `LAB-LOG-02`, `LAB-INC-01`
+  - Standardizing CI/CD (`LAB-JNK-01`, `LAB-JNK-02`, `LAB-GLB-01`), Kubernetes GitOps (`LAB-K8S-02`, `LAB-K8S-03`, `LAB-HLM-01`, `LAB-ARG-01`), Observability (`LAB-MON-01`, `LAB-MON-02`, `LAB-LOG-01`, `LAB-LOG-02`, `LAB-INC-01`), and Capstone (`LAB-CAP-01`).
