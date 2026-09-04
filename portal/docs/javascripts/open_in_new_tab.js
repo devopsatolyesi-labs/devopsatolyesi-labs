@@ -9,18 +9,17 @@ document.addEventListener("DOMContentLoaded", function() {
   function canOpen(pathname) {
     if (accessRole === "admin") return true;
     if (pathname.indexOf("/curriculum/") === 0 || pathname.indexOf("/env/") === 0 || pathname.indexOf("/lab-assets/") === 0 || pathname === "/devops-labs.zip") return false;
+    if (pathname.indexOf("/setup/") === 0) return true;
     if (accessRole === "devops") {
-      return isLabPage(pathname, /^\/setup\/(|index\.html|devops-practitioner(?:\/|\.html)?)$/) ||
-        isLabPage(pathname, /^\/day1\/LAB-(LNX-01-linux-preflight|GIT-01-git-workflow|DOC-01-docker-first-container|DOC-02-docker-volumes-env)(\/|\.html)?$/) ||
-        isLabPage(pathname, /^\/day2\/LAB-DOC-(03-dockerfile-optimization|04-docker-multistage-hardening|05-docker-compose-multitier|06-trivy-harbor-integration|13-docker-compose-production-patterns)(\/|\.html)?$/) ||
-        isLabPage(pathname, /^\/day3\/LAB-(JNK-01-jenkins-declarative-pipeline|JNK-02-jenkins-secure-pipeline|GLB-01-gitlab-ci-pipeline|TF-01-terraform-docker-provider|TF-04-terraform-helm-centralized-monitoring|TF-08-terraform-aws-vpc-architecture)(\/|\.html)?$/) ||
-        isLabPage(pathname, /^\/day4\/LAB-(K8S-01-kind-pods-deployments|K8S-02-services-config-secrets|K8S-03-production-workloads|HLM-01-helm-chart-deployment|ARG-01-argocd-gitops-sync)(\/|\.html)?$/) ||
-        isLabPage(pathname, /^\/day5\/LAB-(MON-01-prometheus-grafana-metrics|MON-02-alertmanager-rules|LOG-01-centralized-logging|LOG-02-elk-centralized-logging|INC-01-k8s-crashloop-postmortem|CAP-01-end-to-end-devops)(\/|\.html)?$/);
+      return isLabPage(pathname, /^\/day1\/LAB-(LNX-(01-linux-preflight|02-nginx-letsencrypt-ssl|03-ssh-tunnel-mysql)|GIT-01-git-workflow|DOC-(01-docker-first-container|02-docker-volumes-env))(\/|\.html)?$/) ||
+        isLabPage(pathname, /^\/day2\/LAB-DOC-(03-dockerfile-optimization|04-docker-multistage-hardening|05-docker-compose-multitier|06-trivy-harbor-integration|07-docker-java-spring-boot|08-docker-react-nginx|09-docker-networks-dns|10-docker-backup-restore|13-docker-compose-production-patterns)(\/|\.html)?$/) ||
+        isLabPage(pathname, /^\/day3\/LAB-(JNK-(01-jenkins-declarative-pipeline|02-jenkins-secure-pipeline)|GLB-01-gitlab-ci-pipeline|GHA-01-github-actions-ci|TF-(01-terraform-docker-provider|04-terraform-helm-centralized-monitoring|08-terraform-aws-vpc-architecture))(\/|\.html)?$/) ||
+        isLabPage(pathname, /^\/day4\/LAB-(K8S-(01-kind-pods-deployments|02-services-config-secrets|03-production-workloads)|HLM-01-helm-chart-deployment|ARG-01-argocd-gitops-sync)(\/|\.html)?$/) ||
+        isLabPage(pathname, /^\/day5\/LAB-(MON-(01-prometheus-grafana-metrics|02-alertmanager-rules)|LOG-(01-centralized-logging|02-elk-centralized-logging)|INC-01-k8s-crashloop-postmortem|CAP-01-end-to-end-devops)(\/|\.html)?$/);
     }
     if (accessRole === "docker" || accessRole === "kubernetes") {
-      return isLabPage(pathname, /^\/setup\/(|index\.html|docker-kubernetes(?:\/|\.html)?)$/) ||
-        isLabPage(pathname, /^\/day1\/LAB-DOC-(01-docker-first-container|02-docker-volumes-env)(\/|\.html)?$/) ||
-        isLabPage(pathname, /^\/day2\/LAB-DOC-(03-dockerfile-optimization|05-docker-compose-multitier)(\/|\.html)?$/) ||
+      return isLabPage(pathname, /^\/day1\/LAB-DOC-(01-docker-first-container|02-docker-volumes-env)(\/|\.html)?$/) ||
+        isLabPage(pathname, /^\/day2\/LAB-DOC-(03-dockerfile-optimization|05-docker-compose-multitier|08-docker-react-nginx|09-docker-networks-dns|10-docker-backup-restore)(\/|\.html)?$/) ||
         isLabPage(pathname, /^\/day4\/LAB-K8S-(01-kind-pods-deployments|02-services-config-secrets|03-production-workloads)(\/|\.html)?$/);
     }
     return false;
