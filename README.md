@@ -24,6 +24,11 @@ yollar. Argo CD yalnız pull yetkisiyle Harbor'ı izleyerek chartları otomatik
 uygular. Kubernetes API internete açılmaz. Parolalar repoya yazılmaz;
 GitHub Actions repository secrets ve Kubernetes Secret nesnelerinde tutulur.
 
+GitHub Actions billing veya runner kesintisinde aynı yayın zinciri
+`scripts/publish-fallback.sh` ile çalıştırılır. Script image build'ini
+`training-platform-01` üzerinde yapar, geçici Harbor robot credential'ını işlem
+sonunda siler ve yalnız Labs Helm chartını OCI registry'ye yollar.
+
 Labs erişimi Keycloak OIDC ile korunur. `admin` tüm sayfalara,
 `devops-practitioner-5-day` ve `docker-kubernetes-2-day` grupları yalnız kendi
 lab URL'lerine erişebilir; doğrudan URL denemeleri Nginx katmanında reddedilir.
