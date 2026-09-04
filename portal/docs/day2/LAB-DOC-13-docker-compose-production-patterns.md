@@ -5,13 +5,7 @@
 | 🔴 **ADVANCED** (İleri Seviye) | ⏱️ 60 dakika | `docker` | `8080` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-13.zip)](/downloads/LAB-DOC-13.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
-> 
-> **Terminalde çalışma ortamını hazırlayın:**
-> ```bash
-> mkdir -p ~/labs/LAB-DOC-13
-> cd ~/labs/LAB-DOC-13
-> ```
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-13.zip)](/downloads/LAB-DOC-13.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
 
 
 ## Amaç
@@ -207,9 +201,3 @@ Aşağıdaki soruları yanıtlamaya çalışın; ardından çözümü görmek i�
 - **Veritabanı Parola Hatası:** `.env` dosyasındaki `POSTGRES_USER`, `POSTGRES_PASSWORD` ve `POSTGRES_DB` değişkenlerinin eksiksiz olduğunu doğrulayın.
 - **Port Meşgul:** 8080 portu meşgulse `docker ps` veya `lsof -i :8080` ile kontrol edin.
 - **Servis Sağlıksız:** Belirli bir servisin loglarını `docker compose -p lab-doc-13 logs <servis_adi>` ile inceleyin.
-
----
-
-## Kaynak ve Referanslar
-
-Bu lab, Production Docker Compose Reference Architecture ve Docker Best Practices kılavuzlarından uyarlanmıştır.

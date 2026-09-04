@@ -196,9 +196,3 @@ Connected to backend (backend-service): <!DOCTYPE html>
 - **502 Bad Gateway:** `backend-service` konteynerinin çalıştığını `docker ps` ile teyit edin.
 - **Ağ Çakışması:** `custom-app-net` zaten varsa `docker network rm custom-app-net` ile silip baştan oluşturun.
 - **DNS Çözümleme Hatası:** Her iki konteynerin de aynı ağda (`custom-app-net`) olduğunu `docker network inspect custom-app-net` çıktısından doğrulayın.
-
----
-
-## Kaynak
-
-- [Hakan Bayraktar — Docker Commands Cheat Sheet with Examples](https://hbayraktar.medium.com/docker-commands-cheat-sheet-with-examples-d9a26396cb6f)

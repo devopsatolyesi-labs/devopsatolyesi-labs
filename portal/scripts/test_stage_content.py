@@ -63,7 +63,7 @@ class StageContentTest(unittest.TestCase):
                 page = candidates[0].read_text()
                 self.assertNotIn("## Metadata", page)
                 self.assertIn(f"/downloads/{lab['id']}.zip", page)
-                self.assertIn(f"mkdir -p ~/labs/{lab['id']}", page)
+                self.assertNotIn("## Kaynak", page)
 
 
 if __name__ == "__main__":

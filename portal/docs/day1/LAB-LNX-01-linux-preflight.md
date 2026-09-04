@@ -5,13 +5,7 @@
 | 🟢 **CORE** (Temel Seviye) | ⏱️ 30 dakika | `docker` | `22` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-LNX-01.zip)](/downloads/LAB-LNX-01.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
-> 
-> **Terminalde çalışma ortamını hazırlayın:**
-> ```bash
-> mkdir -p ~/labs/LAB-LNX-01
-> cd ~/labs/LAB-LNX-01
-> ```
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-LNX-01.zip)](/downloads/LAB-LNX-01.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
 
 
 ## 1. Lab Senaryosu

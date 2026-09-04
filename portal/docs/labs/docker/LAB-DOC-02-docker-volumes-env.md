@@ -186,9 +186,3 @@ Sorgu sonucunda `volume-ok` kaydı görünmelidir. Konteyner silinip yeniden ür
 - **`password is required` Hatası:** `LAB_POSTGRES_PASSWORD` değişkenini `export LAB_POSTGRES_PASSWORD='training-only-password'` ile terminal oturumunuza verin.
 - **Port Çakışması:** `5432` portunu kullanan başka bir PostgreSQL veya servis varsa `docker ps --filter publish=5432` ile tespit edip durdurun.
 - **PostgreSQL Ready Değilse:** `docker compose -p lab-doc-02 logs database` çıktısını inceleyin.
-
----
-
-## Kaynak
-
-- [Hakan Bayraktar — Docker Commands Cheat Sheet with Examples](https://hbayraktar.medium.com/docker-commands-cheat-sheet-with-examples-d9a26396cb6f)

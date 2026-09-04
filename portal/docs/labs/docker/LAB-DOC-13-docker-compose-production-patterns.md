@@ -200,9 +200,3 @@ Aşağıdaki soruları yanıtlamaya çalışın; ardından çözümü görmek i�
 - **Veritabanı Parola Hatası:** `.env` dosyasındaki `POSTGRES_USER`, `POSTGRES_PASSWORD` ve `POSTGRES_DB` değişkenlerinin eksiksiz olduğunu doğrulayın.
 - **Port Meşgul:** 8080 portu meşgulse `docker ps` veya `lsof -i :8080` ile kontrol edin.
 - **Servis Sağlıksız:** Belirli bir servisin loglarını `docker compose -p lab-doc-13 logs <servis_adi>` ile inceleyin.
-
----
-
-## Kaynak ve Referanslar
-
-Bu lab, Production Docker Compose Reference Architecture ve Docker Best Practices kılavuzlarından uyarlanmıştır.

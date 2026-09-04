@@ -74,13 +74,7 @@ def format_lab_header(lab: dict) -> str:
         f"| {difficulty} | ⏱️ {minutes} dakika | `{profiles}` | `{ports}` |",
         "",
         "> [!TIP]",
-        f"> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir ({lab['id']}.zip)](/downloads/{lab['id']}.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.",
-        "> ",
-        "> **Terminalde çalışma ortamını hazırlayın:**",
-        "> ```bash",
-        f"> mkdir -p ~/labs/{lab['id']}",
-        f"> cd ~/labs/{lab['id']}",
-        "> ```",
+        f"> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir ({lab['id']}.zip)](/downloads/{lab['id']}.zip) — paket başlangıç kodlarını içerir; çözüm içermez.",
         "",
     ]
     return "\n".join(header)
@@ -113,8 +107,15 @@ def studentize_guide(content: str) -> str:
         content,
         flags=re.DOTALL,
     )
+    # Strip any Kaynak / Kaynak ve Referanslar sections
+    content = re.sub(
+        r"(?:---\s*\n\s*)?##\s+(?:\d+\.\s*)?Kaynak.*?\Z",
+        "",
+        content,
+        flags=re.DOTALL,
+    )
     content = re.sub(r"(---\s*\n\s*)+---", "---", content)
-    return content
+    return content.strip() + "\n"
 
 
 def main() -> None:

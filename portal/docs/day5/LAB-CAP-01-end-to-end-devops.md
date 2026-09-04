@@ -5,13 +5,7 @@
 | 🔴 **ADVANCED** (İleri Seviye) | ⏱️ 90 dakika | `secure-ci, harbor, kubernetes, argocd, monitoring` | `3000, 8000, 8082, 8085, 9090` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-CAP-01.zip)](/downloads/LAB-CAP-01.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
-> 
-> **Terminalde çalışma ortamını hazırlayın:**
-> ```bash
-> mkdir -p ~/labs/LAB-CAP-01
-> cd ~/labs/LAB-CAP-01
-> ```
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-CAP-01.zip)](/downloads/LAB-CAP-01.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
 
 
 ## 1. Lab Senaryosu

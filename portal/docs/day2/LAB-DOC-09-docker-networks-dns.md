@@ -5,13 +5,7 @@
 | 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `docker` | `8080` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-09.zip)](/downloads/LAB-DOC-09.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
-> 
-> **Terminalde çalışma ortamını hazırlayın:**
-> ```bash
-> mkdir -p ~/labs/LAB-DOC-09
-> cd ~/labs/LAB-DOC-09
-> ```
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-09.zip)](/downloads/LAB-DOC-09.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
 
 
 ## Amaç
@@ -210,9 +204,3 @@ Connected to backend (backend-service): <!DOCTYPE html>
 - **502 Bad Gateway:** `backend-service` konteynerinin çalıştığını `docker ps` ile teyit edin.
 - **Ağ Çakışması:** `custom-app-net` zaten varsa `docker network rm custom-app-net` ile silip baştan oluşturun.
 - **DNS Çözümleme Hatası:** Her iki konteynerin de aynı ağda (`custom-app-net`) olduğunu `docker network inspect custom-app-net` çıktısından doğrulayın.
-
----
-
-## Kaynak
-
-- [Hakan Bayraktar — Docker Commands Cheat Sheet with Examples](https://hbayraktar.medium.com/docker-commands-cheat-sheet-with-examples-d9a26396cb6f)

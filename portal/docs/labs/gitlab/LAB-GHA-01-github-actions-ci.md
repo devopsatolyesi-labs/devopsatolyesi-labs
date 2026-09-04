@@ -147,9 +147,3 @@ EOF
     ??? tip "💡 Çözümü Göster"
         **Cevap:**
         Varsayılan olarak GitHub Actions tüm job'ları paralel çalıştırır. `needs: test` eklenmediğinde, `test` ve `build` job'ları aynı anda başlar. Eğer kodda bir birim test hatası varsa bile Docker imajı derlenmeye devam eder. `needs: test` bağımlılık tanımlayarak imaj derleme aşamasının ancak tüm birim testler başarılı olduğunda başlamasını garanti eder.
-
----
-
-## Kaynak ve Referanslar
-
-Bu lab, [github-actions-demo](https://github.com/hakanbayraktar/github-actions-demo) ve [github-action-simple](https://github.com/hakanbayraktar/github-action-simple) projelerindeki sürekli entegrasyon pratiklerinden uyarlanmıştır.

@@ -5,13 +5,7 @@
 | 🟢 **CORE** (Temel Seviye) | ⏱️ 45 dakika | `secure-ci` | `8080` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-JNK-01.zip)](/downloads/LAB-JNK-01.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
-> 
-> **Terminalde çalışma ortamını hazırlayın:**
-> ```bash
-> mkdir -p ~/labs/LAB-JNK-01
-> cd ~/labs/LAB-JNK-01
-> ```
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-JNK-01.zip)](/downloads/LAB-JNK-01.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
 
 
 ## 1. Lab Senaryosu

@@ -5,13 +5,7 @@
 | 🟢 **CORE** (Temel Seviye) | ⏱️ 45 dakika | `kubernetes` | `Dahili / Küme İçi` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-K8S-02.zip)](/downloads/LAB-K8S-02.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
-> 
-> **Terminalde çalışma ortamını hazırlayın:**
-> ```bash
-> mkdir -p ~/labs/LAB-K8S-02
-> cd ~/labs/LAB-K8S-02
-> ```
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-K8S-02.zip)](/downloads/LAB-K8S-02.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
 
 
 ## 1. Lab Senaryosu

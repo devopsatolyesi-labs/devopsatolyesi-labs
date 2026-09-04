@@ -5,13 +5,7 @@
 | 🔴 **ADVANCED** (İleri Seviye) | ⏱️ 90 dakika | `logging, kubernetes` | `Dahili / Küme İçi` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-LOG-02.zip)](/downloads/LAB-LOG-02.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
-> 
-> **Terminalde çalışma ortamını hazırlayın:**
-> ```bash
-> mkdir -p ~/labs/LAB-LOG-02
-> cd ~/labs/LAB-LOG-02
-> ```
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-LOG-02.zip)](/downloads/LAB-LOG-02.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
 
 
 ## 1. LAB-LOG-01 ile farkı

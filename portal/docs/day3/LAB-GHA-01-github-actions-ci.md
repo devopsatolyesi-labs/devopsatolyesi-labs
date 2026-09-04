@@ -5,13 +5,7 @@
 | 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `docker` | `Dahili / Küme İçi` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-GHA-01.zip)](/downloads/LAB-GHA-01.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
-> 
-> **Terminalde çalışma ortamını hazırlayın:**
-> ```bash
-> mkdir -p ~/labs/LAB-GHA-01
-> cd ~/labs/LAB-GHA-01
-> ```
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-GHA-01.zip)](/downloads/LAB-GHA-01.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
 
 
 ## Amaç
@@ -154,9 +148,3 @@ EOF
     ??? tip "💡 Çözümü Göster"
         **Cevap:**
         Varsayılan olarak GitHub Actions tüm job'ları paralel çalıştırır. `needs: test` eklenmediğinde, `test` ve `build` job'ları aynı anda başlar. Eğer kodda bir birim test hatası varsa bile Docker imajı derlenmeye devam eder. `needs: test` bağımlılık tanımlayarak imaj derleme aşamasının ancak tüm birim testler başarılı olduğunda başlamasını garanti eder.
-
----
-
-## Kaynak ve Referanslar
-
-Bu lab, [github-actions-demo](https://github.com/hakanbayraktar/github-actions-demo) ve [github-action-simple](https://github.com/hakanbayraktar/github-action-simple) projelerindeki sürekli entegrasyon pratiklerinden uyarlanmıştır.

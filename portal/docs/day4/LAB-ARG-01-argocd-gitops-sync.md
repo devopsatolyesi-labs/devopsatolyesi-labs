@@ -5,13 +5,7 @@
 | 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `kubernetes, argocd` | `8085` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-ARG-01.zip)](/downloads/LAB-ARG-01.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
-> 
-> **Terminalde çalışma ortamını hazırlayın:**
-> ```bash
-> mkdir -p ~/labs/LAB-ARG-01
-> cd ~/labs/LAB-ARG-01
-> ```
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-ARG-01.zip)](/downloads/LAB-ARG-01.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
 
 
 ## 1. Lab Senaryosu

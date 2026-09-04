@@ -5,13 +5,7 @@
 | 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 35 dakika | `docker` | `Dahili / Küme İçi` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-LNX-03.zip)](/downloads/LAB-LNX-03.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
-> 
-> **Terminalde çalışma ortamını hazırlayın:**
-> ```bash
-> mkdir -p ~/labs/LAB-LNX-03
-> cd ~/labs/LAB-LNX-03
-> ```
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-LNX-03.zip)](/downloads/LAB-LNX-03.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
 
 
 ## Amaç
@@ -102,9 +96,3 @@ mysql -h 127.0.0.1 -P 33306 -u dbuser -p
     ??? tip "💡 Çözümü Göster"
         **Cevap:**
         `-N` uzakta bir kabuk (shell) açılmasını ve komut çalıştırılmasını engeller, yalnızca port tüneli kurulacağını belirtir. `-f` ise SSH sürecini arka plana (background) atar; böylece terminaliniz kilitlenmez ve script veya otomasyon devam edebilir.
-
----
-
-## Kaynak ve Referanslar
-
-Bu lab, [Secure Access to MySQL Port via SSH Tunnel — Hakan Bayraktar](https://hbayraktar.medium.com/secure-access-to-mysql-port-via-ssh-tunnel-fc1d01feffb9) makalesinden uyarlanmıştır.

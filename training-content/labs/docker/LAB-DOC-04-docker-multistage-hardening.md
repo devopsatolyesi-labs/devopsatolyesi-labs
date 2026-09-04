@@ -207,9 +207,3 @@ Aşağıdaki soruları yanıtlamaya çalışın; ardından çözümü görmek i�
 - **UID Hatası:** `docker image inspect` çıktısında `Config.User` boş görünüyorsa Dockerfile'da `USER 10001` satırının runtime aşamasında yer aldığından emin olun.
 - **Dosya Yetki Hatası:** `COPY --from=builder` satırında `--chown=10001:10001` parametresinin bulunduğunu kontrol edin.
 - **Port Çakışması:** 3000 portu meşgulse `docker ps` ile eski konteynerleri temizleyin.
-
----
-
-## Kaynak ve Referanslar
-
-Bu lab, [ci-cd-docker](https://github.com/hakanbayraktar/ci-cd-docker) ve [jenkins-node](https://github.com/hakanbayraktar/jenkins-node) açık kaynak projelerindeki kurumsal Dockerfile hardening standartlarından uyarlanmıştır.

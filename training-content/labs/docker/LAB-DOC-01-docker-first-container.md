@@ -206,9 +206,3 @@ Hello from DevOps Atolyesi LAB-DOC-01!
 - **Permission Denied Hatası:** Kullanıcınızın `docker` grubunda olduğunu `groups` komutuyla kontrol edin. Değilseniz `sudo usermod -aG docker $USER` komutunu çalıştırıp yeni oturum açın.
 - **Port Çakışması:** `8080` portu kullanımda ise `docker ps --filter publish=8080` komutu ile çakışan konteyneri bulun ve durdurun.
 - **İmaj Derleme Hatası:** `Dockerfile` dosyasında `COPY app.py .` satırının ve dosya isimlerinin doğruluğunu kontrol edin.
-
----
-
-## Kaynak
-
-- [Hakan Bayraktar — Docker Commands Cheat Sheet with Examples](https://hbayraktar.medium.com/docker-commands-cheat-sheet-with-examples-d9a26396cb6f)

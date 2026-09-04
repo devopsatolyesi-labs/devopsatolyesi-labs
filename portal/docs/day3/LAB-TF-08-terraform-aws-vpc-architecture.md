@@ -5,13 +5,7 @@
 | 🔴 **ADVANCED** (İleri Seviye) | ⏱️ 75 dakika | `docker, localstack` | `4566` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-TF-08.zip)](/downloads/LAB-TF-08.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
-> 
-> **Terminalde çalışma ortamını hazırlayın:**
-> ```bash
-> mkdir -p ~/labs/LAB-TF-08
-> cd ~/labs/LAB-TF-08
-> ```
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-TF-08.zip)](/downloads/LAB-TF-08.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
 
 
 ## 1. Lab / Proje Senaryosu

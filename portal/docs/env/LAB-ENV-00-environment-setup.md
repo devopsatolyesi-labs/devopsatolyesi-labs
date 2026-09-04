@@ -5,13 +5,7 @@
 | 🟢 **CORE** (Temel Seviye) | ⏱️ 90 dakika | `base` | `Dahili / Küme İçi` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-ENV-00.zip)](/downloads/LAB-ENV-00.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
-> 
-> **Terminalde çalışma ortamını hazırlayın:**
-> ```bash
-> mkdir -p ~/labs/LAB-ENV-00
-> cd ~/labs/LAB-ENV-00
-> ```
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-ENV-00.zip)](/downloads/LAB-ENV-00.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
 
 
 ## 1. Lab Senaryosu ve Öğretim İlkesi

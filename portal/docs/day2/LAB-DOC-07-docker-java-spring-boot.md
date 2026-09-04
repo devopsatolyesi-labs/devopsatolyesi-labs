@@ -5,13 +5,7 @@
 | 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `docker` | `8080` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-07.zip)](/downloads/LAB-DOC-07.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
-> 
-> **Terminalde çalışma ortamını hazırlayın:**
-> ```bash
-> mkdir -p ~/labs/LAB-DOC-07
-> cd ~/labs/LAB-DOC-07
-> ```
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-07.zip)](/downloads/LAB-DOC-07.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
 
 
 ## 1. Senaryo ve Problem Tanımı
@@ -335,9 +329,3 @@ docker exec spring-app id
 - **Konteyner Başlamadan Çöküyor (Exit 137):** `--memory` sınırınızı çok düşük tutmuş olabilirsiniz (ör. 64 MB). Java 17 temel runtime için en az `256 MB` veya `512 MB` önerilir.
 - **Port Meşgul Hatası (Bind for 0.0.0.0:8080 failed):** 8080 portu başka bir servis tarafından kullanılıyorsa `docker ps` ile kontrol edip çakışan konteyneri durdurun veya `-p 8081:8080` ile yönlendirin.
 - **Permission Denied Hatası:** Dockerfile'da `COPY --from=builder` satırında `--chown=10001:10001` parametresini unuttuysanız Java JAR dosyasına erişemeyebilir.
-
----
-
-## 9. Kaynak ve Referanslar
-
-Bu lab, [spring-boot-course](https://github.com/hakanbayraktar/spring-boot-course) ve [petclinic-java](https://github.com/hakanbayraktar/petclinic-java) açık kaynak projelerindeki kurumsal Java Dockerfile standartlarından uyarlanmıştır.

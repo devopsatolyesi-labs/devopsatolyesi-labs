@@ -95,9 +95,3 @@ mysql -h 127.0.0.1 -P 33306 -u dbuser -p
     ??? tip "💡 Çözümü Göster"
         **Cevap:**
         `-N` uzakta bir kabuk (shell) açılmasını ve komut çalıştırılmasını engeller, yalnızca port tüneli kurulacağını belirtir. `-f` ise SSH sürecini arka plana (background) atar; böylece terminaliniz kilitlenmez ve script veya otomasyon devam edebilir.
-
----
-
-## Kaynak ve Referanslar
-
-Bu lab, [Secure Access to MySQL Port via SSH Tunnel — Hakan Bayraktar](https://hbayraktar.medium.com/secure-access-to-mysql-port-via-ssh-tunnel-fc1d01feffb9) makalesinden uyarlanmıştır.

@@ -158,9 +158,3 @@ docker rm -f nginx-ssl-test
     ??? tip "💡 Çözümü Göster"
         **Cevap:**
         SSLv3, TLS 1.0 ve TLS 1.1 protokolleri POODLE, BEAST ve Heartbleed gibi kritik şifreleme açıklarına karşı savunmasızdır. PCI-DSS ve güncel web güvenlik standartları yalnızca TLS 1.2 ve TLS 1.3 kullanımını zorunlu kılar.
-
----
-
-## Kaynak ve Referanslar
-
-Bu lab, [Step-by-Step Guide: Install Let’s Encrypt SSL on Nginx (Amazon Linux 2023 / Ubuntu) — Hakan Bayraktar](https://hbayraktar.medium.com/step-by-step-guide-install-lets-encrypt-ssl-on-nginx-amazon-linux-2023-91138089c5a9) makalesinden uyarlanmıştır.

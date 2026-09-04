@@ -5,13 +5,7 @@
 | 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 60 dakika | `docker` | `8080` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-05.zip)](/downloads/LAB-DOC-05.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
-> 
-> **Terminalde çalışma ortamını hazırlayın:**
-> ```bash
-> mkdir -p ~/labs/LAB-DOC-05
-> cd ~/labs/LAB-DOC-05
-> ```
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-05.zip)](/downloads/LAB-DOC-05.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
 
 
 ## Amaç
@@ -258,10 +252,3 @@ curl http://localhost:8080/
 - **Sağlık Hatası (500 Internal Error):** `docker compose -p lab-doc-05 logs api-service` çıktısını kontrol edin.
 - **Postgres Bağlantı Hatası:** `LAB_POSTGRES_PASSWORD` değişkeninin doğru export edildiğinden emin olun.
 - **Port Çakışması:** `8080` portunu kullanan başka bir konteyner varsa durdurun.
-
----
-
-## Kaynak
-
-- [Hakan Bayraktar — book-review-app Repository](https://github.com/hakanbayraktar/book-review-app)
-- [Hakan Bayraktar — Docker Commands Cheat Sheet with Examples](https://hbayraktar.medium.com/docker-commands-cheat-sheet-with-examples-d9a26396cb6f)

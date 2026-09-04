@@ -5,13 +5,7 @@
 | 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 40 dakika | `docker` | `Dahili / Küme İçi` |
 
 > [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-10.zip)](/downloads/LAB-DOC-10.zip) — paket README ve başlangıç kodlarını içerir; çözüm içermez.
-> 
-> **Terminalde çalışma ortamını hazırlayın:**
-> ```bash
-> mkdir -p ~/labs/LAB-DOC-10
-> cd ~/labs/LAB-DOC-10
-> ```
+> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-10.zip)](/downloads/LAB-DOC-10.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
 
 
 ## Amaç
@@ -217,9 +211,3 @@ Aşağıdaki soruları yanıtlamaya çalışın; ardından çözümü görmek i�
 
 - **Arşiv Bozulması:** `gzip: stdin: unexpected end of file` hatası alırsanız `save` işleminin disk doluluğu nedeniyle yarıda kalmadığından emin olun.
 - **Volume Silinemiyor:** Volume başka bir konteyner tarafından kullanılıyorsa önce konteyneri `docker rm -f` ile kaldırın.
-
----
-
-## Kaynak ve Referanslar
-
-Bu lab, [Backing Up and Restoring Docker Containers and Images — Hakan Bayraktar](https://hbayraktar.medium.com/backing-up-and-restoring-docker-containers-and-images-8e0b6ef5849b) makalesinden uyarlanmıştır.
