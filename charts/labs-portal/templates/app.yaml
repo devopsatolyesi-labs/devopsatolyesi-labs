@@ -144,6 +144,9 @@ kind: Ingress
 metadata:
   name: labs-oauth2-proxy
   namespace: labs-system
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "32k"
+    nginx.ingress.kubernetes.io/proxy-buffers-number: "8"
 spec:
   ingressClassName: {{ .Values.ingressClassName | quote }}
   rules:
