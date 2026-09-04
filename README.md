@@ -13,6 +13,7 @@ bulunmaz.
 - `gitops/applications.yaml`: Argo CD otomatik senkronizasyon tanımları
 - `scripts/bootstrap-argocd.sh`: GitHub ve Harbor secretlarını güvenli biçimde uygular
 - `docs/KUBERNETES_LABS_KEYCLOAK.md`: kurulum, doğrulama ve taşıma rehberi
+- `docs/DEVOPS_EGITIM_LAB_PLANI.md`: iki eğitim için kanonik lab geliştirme planı
 
 ## Adresler
 

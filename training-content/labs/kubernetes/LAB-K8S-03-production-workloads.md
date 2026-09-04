@@ -6,7 +6,7 @@
 - **Tahmini Süre:** 60 dk
 - **Gerekli Profil:** `kubernetes`
 - **Host Portları:** - (Küme İçi Servis ve Pod Dağıtımı)
-- **Çalışma Dizini:** `~/devops-workspace/labs/LAB-K8S-03`
+- **Çalışma Dizini:** `~/labs/LAB-K8S-03`
 
 ---
 
@@ -36,8 +36,8 @@ Kubernetes üzerinde üretim kalitesinde (production-grade) iş yükü tasarlama
 Aşağıdaki komutlarla başlangıç durumunu kontrol edin:
 ```bash
 kubectl get nodes
-mkdir -p ~/devops-workspace/labs/LAB-K8S-03/manifests
-cd ~/devops-workspace/labs/LAB-K8S-03
+mkdir -p ~/labs/LAB-K8S-03/manifests
+cd ~/labs/LAB-K8S-03
 ```
 
 ## 5. Adım Adım Uygulama
@@ -220,7 +220,7 @@ kubectl rollout status deployment/robust-web-service
 Dağıtımı, servisi ve PVC nesnesini silin:
 ```bash
 kubectl delete -f manifests/ 2>/dev/null || true
-rm -rf ~/devops-workspace/labs/LAB-K8S-03
+rm -rf ~/labs/LAB-K8S-03
 ```
 
 ## 10. Production Notu

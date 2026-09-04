@@ -6,7 +6,7 @@
 - **Tahmini Süre:** 45 dk
 - **Gerekli Profil:** `gitlab-ci`
 - **Host Portları:** `8081:80` (GitLab CE Web UI)
-- **Çalışma Dizini:** `~/devops-workspace/labs/LAB-GLB-01`
+- **Çalışma Dizini:** `~/labs/LAB-GLB-01`
 
 ---
 
@@ -76,8 +76,8 @@ flowchart LR
 
 Aşağıdaki komutlarla çalışma dizinini hazırlayın:
 ```bash
-mkdir -p ~/devops-workspace/labs/LAB-GLB-01/app
-cd ~/devops-workspace/labs/LAB-GLB-01
+mkdir -p ~/labs/LAB-GLB-01/app
+cd ~/labs/LAB-GLB-01
 ```
 
 ## 5. Adım Adım Uygulama
@@ -252,7 +252,7 @@ Pipeline'ı yeniden tetikleyerek job çıktısını kontrol edin.
 Geçici bağımlılıkları ve çalışma dizinini temizleyin:
 ```bash
 rm -rf app/node_modules
-rm -rf ~/devops-workspace/labs/LAB-GLB-01
+rm -rf ~/labs/LAB-GLB-01
 ```
 
 ## 10. Production Notu

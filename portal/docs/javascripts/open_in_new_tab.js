@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
   var accessRole = null;
+  var mermaidInitialized = false;
 
   function isLabPage(pathname, expression) {
     return expression.test(pathname);
@@ -9,14 +10,16 @@ document.addEventListener("DOMContentLoaded", function() {
     if (accessRole === "admin") return true;
     if (pathname.indexOf("/curriculum/") === 0 || pathname.indexOf("/env/") === 0 || pathname.indexOf("/lab-assets/") === 0 || pathname === "/devops-labs.zip") return false;
     if (accessRole === "devops") {
-      return isLabPage(pathname, /^\/day1\/LAB-(LNX-01-linux-preflight|GIT-01-git-workflow|DOC-01-docker-first-container|DOC-02-docker-volumes-env)(\/|\.html)?$/) ||
+      return isLabPage(pathname, /^\/setup\/(|index\.html|devops-practitioner(?:\/|\.html)?)$/) ||
+        isLabPage(pathname, /^\/day1\/LAB-(LNX-01-linux-preflight|GIT-01-git-workflow|DOC-01-docker-first-container|DOC-02-docker-volumes-env)(\/|\.html)?$/) ||
         isLabPage(pathname, /^\/day2\/LAB-DOC-(03-dockerfile-optimization|04-docker-multistage-hardening|05-docker-compose-multitier|06-trivy-harbor-integration|13-docker-compose-production-patterns)(\/|\.html)?$/) ||
         isLabPage(pathname, /^\/day3\/LAB-(JNK-01-jenkins-declarative-pipeline|JNK-02-jenkins-secure-pipeline|GLB-01-gitlab-ci-pipeline|TF-01-terraform-docker-provider|TF-04-terraform-helm-centralized-monitoring|TF-08-terraform-aws-vpc-architecture)(\/|\.html)?$/) ||
         isLabPage(pathname, /^\/day4\/LAB-(K8S-01-kind-pods-deployments|K8S-02-services-config-secrets|K8S-03-production-workloads|HLM-01-helm-chart-deployment|ARG-01-argocd-gitops-sync)(\/|\.html)?$/) ||
         isLabPage(pathname, /^\/day5\/LAB-(MON-01-prometheus-grafana-metrics|MON-02-alertmanager-rules|LOG-01-centralized-logging|LOG-02-elk-centralized-logging|INC-01-k8s-crashloop-postmortem|CAP-01-end-to-end-devops)(\/|\.html)?$/);
     }
     if (accessRole === "docker" || accessRole === "kubernetes") {
-      return isLabPage(pathname, /^\/day1\/LAB-DOC-(01-docker-first-container|02-docker-volumes-env)(\/|\.html)?$/) ||
+      return isLabPage(pathname, /^\/setup\/(|index\.html|docker-kubernetes(?:\/|\.html)?)$/) ||
+        isLabPage(pathname, /^\/day1\/LAB-DOC-(01-docker-first-container|02-docker-volumes-env)(\/|\.html)?$/) ||
         isLabPage(pathname, /^\/day2\/LAB-DOC-(03-dockerfile-optimization|05-docker-compose-multitier)(\/|\.html)?$/) ||
         isLabPage(pathname, /^\/day4\/LAB-K8S-(01-kind-pods-deployments|02-services-config-secrets|03-production-workloads)(\/|\.html)?$/);
     }
@@ -113,13 +116,32 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 
+  function renderMermaidDiagrams() {
+    if (!window.mermaid) {
+      setTimeout(renderMermaidDiagrams, 100);
+      return;
+    }
+    if (!mermaidInitialized) {
+      window.mermaid.initialize({startOnLoad: false, securityLevel: "strict"});
+      mermaidInitialized = true;
+    }
+    var diagrams = document.querySelectorAll(".mermaid:not([data-processed])");
+    if (diagrams.length > 0) {
+      window.mermaid.run({nodes: diagrams}).catch(function(error) {
+        console.error("Mermaid render failed", error);
+      });
+    }
+  }
+
   makeExternalLinksOpenInNewTab();
+  renderMermaidDiagrams();
   loadIdentity();
 
-  if (typeof location$ !== "undefined") {
-    location$.subscribe(function() {
+  if (typeof document$ !== "undefined") {
+    document$.subscribe(function() {
       setTimeout(makeExternalLinksOpenInNewTab, 100);
       setTimeout(applyCourseNavigation, 100);
+      setTimeout(renderMermaidDiagrams, 100);
     });
   }
 });

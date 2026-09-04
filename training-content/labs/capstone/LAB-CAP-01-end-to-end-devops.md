@@ -6,7 +6,7 @@
 - **Tahmini Süre:** 90 dk
 - **Gerekli Profil:** `phased` (Aşamalı Profil: CI -> K8s/GitOps -> Observability)
 - **Host Portları:** `8000:8000` (Order API), `8082:8082` (Harbor), `8085:443` (Argo CD), `9090:9090` (Prometheus), `3000:3000` (Grafana)
-- **Çalışma Dizini:** `~/devops-workspace/labs/LAB-CAP-01`
+- **Çalışma Dizini:** `~/labs/LAB-CAP-01`
 
 ---
 
@@ -93,8 +93,8 @@ Aşağıdaki komutlarla başlangıç ortamını hazırlayın:
 ```bash
 docker ps
 kubectl get nodes
-mkdir -p ~/devops-workspace/labs/LAB-CAP-01/app ~/devops-workspace/labs/LAB-CAP-01/gitops-manifests ~/devops-workspace/labs/LAB-CAP-01/scripts ~/devops-workspace/labs/LAB-CAP-01/tests
-cd ~/devops-workspace/labs/LAB-CAP-01
+mkdir -p ~/labs/LAB-CAP-01/app ~/labs/LAB-CAP-01/gitops-manifests ~/labs/LAB-CAP-01/scripts ~/labs/LAB-CAP-01/tests
+cd ~/labs/LAB-CAP-01
 ```
 
 ## 5. Adım Adım Uygulama
@@ -432,7 +432,7 @@ Capstone ad alanını ve yerel derleme dosyalarını temizleyin:
 ```bash
 kubectl delete namespace capstone-prod 2>/dev/null || true
 docker rmi localhost:8082/devops/capstone-order-api:v2.0.0 2>/dev/null || true
-rm -rf .venv reports ~/devops-workspace/labs/LAB-CAP-01
+rm -rf .venv reports ~/labs/LAB-CAP-01
 ```
 
 ## 10. Production Notu

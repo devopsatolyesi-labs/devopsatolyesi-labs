@@ -6,7 +6,7 @@
 - **Tahmini Süre:** 45 dk
 - **Gerekli Profil:** `monitoring`
 - **Host Portları:** `9090:9090` (Prometheus), `3000:3000` (Grafana), `9100:9100` (Node Exporter), `8000:8000` (Order API)
-- **Çalışma Dizini:** `~/devops-workspace/labs/LAB-MON-01`
+- **Çalışma Dizini:** `~/labs/LAB-MON-01`
 
 ---
 
@@ -76,8 +76,8 @@ flowchart LR
 Aşağıdaki komutlarla çalışma ortamını hazırlayın:
 ```bash
 docker compose version
-mkdir -p ~/devops-workspace/labs/LAB-MON-01/app ~/devops-workspace/labs/LAB-MON-01/prometheus ~/devops-workspace/labs/LAB-MON-01/grafana/provisioning/datasources
-cd ~/devops-workspace/labs/LAB-MON-01
+mkdir -p ~/labs/LAB-MON-01/app ~/labs/LAB-MON-01/prometheus ~/labs/LAB-MON-01/grafana/provisioning/datasources
+cd ~/labs/LAB-MON-01
 ```
 
 ## 5. Adım Adım Uygulama
@@ -295,7 +295,7 @@ curl -s http://localhost:9090/api/v1/targets | jq '.data.activeTargets[] | selec
 Konteynerleri, ağları ve oluşturulan dizini temizleyin:
 ```bash
 docker compose down -v
-rm -rf ~/devops-workspace/labs/LAB-MON-01
+rm -rf ~/labs/LAB-MON-01
 ```
 
 ## 10. Production Notu

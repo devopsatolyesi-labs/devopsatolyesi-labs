@@ -24,8 +24,8 @@
 ### 1. Çalışma dizinini ve başlangıç Compose dosyasını oluşturun
 
 ```bash
-mkdir -p ~/devops-workspace/labs/LAB-DOC-02
-cd ~/devops-workspace/labs/LAB-DOC-02
+mkdir -p ~/labs/LAB-DOC-02
+cd ~/labs/LAB-DOC-02
 
 cat <<'YAML' > compose.yaml
 services:

@@ -6,7 +6,7 @@
 - **Tahmini Süre:** 45 dk
 - **Gerekli Profil:** `monitoring`
 - **Host Portları:** `9090:9090` (Prometheus), `9093:9093` (Alertmanager)
-- **Çalışma Dizini:** `~/devops-workspace/labs/LAB-MON-02`
+- **Çalışma Dizini:** `~/labs/LAB-MON-02`
 
 ---
 
@@ -38,8 +38,8 @@ Prometheus üzerinde `alert.rules.yml` dosyasıyla alarm eşikleri tanımlamak, 
 
 Aşağıdaki komutlarla çalışma ortamını hazırlayın:
 ```bash
-mkdir -p ~/devops-workspace/labs/LAB-MON-02/prometheus ~/devops-workspace/labs/LAB-MON-02/alertmanager
-cd ~/devops-workspace/labs/LAB-MON-02
+mkdir -p ~/labs/LAB-MON-02/prometheus ~/labs/LAB-MON-02/alertmanager
+cd ~/labs/LAB-MON-02
 ```
 
 ## 5. Adım Adım Uygulama
@@ -218,7 +218,7 @@ curl -s http://localhost:9090/api/v1/rules | jq '.data.groups[0].name'
 Konteynerleri kaldırın ve çalışma dizinini temizleyin:
 ```bash
 docker compose down -v
-rm -rf ~/devops-workspace/labs/LAB-MON-02
+rm -rf ~/labs/LAB-MON-02
 ```
 
 ## 10. Production Notu
