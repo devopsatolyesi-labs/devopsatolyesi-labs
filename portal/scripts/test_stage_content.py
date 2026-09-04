@@ -58,9 +58,10 @@ class StageContentTest(unittest.TestCase):
                             self.assertEqual(archive.read(name), source.read_bytes())
 
                 source_name = Path(lab["guide"]).name
-                candidates = list(docs.glob(f"day*/{source_name}")) + list(docs.glob(f"env/{source_name}"))
-                self.assertEqual(len(candidates), 1)
-                page = candidates[0].read_text()
+                folder_name = Path(lab["guide"]).parent.name
+                target_page = docs / folder_name / source_name
+                self.assertTrue(target_page.is_file(), f"Expected staged file at {target_page}")
+                page = target_page.read_text()
                 self.assertNotIn("## Metadata", page)
                 self.assertIn(f"/downloads/{lab['id']}.zip", page)
                 self.assertNotIn("## Kaynak", page)
@@ -113,6 +114,8 @@ class StageContentTest(unittest.TestCase):
             if access_role == "devops":
                 if p.startswith("/curriculum") or p.startswith("/setup") or p.startswith("/projects") or p.startswith("/troubleshooting"):
                     return True
+                if re.match(r"^/(?:linux|git|docker|jenkins|gitlab|terraform|kubernetes|helm|gitops|monitoring|logging|incident|capstone)/LAB-[A-Za-z0-9_-]+$", p):
+                    return True
                 if re.match(r"^/day[1-5]/LAB-[A-Za-z0-9_-]+$", p):
                     return True
                 if re.match(r"^/downloads/LAB-[A-Za-z0-9_-]+\.zip$", p):
@@ -131,9 +134,9 @@ class StageContentTest(unittest.TestCase):
                     "/setup/docker-kubernetes",
                 ):
                     return True
-                if re.match(r"^/day[12]/LAB-DOC-[A-Za-z0-9_-]+$", p):
+                if re.match(r"^/(?:docker|day[12])/LAB-DOC-[A-Za-z0-9_-]+$", p):
                     return True
-                if re.match(r"^/day4/LAB-K8S-[A-Za-z0-9_-]+$", p):
+                if re.match(r"^/(?:kubernetes|day4)/LAB-K8S-[A-Za-z0-9_-]+$", p):
                     return True
                 if re.match(r"^/downloads/LAB-(?:DOC|K8S)-[A-Za-z0-9_-]+\.zip$", p):
                     return True
@@ -141,21 +144,17 @@ class StageContentTest(unittest.TestCase):
             return False
 
         # Verify JS contains dynamic pattern matching and not obsolete hardcoded slug regexes
-        self.assertIn(r"/^\/day[1-5]\/LAB-[A-Za-z0-9_-]+$/", js_code)
-        self.assertIn(r"/^\/day[12]\/LAB-DOC-[A-Za-z0-9_-]+$/", js_code)
-        self.assertIn(r"/^\/day4\/LAB-K8S-[A-Za-z0-9_-]+$/", js_code)
+        self.assertIn(r"/^\/(?:linux|git|docker|jenkins|gitlab|terraform|kubernetes|helm|gitops|monitoring|logging|incident|capstone)\/LAB-[A-Za-z0-9_-]+$/", js_code)
         self.assertNotIn("01-kind-pods-deployments", js_code)
         self.assertNotIn("JNK-01", js_code)
 
         # Test each lab against both JS logic and Nginx configuration
         for lab in catalog["labs"]:
             lab_id = lab["id"]
-            filename = Path(lab["guide"]).name
-            slug = filename.replace(".md", "")
-            candidates = list((REPOSITORY / "portal/docs").glob(f"day*/{filename}")) + list((REPOSITORY / "portal/docs").glob(f"env/{filename}"))
-            self.assertTrue(len(candidates) == 1, f"Missing portal candidate for {lab_id}")
-            day_or_env = candidates[0].relative_to(REPOSITORY / "portal/docs").parts[0]
-            url = f"/{day_or_env}/{slug}/"
+            guide_path = Path(lab["guide"])
+            folder_name = guide_path.parent.name
+            slug = guide_path.stem
+            url = f"/{folder_name}/{slug}/"
             download_url = f"/downloads/{lab_id}.zip"
 
             # Admin must access everything

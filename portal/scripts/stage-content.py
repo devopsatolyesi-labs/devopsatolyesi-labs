@@ -145,16 +145,17 @@ def main() -> None:
 
     for lab in catalog["labs"]:
         source = training.parent / lab["guide"]
-        candidates = list(docs.glob(f"day*/{source.name}")) + list(docs.glob(f"env/{source.name}"))
-        if len(candidates) != 1:
-            raise SystemExit(f"expected one portal target for {lab['id']}, found {len(candidates)}")
+        folder_name = source.parent.name
+        target_dir = docs / folder_name
+        target_dir.mkdir(parents=True, exist_ok=True)
+        target = target_dir / source.name
         canonical_guide = source.read_text(encoding="utf-8")
         package_guide = studentize_guide(canonical_guide)
         guide = package_guide.replace("../../lab-assets/", "../lab-assets/")
         guide_lines = guide.splitlines()
         guide_lines.insert(1, format_lab_header(lab))
         guide = "\n".join(guide_lines) + "\n"
-        candidates[0].write_text(guide, encoding="utf-8")
+        target.write_text(guide, encoding="utf-8")
 
         assets = training.parent / lab["assets"]
         download = docs / "downloads" / f"{lab['id']}.zip"
@@ -178,7 +179,9 @@ def main() -> None:
 
     # Student-facing pages do not promise completion times. Timing remains in
     # the admin curriculum/catalog for lesson planning.
-    for student_guide in docs.glob("day*/LAB-*.md"):
+    for student_guide in docs.glob("*/*.md"):
+        if student_guide.parent.name in ("labs", "lab-assets", "downloads", "curriculum", "setup", "projects", "troubleshooting", "reference"):
+            continue
         content = student_guide.read_text(encoding="utf-8")
         content = studentize_guide(content)
         student_guide.write_text(content, encoding="utf-8")

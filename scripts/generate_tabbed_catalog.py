@@ -9,13 +9,10 @@ with open(REPOSITORY / 'training-content/catalog.json', encoding='utf-8') as f:
     cat = json.load(f)
 
 for lab in cat['labs']:
-    guide_name = Path(lab['guide']).name
-    matches = list((REPOSITORY / 'portal/docs').glob(f'day*/{guide_name}')) + list((REPOSITORY / 'portal/docs').glob(f'env/{guide_name}'))
-    if matches:
-        rel = matches[0].relative_to(REPOSITORY / 'portal/docs').as_posix().replace('.md', '/')
-        lab['url'] = f'../{rel}'
-    else:
-        lab['url'] = f"../day1/{guide_name.replace('.md', '/')}"
+    guide_path = Path(lab['guide'])
+    topic_name = guide_path.parent.name
+    slug_name = guide_path.stem
+    lab['url'] = f'../{topic_name}/{slug_name}/'
 
 diff_map = {100: '🟢 CORE', 200: '🟡 PRACTITIONER', 300: '🔴 ADVANCED'}
 

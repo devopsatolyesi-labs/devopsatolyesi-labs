@@ -34,14 +34,17 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // DevOps Practitioner Role (5-day comprehensive course):
-    // Full access across Day 1 to Day 5, Projects, Troubleshooting, Curriculum, and Setup.
+    // Full access across all canonical topic families, projects, troubleshooting, curriculum, and setup.
     if (accessRole === "devops") {
       if (p.indexOf("/curriculum") === 0) return true;
       if (p.indexOf("/setup") === 0) return true;
       if (p.indexOf("/projects") === 0) return true;
       if (p.indexOf("/troubleshooting") === 0) return true;
 
-      // Matches ANY lab on Day 1 to Day 5 (all 64 active labs across Linux, Git, Docker, CI/CD, K8s, GitOps, Monitoring, Capstone)
+      // Matches ANY lab across all topic families
+      if (/^\/(?:linux|git|docker|jenkins|gitlab|terraform|kubernetes|helm|gitops|monitoring|logging|incident|capstone)\/LAB-[A-Za-z0-9_-]+$/.test(p)) return true;
+
+      // Legacy fallback matching
       if (/^\/day[1-5]\/LAB-[A-Za-z0-9_-]+$/.test(p)) return true;
 
       // Downloads: any student lab package
@@ -71,11 +74,11 @@ document.addEventListener("DOMContentLoaded", function() {
         return true;
       }
 
-      // All 20 Docker labs (Day 1 & Day 2: LAB-DOC-01 to LAB-DOC-20)
-      if (/^\/day[12]\/LAB-DOC-[A-Za-z0-9_-]+$/.test(p)) return true;
+      // All 20 Docker labs
+      if (/^\/(?:docker|day[12])\/LAB-DOC-[A-Za-z0-9_-]+$/.test(p)) return true;
 
-      // All 12 Kubernetes labs (Day 4: LAB-K8S-01 to LAB-K8S-12)
-      if (/^\/day4\/LAB-K8S-[A-Za-z0-9_-]+$/.test(p)) return true;
+      // All 12 Kubernetes labs
+      if (/^\/(?:kubernetes|day4)\/LAB-K8S-[A-Za-z0-9_-]+$/.test(p)) return true;
 
       // Downloads: strictly Docker and Kubernetes starter packages
       if (/^\/downloads\/LAB-(?:DOC|K8S)-[A-Za-z0-9_-]+\.zip$/.test(p)) return true;
