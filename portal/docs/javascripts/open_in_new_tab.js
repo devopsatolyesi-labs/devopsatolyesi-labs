@@ -17,14 +17,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Portal home, general setup, curriculum syllabi, reference, troubleshooting, and search are available to students
     if (pathname === "/" || pathname === "/index.html" || pathname === "") return true;
-    if (pathname.indexOf("/setup/") === 0) return true;
-    if (pathname.indexOf("/curriculum/") === 0) return true;
-    if (pathname.indexOf("/troubleshooting/") === 0) return true;
-    if (pathname.indexOf("/reference/") === 0) return true;
-    if (pathname.indexOf("/search/") === 0) return true;
+    if (pathname.indexOf("/setup") === 0) return true;
+    if (pathname.indexOf("/curriculum") === 0) return true;
+    if (pathname.indexOf("/troubleshooting") === 0) return true;
+    if (pathname.indexOf("/reference") === 0) return true;
+    if (pathname.indexOf("/search") === 0) return true;
 
     if (accessRole === "devops") {
-      if (pathname.indexOf("/projects/") === 0) return true;
+      if (pathname.indexOf("/projects") === 0) return true;
       return isLabPage(pathname, /^\/day1\/LAB-(LNX-(01-linux-preflight|02-nginx-letsencrypt-ssl|03-ssh-tunnel-mysql)|GIT-01-git-workflow|DOC-(01-docker-first-container|02-docker-volumes-env))(\/|\.html)?$/) ||
         isLabPage(pathname, /^\/day2\/LAB-DOC-(03-dockerfile-optimization|04-docker-multistage-hardening|05-docker-compose-multitier|06-trivy-harbor-integration|07-docker-java-spring-boot|08-docker-react-nginx|09-docker-networks-dns|10-docker-backup-restore|13-docker-compose-production-patterns)(\/|\.html)?$/) ||
         isLabPage(pathname, /^\/day3\/LAB-(JNK-(01-jenkins-declarative-pipeline|02-jenkins-secure-pipeline)|GLB-01-gitlab-ci-pipeline|GHA-01-github-actions-ci|TF-(01-terraform-docker-provider|04-terraform-helm-centralized-monitoring|08-terraform-aws-vpc-architecture))(\/|\.html)?$/) ||
