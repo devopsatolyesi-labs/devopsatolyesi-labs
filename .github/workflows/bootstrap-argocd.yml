@@ -35,6 +35,7 @@ jobs:
           LABS_COOKIE_SECRET: ${{ secrets.LABS_COOKIE_SECRET }}
         run: |
           ssh-keygen -q -t ed25519 -N '' -f "$RUNNER_TEMP/deploy_key"
+          remote_dir="/tmp/devopsatolyesi-labs-bootstrap-${GITHUB_RUN_ID}"
           install -m 700 -d "$RUNNER_TEMP/bootstrap"
           install -m 700 scripts/bootstrap-argocd.sh "$RUNNER_TEMP/bootstrap/bootstrap-argocd.sh"
           install -m 600 gitops/applications.yaml "$RUNNER_TEMP/bootstrap/applications.yaml"
@@ -50,9 +51,12 @@ jobs:
             printf 'LABS_OIDC_CLIENT_SECRET=%q\n' "$LABS_OIDC_CLIENT_SECRET"
             printf 'LABS_COOKIE_SECRET=%q\n' "$LABS_COOKIE_SECRET"
           } > "$RUNNER_TEMP/bootstrap/secrets.env"
-          gcloud compute scp --recurse "$RUNNER_TEMP/bootstrap" "$DEPLOY_USER@$INSTANCE:/tmp/devopsatolyesi-labs-bootstrap" \
+          gcloud compute ssh "$DEPLOY_USER@$INSTANCE" --project "$GCP_PROJECT_ID" --zone "$GCP_ZONE" \
+            --tunnel-through-iap --quiet --ssh-key-file "$RUNNER_TEMP/deploy_key" \
+            --command "rm -rf /tmp/devopsatolyesi-labs-bootstrap '$remote_dir'"
+          gcloud compute scp --recurse "$RUNNER_TEMP/bootstrap" "$DEPLOY_USER@$INSTANCE:$remote_dir" \
             --project "$GCP_PROJECT_ID" --zone "$GCP_ZONE" --tunnel-through-iap --quiet \
             --ssh-key-file "$RUNNER_TEMP/deploy_key"
           gcloud compute ssh "$DEPLOY_USER@$INSTANCE" --project "$GCP_PROJECT_ID" --zone "$GCP_ZONE" \
             --tunnel-through-iap --quiet --ssh-key-file "$RUNNER_TEMP/deploy_key" \
-            --command "set -eu; cd /tmp/devopsatolyesi-labs-bootstrap; . ./secrets.env; export HARBOR_ROBOT_USERNAME HARBOR_ROBOT_PASSWORD KEYCLOAK_DB_PASSWORD PLATFORM_ADMIN_PASSWORD LABS_ADMIN_PASSWORD LABS_DEVOPS_PASSWORD LABS_KUBERNETES_PASSWORD LABS_OIDC_CLIENT_SECRET LABS_COOKIE_SECRET; install -d gitops; mv applications.yaml gitops/applications.yaml; ./bootstrap-argocd.sh; rm -f secrets.env"
+            --command "set -eu; cd '$remote_dir'; . ./secrets.env; export HARBOR_ROBOT_USERNAME HARBOR_ROBOT_PASSWORD KEYCLOAK_DB_PASSWORD PLATFORM_ADMIN_PASSWORD LABS_ADMIN_PASSWORD LABS_DEVOPS_PASSWORD LABS_KUBERNETES_PASSWORD LABS_OIDC_CLIENT_SECRET LABS_COOKIE_SECRET; install -d gitops; mv applications.yaml gitops/applications.yaml; ./bootstrap-argocd.sh; cd /; rm -rf '$remote_dir'"
