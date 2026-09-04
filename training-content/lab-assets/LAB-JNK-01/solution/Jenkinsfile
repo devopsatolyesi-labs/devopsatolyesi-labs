@@ -1,0 +1,38 @@
+pipeline {
+    agent any
+    environment {
+        APP_NAME = "calculator-service"
+        BUILD_ENV = "ci"
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                echo "--> [1] Kaynak kod repodan cekiliyor..."
+            }
+        }
+        stage('Linting') {
+            steps {
+                echo "--> [2] Flake8 ile kod kalitesi denetleniyor..."
+                sh 'flake8 src/ --max-line-length=100'
+            }
+        }
+        stage('Unit Tests') {
+            steps {
+                echo "--> [3] Pytest calistiriliyor ve JUnit XML raporu uretiliyor..."
+                sh 'pytest --junitxml=reports/junit-report.xml tests/'
+            }
+        }
+        stage('Build Packaging') {
+            steps {
+                echo "--> [4] Dagitim paketi olusturuluyor..."
+                sh 'tar -czf ${APP_NAME}.tar.gz src/'
+            }
+        }
+    }
+    post {
+        always {
+            junit allowEmptyResults: true, testResults: 'reports/junit-report.xml'
+            archiveArtifacts artifacts: '*.tar.gz', allowEmptyArchive: true
+        }
+    }
+}

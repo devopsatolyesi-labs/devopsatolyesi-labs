@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: incident-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: incident-app
+  template:
+    metadata:
+      labels:
+        app: incident-app
+    spec:
+      containers:
+        - name: app
+          image: busybox:1.37
+          command: ["sh", "-c", "exit 1"]

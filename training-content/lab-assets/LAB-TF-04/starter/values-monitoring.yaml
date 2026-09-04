@@ -1,0 +1,80 @@
+# ==============================================================================
+# Values for kube-prometheus-stack (Optimized for Local kind Cluster)
+# Prevents memory bloat, limits retention, and disables unreachable cloud checks
+# ==============================================================================
+
+# Core Prometheus Configuration
+prometheus:
+  prometheusSpec:
+    retention: 12h
+    scrapeInterval: "15s"
+    evaluationInterval: "15s"
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+
+# Grafana Visualizations
+grafana:
+  enabled: true
+  adminPassword: "REPLACE_WITH_RUNTIME_SECRET"
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+  service:
+    type: ClusterIP
+    port: 80
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+        - name: 'default'
+          orgId: 1
+          folder: ''
+          type: file
+          disableDeletion: false
+          editable: true
+          options:
+            path: /var/lib/grafana/dashboards/default
+
+# Alertmanager Engine
+alertmanager:
+  enabled: true
+  alertmanagerSpec:
+    resources:
+      requests:
+        cpu: 25m
+        memory: 64Mi
+      limits:
+        cpu: 100m
+        memory: 128Mi
+
+# Node Exporter (Host Metrics)
+nodeExporter:
+  enabled: true
+
+# Kubernetes State Metrics (Pods, Deployments, ReplicaSets)
+kubeStateMetrics:
+  enabled: true
+
+# Disable Components Incompatible with Local kind Control Plane
+kubeEtcd:
+  enabled: false
+
+kubeControllerManager:
+  enabled: false
+
+kubeScheduler:
+  enabled: false
+
+kubeProxy:
+  enabled: false

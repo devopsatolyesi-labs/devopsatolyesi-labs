@@ -1,0 +1,24 @@
+image:
+  repository: quay.io/keycloak/keycloak
+  tag: 26.7.3
+  pullPolicy: IfNotPresent
+postgres:
+  image: postgres:16.10-alpine
+  storage: 20Gi
+  database: keycloak
+  username: keycloak
+  password: ""
+admin:
+  username: admin
+  password: ""
+users:
+  admin:
+    password: ""
+  devops:
+    password: ""
+  kubernetes:
+    password: ""
+hostname: auth.devopsatolyesi.com
+ingressClassName: nginx
+storageClassName: ""
+replicas: 1

@@ -1,0 +1,80 @@
+# ==============================================================================
+# DevOps Atölyesi — Filebeat Configuration (filebeat.yml)
+# ==============================================================================
+
+filebeat.inputs:
+  # 1. Uygulama dosya loglari
+  - type: filestream
+    id: application-files
+    enabled: true
+    paths:
+      - /var/log/sample-logs/*.log
+    tags: ["sample_logs", "filebeat"]
+    fields:
+      service: sample-application
+      environment: production
+    fields_under_root: true
+
+  # 2. Docker JSON loglari; container parser stdout/stderr ve zaman damgasini ayirir.
+  - type: filestream
+    id: docker-containers
+    enabled: true
+    paths:
+      - /var/lib/docker/containers/*/*.log
+    parsers:
+      - container:
+          stream: all
+          format: docker
+    tags: ["docker_containers", "filebeat"]
+    fields_under_root: true
+    fields:
+      event:
+        dataset: docker.container
+    processors:
+      - add_docker_metadata:
+          host: "unix:///var/run/docker.sock"
+
+  # 3. Kubernetes node'undaki CRI loglari. Docker Compose mount'u ogrenci
+  # makinesindeki /var/log/containers dizinine yonlendirilir.
+  - type: filestream
+    id: kubernetes-containers
+    enabled: true
+    prospector.scanner.symlinks: true
+    paths:
+      - /var/log/kubernetes/*.log
+    parsers:
+      - container:
+          stream: all
+          format: auto
+    tags: ["kubernetes_containers", "filebeat"]
+    fields_under_root: true
+    fields:
+      event:
+        dataset: kubernetes.container
+    processors:
+      - add_kubernetes_metadata:
+          host: ${NODE_NAME:}
+          matchers:
+            - logs_path:
+                logs_path: "/var/log/kubernetes/"
+
+# ------------------------------------------------------------------------------
+# Processors
+# ------------------------------------------------------------------------------
+processors:
+  - add_host_metadata: ~
+  - add_cloud_metadata: ~
+
+# ------------------------------------------------------------------------------
+# Output to Logstash (Port 5044)
+# ------------------------------------------------------------------------------
+output.logstash:
+  hosts: ["logstash:5044"]
+  worker: 2
+  bulk_max_size: 512
+
+# ------------------------------------------------------------------------------
+# Logging
+# ------------------------------------------------------------------------------
+logging.level: info
+logging.to_files: false

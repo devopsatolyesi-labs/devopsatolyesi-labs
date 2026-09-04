@@ -1,0 +1,115 @@
+site_name: DevOps Atölyesi - Eğitim Portalı
+site_description: DevOps Practitioner ve Cloud Native Eğitim Platformu Laboratuvar ve Müfredat Portalı
+site_author: DevOps Atölyesi
+site_url: https://labs.devopsatolyesi.com
+
+theme:
+  name: material
+  language: tr
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: deep purple
+      toggle:
+        icon: material/brightness-7
+        name: Karanlık moda geç
+    - scheme: slate
+      primary: indigo
+      accent: deep purple
+      toggle:
+        icon: material/brightness-4
+        name: Aydınlık moda geç
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+extra_javascript:
+  - https://unpkg.com/mermaid@10/dist/mermaid.min.js
+  - javascripts/open_in_new_tab.js
+
+nav:
+  - Ana Sayfa: index.md
+  - Eğitim Programı:
+      - DevOps Practitioner — 5 Gün: curriculum/01_5_DAY_CURRICULUM.md
+      - Docker and Kubernetes — 2 Gün: curriculum/02_2_DAY_DOCKER_KUBERNETES.md
+      - Lab Kataloğu İndeksi: curriculum/02_LAB_CATALOG_INDEX.md
+      - Zorunlu Lablar Planı: curriculum/03_MANDATORY_LABS_DETAILED.md
+      - Demo Uygulama Haritası: curriculum/06_DEMO_APPLICATION_MAPPING.md
+  - Lab Ortamı Hazırlığı:
+      - LAB-ENV-00 - Çevre Kurulumu: env/LAB-ENV-00-environment-setup.md
+  - Temeller:
+      - LAB-LNX-01 - Linux Preflight: day1/LAB-LNX-01-linux-preflight.md
+      - LAB-GIT-01 - Git Workflow: day1/LAB-GIT-01-git-workflow.md
+  - Docker:
+      - LAB-DOC-01 - İlk Docker Konteyneri: day1/LAB-DOC-01-docker-first-container.md
+      - LAB-DOC-02 - Volumes ve Ortam Değişkenleri: day1/LAB-DOC-02-docker-volumes-env.md
+      - LAB-DOC-03 - Dockerfile Optimizasyonu: day2/LAB-DOC-03-dockerfile-optimization.md
+      - LAB-DOC-04 - Multi-Stage Build: day2/LAB-DOC-04-docker-multistage-hardening.md
+      - LAB-DOC-05 - Docker Compose Çok Katmanlı Mimari: day2/LAB-DOC-05-docker-compose-multitier.md
+      - LAB-DOC-06 - Trivy ve Harbor Entegrasyonu: day2/LAB-DOC-06-trivy-harbor-integration.md
+      - LAB-DOC-13 - Production Docker Compose Desenleri: day2/LAB-DOC-13-docker-compose-production-patterns.md
+  - CI/CD:
+      - LAB-JNK-01 - Jenkins Declarative Pipeline: day3/LAB-JNK-01-jenkins-declarative-pipeline.md
+      - LAB-JNK-02 - Jenkins Güvenli Pipeline: day3/LAB-JNK-02-jenkins-secure-pipeline.md
+      - LAB-GLB-01 - GitLab CI/CD Pipeline: day3/LAB-GLB-01-gitlab-ci-pipeline.md
+  - Infrastructure as Code:
+      - LAB-TF-01 - Terraform Docker Provider: day3/LAB-TF-01-terraform-docker-provider.md
+      - LAB-TF-04 - Terraform Helm Centralized Monitoring: day3/LAB-TF-04-terraform-helm-centralized-monitoring.md
+      - LAB-TF-08 - Terraform AWS VPC Mimarisi: day3/LAB-TF-08-terraform-aws-vpc-architecture.md
+  - Kubernetes ve GitOps:
+      - LAB-K8S-01 - Kubernetes Pods ve Deployments: day4/LAB-K8S-01-kind-pods-deployments.md
+      - LAB-K8S-02 - Services, ConfigMaps ve Secrets: day4/LAB-K8S-02-services-config-secrets.md
+      - LAB-K8S-03 - Production Workloads: day4/LAB-K8S-03-production-workloads.md
+      - LAB-HLM-01 - Helm Chart Deployment: day4/LAB-HLM-01-helm-chart-deployment.md
+      - LAB-ARG-01 - Argo CD GitOps Senkronizasyonu: day4/LAB-ARG-01-argocd-gitops-sync.md
+  - Gözlemlenebilirlik ve Olay Yönetimi:
+      - LAB-MON-01 - Prometheus ve Grafana Metrikleri: day5/LAB-MON-01-prometheus-grafana-metrics.md
+      - LAB-MON-02 - Alertmanager ve Bildirim Kuralları: day5/LAB-MON-02-alertmanager-rules.md
+      - LAB-LOG-01 - Merkezi Loglama: day5/LAB-LOG-01-centralized-logging.md
+      - LAB-LOG-02 - Enterprise ELK Stack Merkezi Loglama: day5/LAB-LOG-02-elk-centralized-logging.md
+      - LAB-INC-01 - K8s CrashLoop Olay Müdahalesi: day5/LAB-INC-01-k8s-crashloop-postmortem.md
+  - Capstone:
+      - LAB-CAP-01 - End-to-End DevOps Capstone: day5/LAB-CAP-01-end-to-end-devops.md
+  - Projeler:
+      - Proje Kataloğu: projects/05_PROJECT_CATALOG.md
+      - Jenkins Python Flask CI/CD Hattı: projects/python-flask-ci-cd.md
+      - GitLab Python Flask CI/CD Hattı: projects/gitlab-python-flask-ci-cd.md
+      - GitLab DevOps Capstone Teslimat Hattı: projects/gitlab-devops-capstone.md
+      - Capstone Planı: projects/09_FINAL_CAPSTONE_BLUEPRINT.md
+  - Troubleshooting:
+      - Sorun Giderme Senaryoları: troubleshooting/07_TROUBLESHOOTING_SCENARIOS.md
+  - Hızlı Referans:
+      - Port ve Kaynak Matrisi: reference/13_RESOURCE_AND_PORT_MATRIX.md
+      - Versiyon Uyumluluk Matrisi: reference/16_2026_VERSION_COMPATIBILITY_MATRIX.md
+      - Üretim En İyi Uygulamaları: reference/08_PRODUCTION_BEST_PRACTICES_MATRIX.md

@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 480" width="100%" height="480">
+  <defs>
+    <linearGradient id="canvasGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b1120" />
+      <stop offset="100%" stop-color="#1e293b" />
+    </linearGradient>
+    <linearGradient id="tfGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#312e81" />
+      <stop offset="100%" stop-color="#1e1b4b" />
+    </linearGradient>
+    <linearGradient id="k8sGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e3a8a" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <linearGradient id="monGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2a1205" />
+      <stop offset="100%" stop-color="#180c04" />
+    </linearGradient>
+    <filter id="boxShadow" x="-5%" y="-10%" width="110%" height="130%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Canvas Background -->
+  <rect width="900" height="480" rx="16" fill="url(#canvasGrad)" stroke="#334155" stroke-width="1.5"/>
+
+  <!-- Title Header -->
+  <text x="450" y="42" text-anchor="middle" fill="#f8fafc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="800" font-size="20" letter-spacing="0.5">CENTRALIZED KUBERNETES MONITORING VIA TERRAFORM &amp; HELM</text>
+  <text x="450" y="66" text-anchor="middle" fill="#94a3b8" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="500" font-size="13">Production Blueprint: Declarative Prometheus, Grafana &amp; Metrics Pipeline</text>
+
+  <!-- Box 1: Terraform IaC Automation Plane (Left) -->
+  <g transform="translate(40, 95)">
+    <rect width="240" height="340" rx="12" fill="url(#tfGrad)" stroke="#6366f1" stroke-width="1.5" filter="url(#boxShadow)"/>
+    <rect x="0" y="0" width="240" height="44" rx="12" fill="#4338ca" fill-opacity="0.4"/>
+    <text x="120" y="28" text-anchor="middle" fill="#e0e7ff" font-family="sans-serif" font-weight="700" font-size="14">TERRAFORM CONTROLLER</text>
+    
+    <!-- Code Files inside Terraform -->
+    <g transform="translate(20, 60)">
+      <rect width="200" height="50" rx="6" fill="#1e1b4b" stroke="#4f46e5" stroke-width="1"/>
+      <text x="15" y="24" fill="#ffffff" font-family="monospace" font-size="12" font-weight="bold">main.tf</text>
+      <text x="15" y="40" fill="#a5b4fc" font-family="sans-serif" font-size="10">Provider: helm &amp; kubernetes</text>
+    </g>
+
+    <g transform="translate(20, 125)">
+      <rect width="200" height="50" rx="6" fill="#1e1b4b" stroke="#4f46e5" stroke-width="1"/>
+      <text x="15" y="24" fill="#ffffff" font-family="monospace" font-size="12" font-weight="bold">values.yaml</text>
+      <text x="15" y="40" fill="#a5b4fc" font-family="sans-serif" font-size="10">Resource limits &amp; Retention</text>
+    </g>
+
+    <g transform="translate(20, 190)">
+      <rect width="200" height="60" rx="6" fill="#1e1b4b" stroke="#4f46e5" stroke-width="1"/>
+      <text x="15" y="24" fill="#ffffff" font-family="monospace" font-size="12" font-weight="bold">helm_release "stack"</text>
+      <text x="15" y="40" fill="#a5b4fc" font-family="sans-serif" font-size="10">repo: prometheus-community</text>
+      <text x="15" y="52" fill="#38bdf8" font-family="sans-serif" font-size="10">chart: kube-prometheus-stack</text>
+    </g>
+
+    <g transform="translate(20, 265)">
+      <rect width="200" height="50" rx="6" fill="#1e1b4b" stroke="#10b981" stroke-width="1"/>
+      <text x="15" y="24" fill="#34d399" font-family="monospace" font-size="11" font-weight="bold">$ terraform apply</text>
+      <text x="15" y="40" fill="#6ee7b7" font-family="sans-serif" font-size="10">Automated Headless Execution</text>
+    </g>
+  </g>
+
+  <!-- Big Connecting Arrow -->
+  <g transform="translate(290, 250)">
+    <line x1="0" y1="0" x2="50" y2="0" stroke="#818cf8" stroke-width="3" stroke-dasharray="6 3"/>
+    <polygon points="50,-6 62,0 50,6" fill="#818cf8"/>
+    <text x="25" y="-12" text-anchor="middle" fill="#c7d2fe" font-family="sans-serif" font-size="11" font-weight="600">Deploy</text>
+  </g>
+
+  <!-- Box 2: Kubernetes Cluster Plane (Right) -->
+  <g transform="translate(365, 95)">
+    <rect width="495" height="340" rx="12" fill="url(#k8sGrad)" stroke="#3b82f6" stroke-width="1.5" filter="url(#boxShadow)"/>
+    <rect x="0" y="0" width="495" height="44" rx="12" fill="#1d4ed8" fill-opacity="0.3"/>
+    <text x="247" y="28" text-anchor="middle" fill="#dbeafe" font-family="sans-serif" font-weight="700" font-size="14">KUBERNETES CLUSTER (devops-cluster v1.31.9)</text>
+
+    <!-- Namespace: monitoring -->
+    <g transform="translate(20, 55)">
+      <rect width="455" height="265" rx="8" fill="#0f172a" stroke="#0284c7" stroke-width="1" stroke-dasharray="4 2"/>
+      <text x="15" y="22" fill="#38bdf8" font-family="sans-serif" font-weight="700" font-size="11">NAMESPACE: monitoring</text>
+
+      <!-- Prometheus Server Component -->
+      <g transform="translate(20, 35)">
+        <rect width="195" height="100" rx="8" fill="url(#monGrad)" stroke="#ea580c" stroke-width="1.2"/>
+        <text x="15" y="25" fill="#ffedd5" font-family="sans-serif" font-weight="bold" font-size="13">Prometheus Server</text>
+        <text x="15" y="45" fill="#fdba74" font-family="sans-serif" font-size="10">Port: 9090 (TSDB Engine)</text>
+        <text x="15" y="65" fill="#cbd5e1" font-family="sans-serif" font-size="10">Scrapes: Node, K8s API, Pods</text>
+        <rect x="15" y="75" width="165" height="16" rx="4" fill="#431407"/>
+        <text x="22" y="87" fill="#fb923c" font-family="monospace" font-size="9">Retention: 12h | RAM: 512Mi</text>
+      </g>
+
+      <!-- Grafana Component -->
+      <g transform="translate(240, 35)">
+        <rect width="195" height="100" rx="8" fill="#291804" stroke="#f59e0b" stroke-width="1.2"/>
+        <text x="15" y="25" fill="#fef3c7" font-family="sans-serif" font-weight="bold" font-size="13">Grafana Dashboard</text>
+        <text x="15" y="45" fill="#fcd34d" font-family="sans-serif" font-size="10">Port: 3000 (UI / Visuals)</text>
+        <text x="15" y="65" fill="#cbd5e1" font-family="sans-serif" font-size="10">Datasource: Auto-provisioned</text>
+        <rect x="15" y="75" width="165" height="16" rx="4" fill="#451a03"/>
+        <text x="22" y="87" fill="#fbbf24" font-family="monospace" font-size="9">Dashboards: Golden Signals</text>
+      </g>
+
+      <!-- Connecting internal arrow: Prometheus to Grafana -->
+      <g transform="translate(215, 85)">
+        <line x1="0" y1="0" x2="22" y2="0" stroke="#f59e0b" stroke-width="2"/>
+        <polygon points="22,-4 28,0 22,4" fill="#f59e0b"/>
+      </g>
+
+      <!-- Collectors Section -->
+      <g transform="translate(20, 150)">
+        <rect width="415" height="95" rx="6" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+        <text x="15" y="20" fill="#94a3b8" font-family="sans-serif" font-weight="600" font-size="11">METRIC EXPORTERS &amp; AGENTS</text>
+        
+        <!-- Node Exporter -->
+        <g transform="translate(15, 30)">
+          <rect width="120" height="50" rx="4" fill="#0f172a" stroke="#64748b" stroke-width="1"/>
+          <text x="10" y="22" fill="#ffffff" font-family="sans-serif" font-weight="600" font-size="10">Node Exporter</text>
+          <text x="10" y="38" fill="#94a3b8" font-family="sans-serif" font-size="9">CPU/RAM/Disk</text>
+        </g>
+
+        <!-- kube-state-metrics -->
+        <g transform="translate(145, 30)">
+          <rect width="130" height="50" rx="4" fill="#0f172a" stroke="#64748b" stroke-width="1"/>
+          <text x="10" y="22" fill="#ffffff" font-family="sans-serif" font-weight="600" font-size="10">kube-state-metrics</text>
+          <text x="10" y="38" fill="#94a3b8" font-family="sans-serif" font-size="9">Pods/Deployments</text>
+        </g>
+
+        <!-- ServiceMonitor Target -->
+        <g transform="translate(285, 30)">
+          <rect width="115" height="50" rx="4" fill="#0f172a" stroke="#10b981" stroke-width="1"/>
+          <text x="10" y="22" fill="#34d399" font-family="sans-serif" font-weight="600" font-size="10">Demo App (API)</text>
+          <text x="10" y="38" fill="#6ee7b7" font-family="sans-serif" font-size="9">ServiceMonitor</text>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,11 @@
+// TODO: Write Declarative Pipeline with Checkout, Linting, Unit Tests
+pipeline {
+    agent any
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Checking out...'
+            }
+        }
+    }
+}

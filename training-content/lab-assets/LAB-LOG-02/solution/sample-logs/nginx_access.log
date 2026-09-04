@@ -1,0 +1,8 @@
+192.168.1.50 - admin [01/Sep/2026:14:30:00 +0300] "GET /api/v1/health HTTP/1.1" 200 64 "-" "curl/7.88.1"
+192.168.1.51 - john [01/Sep/2026:14:30:05 +0300] "POST /api/v1/orders HTTP/1.1" 201 512 "https://checkout.devopsatolyesi.com" "Mozilla/5.0 Chrome/128.0"
+192.168.1.52 - mary [01/Sep/2026:14:30:10 +0300] "GET /api/v1/products/1234 HTTP/1.1" 200 1024 "https://store.devopsatolyesi.com" "Mozilla/5.0 Safari/605.1"
+192.168.1.53 - guest [01/Sep/2026:14:30:15 +0300] "POST /api/v1/payments HTTP/1.1" 504 128 "https://checkout.devopsatolyesi.com" "Mozilla/5.0 Firefox/130.0"
+192.168.1.54 - bob [01/Sep/2026:14:30:20 +0300] "GET /admin/debug HTTP/1.1" 403 256 "-" "Python-urllib/3.11"
+192.168.1.55 - alice [01/Sep/2026:14:30:25 +0300] "GET /api/v1/orders/history HTTP/1.1" 200 2048 "https://portal.devopsatolyesi.com" "Mozilla/5.0 Edge/128.0"
+8.8.8.8 - external_user [01/Sep/2026:14:30:30 +0300] "GET /api/v1/catalog HTTP/1.1" 200 4096 "-" "PostmanRuntime/7.39.0"
+1.1.1.1 - crawler [01/Sep/2026:14:30:35 +0300] "GET /robots.txt HTTP/1.1" 200 120 "-" "Googlebot/2.1"

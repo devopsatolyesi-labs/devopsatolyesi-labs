@@ -1,0 +1,28 @@
+stages:
+  - test
+  - security
+  - build
+
+unit-tests:
+  stage: test
+  image: node:20-alpine
+  script:
+    - cd app
+    - node test.js
+
+dependency-scan:
+  stage: security
+  image:
+    name: aquasec/trivy:0.74.0
+    entrypoint: [""]
+  script:
+    - trivy fs --severity HIGH,CRITICAL --exit-code 1 app/
+
+docker-build:
+  stage: build
+  image: docker:27.5-cli
+  services:
+    - docker:27.5-dind
+  script:
+    - echo "Building container..."
+    - docker build -t gitlab-demo-api:latest app/

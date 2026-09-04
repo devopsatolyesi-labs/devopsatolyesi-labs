@@ -1,0 +1,25 @@
+# ==============================================================================
+# ANTI-PATTERN DOCKERFILE (Bloated Image Example - DO NOT USE IN PRODUCTION)
+# Results in ~1.28 GB image size due to:
+#  1. Fat Ubuntu-based full Python image
+#  2. Unnecessary build tools (gcc, make, vim)
+#  3. Uncleaned apt package caches
+#  4. Missing --no-cache-dir in pip
+#  5. Copying all files before installing requirements (breaks cache)
+# ==============================================================================
+FROM python:3.11
+
+# Anti-Pattern 1: Installing extra packages without cleanup
+RUN apt-get update
+RUN apt-get install -y build-essential gcc g++ make curl wget git vim
+
+WORKDIR /app
+
+# Anti-Pattern 2: Copying entire context before pip breaks layer cache!
+COPY . /app
+
+# Anti-Pattern 3: Pip cache is preserved in image layers
+RUN pip install -r requirements.txt
+
+EXPOSE 8000
+CMD ["python", "src/app.py"]

@@ -1,0 +1,8 @@
+image:
+  repository: devops-atolyesi/labs-portal
+  tag: latest
+  pullPolicy: IfNotPresent
+replicas: 2
+hostname: labs.devopsatolyesi.com
+ingressClassName: nginx
+servicePort: 80

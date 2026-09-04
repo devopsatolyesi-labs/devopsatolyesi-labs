@@ -1,0 +1,31 @@
+{
+  "index_patterns": ["devops-nginx-*"],
+  "priority": 200,
+  "template": {
+    "settings": {
+      "number_of_shards": 1,
+      "number_of_replicas": 0,
+      "index.lifecycle.name": "devops-nginx-7d"
+    },
+    "mappings": {
+      "dynamic": true,
+      "properties": {
+        "@timestamp": { "type": "date" },
+        "message": { "type": "text", "fields": { "keyword": { "type": "keyword", "ignore_above": 1024 } } },
+        "client": { "properties": { "ip": { "type": "ip", "ignore_malformed": true } } },
+        "http": {
+          "properties": {
+            "version": { "type": "keyword" },
+            "request": { "properties": { "method": { "type": "keyword" }, "referrer": { "type": "keyword", "ignore_above": 2048 } } },
+            "response": { "properties": { "status_code": { "type": "integer" }, "body": { "properties": { "bytes": { "type": "long" } } } } }
+          }
+        },
+        "url": { "properties": { "original": { "type": "wildcard" } } },
+        "event": { "properties": { "dataset": { "type": "keyword" }, "outcome": { "type": "keyword" } } },
+        "service": { "properties": { "name": { "type": "keyword" } } },
+        "source": { "properties": { "geo": { "properties": { "location": { "type": "geo_point" } } } } },
+        "tags": { "type": "keyword" }
+      }
+    }
+  }
+}

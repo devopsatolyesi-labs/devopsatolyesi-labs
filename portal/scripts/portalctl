@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+portal_dir=$(cd -- "${script_dir}/.." && pwd)
+compose=(docker compose --project-directory "$portal_dir" -f "$portal_dir/compose.yml")
+
+usage() {
+  cat <<'EOF'
+Usage: portalctl {start|recover|stop|restart|status|health|build}
+EOF
+}
+
+wait_for_http() {
+  local url=$1 name=$2 timeout_seconds=$3 deadline
+  deadline=$((SECONDS + timeout_seconds))
+  until curl --fail --silent --show-error --max-time 10 "$url" >/dev/null 2>&1; do
+    if (( SECONDS >= deadline )); then
+      printf '%s did not become healthy at %s within %s seconds\n' "$name" "$url" "$timeout_seconds" >&2
+      return 1
+    fi
+    sleep 5
+  done
+}
+
+start() {
+  "${compose[@]}" up --build --detach --remove-orphans
+}
+
+recover() {
+  "${compose[@]}" up --detach --remove-orphans
+  health
+}
+
+stop() {
+  "${compose[@]}" stop
+}
+
+health() {
+  wait_for_http http://127.0.0.1:8000 Portal 60
+  printf 'Portal health checks passed\n'
+}
+
+case ${1:-} in
+  start) start ;;
+  recover) recover ;;
+  stop) stop ;;
+  restart)
+    stop
+    start
+    ;;
+  status)
+    "${compose[@]}" ps
+    ;;
+  health) health ;;
+  build)
+    "${compose[@]}" build
+    ;;
+  *) usage >&2; exit 64 ;;
+esac

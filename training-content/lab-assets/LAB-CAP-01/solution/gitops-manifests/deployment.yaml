@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: capstone-order-service
+  namespace: capstone-prod
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: capstone-order-service
+  template:
+    metadata:
+      labels:
+        app: capstone-order-service
+    spec:
+      containers:
+        - name: order-api
+          image: order-service:v2.0.0
+          ports:
+            - containerPort: 8000
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10

@@ -1,0 +1,4 @@
+# TODO: Write Prometheus alert rule
+groups:
+  - name: training-alerts
+    rules: []

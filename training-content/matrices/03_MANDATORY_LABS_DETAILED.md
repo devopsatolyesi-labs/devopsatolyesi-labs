@@ -1,0 +1,1 @@
+../curriculum/03_MANDATORY_LABS_DETAILED.md

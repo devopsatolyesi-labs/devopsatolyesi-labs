@@ -1,0 +1,5 @@
+# Starter compose template
+services:
+  # TODO: Add postgres-db service with healthcheck
+  # TODO: Add redis-cache service with healthcheck
+  # TODO: Add api-service with depends_on condition: service_healthy

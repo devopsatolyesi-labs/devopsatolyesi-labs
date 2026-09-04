@@ -1,0 +1,9 @@
+{
+  "name": "gitlab-demo-api",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "test": "node test.js",
+    "start": "node server.js"
+  }
+}

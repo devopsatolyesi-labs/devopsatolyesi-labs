@@ -1,0 +1,59 @@
+services:
+  postgres-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: orderdb
+      POSTGRES_USER: devops
+      POSTGRES_PASSWORD: ${LAB_POSTGRES_PASSWORD:?LAB_POSTGRES_PASSWORD is required}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - backend-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U devops -d orderdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  redis-cache:
+    image: redis:7-alpine
+    networks:
+      - backend-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+
+  api-service:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: postgres-db
+      DB_USER: devops
+      DB_PASS: ${LAB_POSTGRES_PASSWORD:?LAB_POSTGRES_PASSWORD is required}
+      DB_NAME: orderdb
+      REDIS_HOST: redis-cache
+    networks:
+      - backend-net
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+      redis-cache:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8080/healthz')\""]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  db_data:
+
+networks:
+  backend-net:
+    driver: bridge

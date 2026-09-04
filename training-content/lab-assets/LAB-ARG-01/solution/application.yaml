@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: demo-gitops-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/devopsatolyesi-labs/devopsatolyesi-training-platform.git
+    targetRevision: HEAD
+    path: labs/kubernetes
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

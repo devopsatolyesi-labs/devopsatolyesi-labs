@@ -1,0 +1,18 @@
+# ==============================================================================
+# Logstash Main Configuration (logstash.yml)
+# ==============================================================================
+
+http.host: "0.0.0.0"
+http.port: 9600
+
+# Pipeline settings
+pipeline.workers: 2
+pipeline.batch.size: 125
+pipeline.batch.delay: 50
+
+# Queue settings (memory queue for dev/student, can use persisted for prod)
+queue.type: memory
+
+# Monitoring
+monitoring.enabled: false
+log.level: info

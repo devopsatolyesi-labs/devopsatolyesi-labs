@@ -1,0 +1,10 @@
+{
+  "data_view": {
+    "id": "devops-nginx-logs",
+    "title": "devops-nginx-*",
+    "name": "Nginx GeoIP Logları",
+    "timeFieldName": "@timestamp",
+    "allowNoIndex": true
+  },
+  "override": true
+}

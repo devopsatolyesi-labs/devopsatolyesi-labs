@@ -1,0 +1,10 @@
+{
+  "data_view": {
+    "id": "devops-observability-metrics",
+    "title": "devops-metrics-*",
+    "name": "Linux ve Docker Metrikleri",
+    "timeFieldName": "@timestamp",
+    "allowNoIndex": true
+  },
+  "override": true
+}

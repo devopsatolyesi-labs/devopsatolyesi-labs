@@ -1,0 +1,38 @@
+# ==============================================================================
+# Production Hardening Override (compose.prod.yaml)
+# Applied via: docker compose -f compose.yaml -f compose.prod.yaml up -d
+# ==============================================================================
+
+services:
+  gateway:
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 128M
+
+  order-api:
+    environment:
+      - ENVIRONMENT=production
+      - DEBUG=false
+    deploy:
+      resources:
+        limits:
+          cpus: "1.00"
+          memory: 384M
+        reservations:
+          memory: 128M
+
+  postgres-db:
+    deploy:
+      resources:
+        limits:
+          cpus: "1.00"
+          memory: 512M
+
+  redis-broker:
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 128M

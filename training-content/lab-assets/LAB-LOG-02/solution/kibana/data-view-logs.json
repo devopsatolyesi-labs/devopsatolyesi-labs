@@ -1,0 +1,10 @@
+{
+  "data_view": {
+    "id": "devops-runtime-logs",
+    "title": "training-logs-*",
+    "name": "Linux, Docker ve Kubernetes Logları",
+    "timeFieldName": "timestamp",
+    "allowNoIndex": true
+  },
+  "override": true
+}

@@ -1,0 +1,26 @@
+{
+  "index_patterns": ["devops-metrics-*"],
+  "priority": 220,
+  "template": {
+    "settings": {
+      "index.lifecycle.name": "logs-policy",
+      "index.number_of_shards": 1,
+      "index.number_of_replicas": 0
+    },
+    "mappings": {
+      "dynamic": true,
+      "properties": {
+        "@timestamp": {"type": "date"},
+        "event.dataset": {"type": "keyword"},
+        "event.module": {"type": "keyword"},
+        "host.name": {"type": "keyword"},
+        "container.id": {"type": "keyword"},
+        "container.name": {"type": "keyword"},
+        "system.cpu.total.norm.pct": {"type": "scaled_float", "scaling_factor": 1000},
+        "system.memory.actual.used.pct": {"type": "scaled_float", "scaling_factor": 1000},
+        "docker.cpu.total.pct": {"type": "scaled_float", "scaling_factor": 1000},
+        "docker.memory.usage.pct": {"type": "scaled_float", "scaling_factor": 1000}
+      }
+    }
+  }
+}

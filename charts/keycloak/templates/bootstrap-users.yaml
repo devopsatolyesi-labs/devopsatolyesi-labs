@@ -1,0 +1,55 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: keycloak-bootstrap-users
+  namespace: identity-system
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+spec:
+  backoffLimit: 3
+  ttlSecondsAfterFinished: 300
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: keycloak-bootstrap-users
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: bootstrap
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          command: ["/bin/bash", "-ec"]
+          args:
+            - |
+              kcadm=/opt/keycloak/bin/kcadm.sh
+              until "$kcadm" config credentials --server http://keycloak:8080 --realm master --user "${BOOTSTRAP_ADMIN}" --password "${BOOTSTRAP_PASSWORD}" >/dev/null 2>&1; do sleep 5; done
+              ensure_user() {
+                username=$1 password=$2 role=$3 group=$4
+                "$kcadm" create users -r devops-atolyesi -s "username=${username}" -s enabled=true -s emailVerified=true 2>/dev/null || true
+                user_id=$("$kcadm" get users -r devops-atolyesi -q exact=true -q "username=${username}" --fields id --format csv --noquotes)
+                "$kcadm" update "users/${user_id}" -r devops-atolyesi -s enabled=true -s emailVerified=true -s "email=${username}@devopsatolyesi.com" -s "firstName=${username}" -s lastName=User -s 'requiredActions=[]'
+                "$kcadm" set-password -r devops-atolyesi --username "$username" --new-password "$password"
+                "$kcadm" add-roles -r devops-atolyesi --uusername "$username" --rolename "$role" 2>/dev/null || true
+                if [[ -n "$group" ]]; then
+                  group_id=$("$kcadm" get groups -r devops-atolyesi -q exact=true -q "search=${group}" --fields id --format csv --noquotes)
+                  "$kcadm" update "users/${user_id}/groups/${group_id}" -r devops-atolyesi -n
+                fi
+              }
+              ensure_user admin "$REALM_ADMIN_PASSWORD" admin ""
+              ensure_user devops "$DEVOPS_PASSWORD" student devops-practitioner-5-day
+              ensure_user kubernetes "$KUBERNETES_PASSWORD" student docker-kubernetes-2-day
+          env:
+            - name: BOOTSTRAP_ADMIN
+              value: {{ .Values.admin.username | quote }}
+            - name: BOOTSTRAP_PASSWORD
+              valueFrom:
+                secretKeyRef: {name: keycloak-secrets, key: admin-password}
+            - name: REALM_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef: {name: keycloak-secrets, key: realm-admin-password}
+            - name: DEVOPS_PASSWORD
+              valueFrom:
+                secretKeyRef: {name: keycloak-secrets, key: devops-password}
+            - name: KUBERNETES_PASSWORD
+              valueFrom:
+                secretKeyRef: {name: keycloak-secrets, key: kubernetes-password}

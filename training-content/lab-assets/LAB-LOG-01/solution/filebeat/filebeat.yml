@@ -1,0 +1,63 @@
+filebeat.inputs:
+  - type: filestream
+    id: lab-nginx-access
+    enabled: true
+    paths: ["/var/log/lab-nginx/access.log", "/var/log/lab-nginx/access.log.1"]
+    prospector.scanner.fingerprint.length: 64
+    fields_under_root: true
+    fields:
+      event:
+        dataset: nginx.access
+      service:
+        name: lab-nginx
+
+  - type: filestream
+    id: lab-nginx-error
+    enabled: true
+    paths: ["/var/log/lab-nginx/error.log", "/var/log/lab-nginx/error.log.1"]
+    prospector.scanner.fingerprint.length: 64
+    fields_under_root: true
+    fields:
+      event:
+        dataset: nginx.error
+      service:
+        name: lab-nginx
+
+  - type: filestream
+    id: host-nginx-access
+    enabled: true
+    paths: ["/var/log/host-nginx/access.log", "/var/log/host-nginx/access.log.1"]
+    prospector.scanner.fingerprint.length: 64
+    fields_under_root: true
+    fields:
+      event:
+        dataset: nginx.access
+      service:
+        name: host-nginx
+
+  - type: filestream
+    id: host-nginx-error
+    enabled: true
+    paths: ["/var/log/host-nginx/error.log", "/var/log/host-nginx/error.log.1"]
+    prospector.scanner.fingerprint.length: 64
+    fields_under_root: true
+    fields:
+      event:
+        dataset: nginx.error
+      service:
+        name: host-nginx
+
+processors:
+  - add_host_metadata: ~
+  - add_cloud_metadata: ~
+
+output.logstash:
+  hosts: ["logstash:5044"]
+  worker: 1
+  bulk_max_size: 256
+
+queue.mem:
+  events: 2048
+
+logging.level: info
+logging.to_files: false

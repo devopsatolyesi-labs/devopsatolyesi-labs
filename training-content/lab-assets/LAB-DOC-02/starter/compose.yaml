@@ -1,0 +1,5 @@
+# LAB-DOC-02 Starter
+services:
+  database:
+    image: postgres:16-alpine
+    # TODO: Add environment variables and named volume persistence

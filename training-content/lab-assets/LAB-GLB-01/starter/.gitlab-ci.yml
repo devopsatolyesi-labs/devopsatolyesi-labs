@@ -1,0 +1,3 @@
+# TODO: Define stages test, security, build
+stages:
+  - test

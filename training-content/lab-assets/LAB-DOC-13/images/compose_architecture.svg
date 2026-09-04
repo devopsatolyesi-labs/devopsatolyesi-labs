@@ -1,0 +1,131 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 500" width="100%" height="500">
+  <defs>
+    <linearGradient id="mainBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#030712" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <linearGradient id="netGateway" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0c4a6e" />
+      <stop offset="100%" stop-color="#082f49" />
+    </linearGradient>
+    <linearGradient id="netData" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#14532d" />
+      <stop offset="100%" stop-color="#052e16" />
+    </linearGradient>
+    <filter id="glowShadow" x="-5%" y="-10%" width="110%" height="130%">
+      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#000" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+
+  <rect width="920" height="500" rx="16" fill="url(#mainBg)" stroke="#1e293b" stroke-width="1.5"/>
+
+  <text x="460" y="38" text-anchor="middle" fill="#f8fafc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="800" font-size="20" letter-spacing="0.5">ENTERPRISE DOCKER COMPOSE MULTI-TIER ARCHITECTURE</text>
+  <text x="460" y="60" text-anchor="middle" fill="#94a3b8" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="500" font-size="12">Tiered Networks, Multi-File Overrides, On-Demand Profiles &amp; YAML Anchors</text>
+
+  <!-- Host Traffic Ingress -->
+  <g transform="translate(30, 210)">
+    <rect width="110" height="60" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="1.2"/>
+    <text x="55" y="26" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="10">USER CLIENT</text>
+    <text x="55" y="46" text-anchor="middle" fill="#38bdf8" font-family="monospace" font-weight="700" font-size="11">:8080/api</text>
+  </g>
+
+  <!-- Arrow to Gateway -->
+  <g transform="translate(145, 240)">
+    <line x1="0" y1="0" x2="35" y2="0" stroke="#38bdf8" stroke-width="2.5"/>
+    <polygon points="35,-4 42,0 35,4" fill="#38bdf8"/>
+  </g>
+
+  <!-- Zone 1: Gateway Network (Public Bridge) -->
+  <g transform="translate(195, 90)">
+    <rect width="260" height="375" rx="12" fill="url(#netGateway)" stroke="#0284c7" stroke-width="1.5" filter="url(#glowShadow)"/>
+    <rect x="0" y="0" width="260" height="36" rx="12" fill="#0369a1" fill-opacity="0.5"/>
+    <text x="130" y="24" text-anchor="middle" fill="#e0f2fe" font-family="sans-serif" font-weight="700" font-size="12">NETWORK: gateway_net (Bridge)</text>
+
+    <!-- NGINX Reverse Proxy -->
+    <g transform="translate(20, 55)">
+      <rect width="220" height="85" rx="8" fill="#042f2e" stroke="#14b8a6" stroke-width="1.2"/>
+      <text x="16" y="26" fill="#ccfbf1" font-family="sans-serif" font-weight="700" font-size="13">gateway (nginx:1.27-alpine)</text>
+      <text x="16" y="46" fill="#5eead4" font-family="monospace" font-size="11">ports: ["8080:80"]</text>
+      <text x="16" y="66" fill="#99f6e4" font-family="sans-serif" font-size="10">Reverse Proxy &amp; Rate Limiting</text>
+    </g>
+
+    <!-- Arrow between Nginx and API -->
+    <g transform="translate(130, 145)">
+      <line x1="0" y1="0" x2="0" y2="35" stroke="#38bdf8" stroke-width="2"/>
+      <polygon points="-4,35 0,42 4,35" fill="#38bdf8"/>
+    </g>
+
+    <!-- Order API in Gateway Net -->
+    <g transform="translate(20, 195)">
+      <rect width="220" height="155" rx="8" fill="#1e1b4b" stroke="#6366f1" stroke-width="1.5"/>
+      <text x="16" y="26" fill="#e0e7ff" font-family="sans-serif" font-weight="700" font-size="13">order-api (Python 3.11)</text>
+      <text x="16" y="46" fill="#a5b4fc" font-family="sans-serif" font-size="10">FastAPI Async Web Service</text>
+      <rect x="14" y="55" width="192" height="20" rx="4" fill="#312e81"/>
+      <text x="20" y="69" fill="#c7d2fe" font-family="monospace" font-size="9">&lt;&lt;: *app-defaults (Limits: 256M)</text>
+      
+      <text x="16" y="95" fill="#a5b4fc" font-family="sans-serif" font-size="10">Dual-Homed Network:</text>
+      <text x="16" y="110" fill="#38bdf8" font-family="monospace" font-size="10">- gateway_net</text>
+      <text x="16" y="125" fill="#4ade80" font-family="monospace" font-size="10">- data_net (Internal)</text>
+      <text x="16" y="142" fill="#e0e7ff" font-family="monospace" font-size="9">healthcheck: /healthz (200 OK)</text>
+    </g>
+  </g>
+
+  <!-- Bridge connector arrow between API and Data Net -->
+  <g transform="translate(460, 270)">
+    <line x1="0" y1="0" x2="45" y2="0" stroke="#4ade80" stroke-width="3" stroke-dasharray="4 2"/>
+    <polygon points="45,-4 52,0 45,4" fill="#4ade80"/>
+  </g>
+
+  <!-- Zone 2: Data Network (Private Internal Bridge) -->
+  <g transform="translate(515, 90)">
+    <rect width="375" height="375" rx="12" fill="url(#netData)" stroke="#16a34a" stroke-width="1.5" filter="url(#glowShadow)"/>
+    <rect x="0" y="0" width="375" height="36" rx="12" fill="#15803d" fill-opacity="0.5"/>
+    <text x="187" y="24" text-anchor="middle" fill="#dcfce7" font-family="sans-serif" font-weight="700" font-size="12">NETWORK: data_net (Strictly Isolated / No Host Ports)</text>
+
+    <!-- PostgreSQL Service -->
+    <g transform="translate(20, 50)">
+      <rect width="160" height="95" rx="8" fill="#022c22" stroke="#10b981" stroke-width="1.2"/>
+      <text x="12" y="24" fill="#ecfdf5" font-family="sans-serif" font-weight="700" font-size="12">postgres-db</text>
+      <text x="12" y="42" fill="#6ee7b7" font-family="monospace" font-size="10">postgres:16.4-alpine</text>
+      <text x="12" y="60" fill="#a7f3d0" font-family="sans-serif" font-size="9">Health: pg_isready</text>
+      <rect x="12" y="70" width="136" height="16" rx="3" fill="#064e3b"/>
+      <text x="16" y="82" fill="#34d399" font-family="monospace" font-size="8">Volume: pg_data (Named)</text>
+    </g>
+
+    <!-- Redis Cache & Queue Broker -->
+    <g transform="translate(195, 50)">
+      <rect width="160" height="95" rx="8" fill="#3b0764" stroke="#c084fc" stroke-width="1.2"/>
+      <text x="12" y="24" fill="#faf5ff" font-family="sans-serif" font-weight="700" font-size="12">redis-broker</text>
+      <text x="12" y="42" fill="#e9d5ff" font-family="monospace" font-size="10">redis:7.4-alpine</text>
+      <text x="12" y="60" fill="#d8b4fe" font-family="sans-serif" font-size="9">Health: redis-cli ping</text>
+      <rect x="12" y="70" width="136" height="16" rx="3" fill="#581c87"/>
+      <text x="16" y="82" fill="#f3e8ff" font-family="monospace" font-size="8">Protected Mode: enabled</text>
+    </g>
+
+    <!-- Profile: worker -->
+    <g transform="translate(20, 160)">
+      <rect width="335" height="90" rx="8" fill="#451a03" stroke="#f59e0b" stroke-width="1.2" stroke-dasharray="4 2"/>
+      <text x="12" y="24" fill="#fef3c7" font-family="sans-serif" font-weight="700" font-size="12">queue-worker [PROFILE: worker]</text>
+      <text x="12" y="42" fill="#fde68a" font-family="monospace" font-size="10">python:3.11-slim-bookworm</text>
+      <text x="12" y="60" fill="#fcd34d" font-family="sans-serif" font-size="10">Consumes background tasks from Redis</text>
+      <text x="12" y="76" fill="#fde047" font-family="monospace" font-size="9">depends_on: {redis: service_healthy}</text>
+    </g>
+
+    <!-- Profiles: monitoring & debug (Bottom) -->
+    <g transform="translate(20, 265)">
+      <rect width="160" height="90" rx="8" fill="#1e293b" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3 3"/>
+      <text x="10" y="22" fill="#ffffff" font-family="sans-serif" font-weight="600" font-size="11">[PROFILE: debug]</text>
+      <text x="10" y="40" fill="#94a3b8" font-family="monospace" font-size="9">curlimages/curl</text>
+      <text x="10" y="58" fill="#cbd5e1" font-family="sans-serif" font-size="9">Internal Network Ping</text>
+      <text x="10" y="74" fill="#38bdf8" font-family="sans-serif" font-size="9">DNS Resolution Test</text>
+    </g>
+
+    <g transform="translate(195, 265)">
+      <rect width="160" height="90" rx="8" fill="#1e293b" stroke="#ea580c" stroke-width="1" stroke-dasharray="3 3"/>
+      <text x="10" y="22" fill="#ffedd5" font-family="sans-serif" font-weight="600" font-size="11">[PROFILE: monitoring]</text>
+      <text x="10" y="40" fill="#fdba74" font-family="monospace" font-size="9">redis_exporter:v1.67</text>
+      <text x="10" y="58" fill="#fed7aa" font-family="sans-serif" font-size="9">Exports Redis metrics</text>
+      <text x="10" y="74" fill="#fb923c" font-family="sans-serif" font-size="9">Port: 9121 (Internal)</text>
+    </g>
+  </g>
+</svg>

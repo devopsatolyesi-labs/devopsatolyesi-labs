@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 380" width="100%" height="380">
+  <defs>
+    <linearGradient id="bgReg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#021428" />
+      <stop offset="100%" stop-color="#0f2b48" />
+    </linearGradient>
+    <filter id="cardShadowReg" x="-5%" y="-10%" width="110%" height="130%">
+      <feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <rect width="920" height="380" rx="14" fill="url(#bgReg)" stroke="#1e4976" stroke-width="1.5"/>
+
+  <text x="460" y="36" text-anchor="middle" fill="#f8fafc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="800" font-size="18" letter-spacing="0.5">CONTAINER REGISTRY PUBLISHING PIPELINE</text>
+  <text x="460" y="56" text-anchor="middle" fill="#94a3b8" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="500" font-size="12">Local Image Tagging to Enterprise Private Registry &amp; Docker Hub (Public vs Private)</text>
+
+  <!-- Box 1: Local Docker Daemon -->
+  <g transform="translate(30, 85)">
+    <rect width="210" height="260" rx="10" fill="#0b2440" stroke="#0ea5e9" stroke-width="1.5" filter="url(#cardShadowReg)"/>
+    <rect x="0" y="0" width="210" height="36" rx="10" fill="#0284c7" fill-opacity="0.3"/>
+    <text x="105" y="24" text-anchor="middle" fill="#e0f2fe" font-family="sans-serif" font-weight="700" font-size="12">LOCAL DOCKER ENGINE</text>
+
+    <g transform="translate(15, 55)">
+      <rect width="180" height="55" rx="6" fill="#04203a" stroke="#38bdf8" stroke-width="1"/>
+      <text x="12" y="22" fill="#ffffff" font-family="monospace" font-weight="bold" font-size="11">order-api:48mb</text>
+      <text x="12" y="40" fill="#7dd3fc" font-family="sans-serif" font-size="10">Optimize Edilmiş İmaj</text>
+    </g>
+
+    <g transform="translate(15, 125)">
+      <text x="0" y="16" fill="#38bdf8" font-family="sans-serif" font-weight="600" font-size="11">Etiketleme Mantığı:</text>
+      <text x="0" y="34" fill="#cbd5e1" font-family="monospace" font-size="9">docker tag &lt;src&gt; \</text>
+      <text x="0" y="48" fill="#fcd34d" font-family="monospace" font-size="9">&lt;registry&gt;/&lt;user&gt;/&lt;app&gt;:&lt;tag&gt;</text>
+    </g>
+
+    <g transform="translate(15, 195)">
+      <rect width="180" height="45" rx="4" fill="#083358"/>
+      <text x="10" y="26" fill="#38bdf8" font-family="monospace" font-size="10">docker push &lt;target&gt;</text>
+    </g>
+  </g>
+
+  <!-- Connectors -->
+  <line x1="240" y1="215" x2="290" y2="215" stroke="#38bdf8" stroke-width="2"/>
+  <line x1="290" y1="130" x2="290" y2="300" stroke="#38bdf8" stroke-width="2"/>
+  
+  <line x1="290" y1="130" x2="330" y2="130" stroke="#38bdf8" stroke-width="2"/>
+  <polygon points="330,126 338,130 330,134" fill="#38bdf8"/>
+
+  <line x1="290" y1="215" x2="330" y2="215" stroke="#38bdf8" stroke-width="2"/>
+  <polygon points="330,211 338,215 330,219" fill="#38bdf8"/>
+
+  <line x1="290" y1="300" x2="330" y2="300" stroke="#38bdf8" stroke-width="2"/>
+  <polygon points="330,296 338,300 330,304" fill="#38bdf8"/>
+
+  <!-- Target 1: Enterprise Private Registry (Harbor) -->
+  <g transform="translate(340, 85)">
+    <rect width="540" height="75" rx="8" fill="#14532d" stroke="#22c55e" stroke-width="1.2" filter="url(#cardShadowReg)"/>
+    <text x="20" y="28" fill="#bbf7d0" font-family="sans-serif" font-weight="700" font-size="13">Hedef 1: Kurumsal Private Registry (Harbor / Local OCI)</text>
+    <text x="20" y="48" fill="#86efac" font-family="monospace" font-size="11">localhost:8082/devops/order-api:1.0.0</text>
+    <text x="20" y="64" fill="#dcfce7" font-family="sans-serif" font-size="10">Korumalı şirket içi ağ, RBAC robot kullanıcı kimlik doğrulaması (`docker login localhost:8082`)</text>
+  </g>
+
+  <!-- Target 2: Docker Hub Public Repository -->
+  <g transform="translate(340, 175)">
+    <rect width="540" height="75" rx="8" fill="#0c4a6e" stroke="#0ea5e9" stroke-width="1.2" filter="url(#cardShadowReg)"/>
+    <text x="20" y="28" fill="#bae6fd" font-family="sans-serif" font-weight="700" font-size="13">Hedef 2: Docker Hub — Public Repository (Herkese Açık)</text>
+    <text x="20" y="48" fill="#7dd3fc" font-family="monospace" font-size="11">docker.io/&lt;kullanici_adi&gt;/order-api:v1.0.0</text>
+    <text x="20" y="64" fill="#e0f2fe" font-family="sans-serif" font-size="10">Dünyadaki herkes tarafından şifresiz `docker pull` ile çekilebilir (Açık Kaynak Dağıtımı)</text>
+  </g>
+
+  <!-- Target 3: Docker Hub Private Repository -->
+  <g transform="translate(340, 265)">
+    <rect width="540" height="75" rx="8" fill="#3b0764" stroke="#a855f7" stroke-width="1.2" filter="url(#cardShadowReg)"/>
+    <text x="20" y="28" fill="#f3e8ff" font-family="sans-serif" font-weight="700" font-size="13">Hedef 3: Docker Hub — Private Repository (Özel / Gizli)</text>
+    <text x="20" y="48" fill="#d8b4fe" font-family="monospace" font-size="11">docker.io/&lt;kullanici_adi&gt;/order-api-private:v1.0.0</text>
+    <text x="20" y="64" fill="#faf5ff" font-family="sans-serif" font-size="10">Yalnızca token/parola ile `docker login` yapmış yetkili hesaplar çekebilir (Private IP/Kod Koruma)</text>
+  </g>
+</svg>
