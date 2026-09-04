@@ -37,6 +37,8 @@ spec:
               }
               "$kcadm" create groups -r devops-atolyesi -s name=admins 2>/dev/null || true
               ensure_user admin "$REALM_ADMIN_PASSWORD" admin admins
+              "$kcadm" add-roles -r devops-atolyesi --uusername admin \
+                --cclientid realm-management --rolename realm-admin 2>/dev/null || true
               ensure_user devops "$DEVOPS_PASSWORD" student devops-practitioner-5-day
               ensure_user kubernetes "$KUBERNETES_PASSWORD" student docker-kubernetes-2-day
               client_id=$("$kcadm" get clients -r devops-atolyesi -q clientId=labs-portal --fields id --format csv --noquotes)

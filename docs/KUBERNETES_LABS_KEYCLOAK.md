@@ -55,9 +55,12 @@ verilir; release geçmişi ve rollback Helm tarafından yönetilir.
 
 Keycloak yönetim konsolu
 `https://auth.devopsatolyesi.com/admin/devops-atolyesi/console/` adresindedir.
-Yönetim hesabı `admin`, parolası `PLATFORM_ADMIN_PASSWORD` GitHub Actions
-secret'ıdır. Portal yöneticisi üst menüdeki **Kullanıcı Yönetimi** bağlantısıyla
-bu ekrana ulaşır.
+Yönetim hesabı portalda kullanılan `admin` hesabıdır; parolası
+`LABS_ADMIN_PASSWORD` GitHub Actions secret'ıyla yönetilir. Bu hesaba yalnız
+`devops-atolyesi` realm'ini yönetmesi için `realm-management/realm-admin` rolü
+verilir. Portal yöneticisi üst menüdeki **Kullanıcı Yönetimi** bağlantısıyla bu
+ekrana ulaşır. `master` realm yönetici parolası günlük kullanıcı yönetiminde
+kullanılmaz.
 
 Öğrenci hesabı `Users` bölümünde oluşturulur. Erişim, kullanıcıyı aşağıdaki
 gruplardan birine ekleyerek verilir:
