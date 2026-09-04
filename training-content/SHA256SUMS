@@ -285,7 +285,7 @@ beedd6869af264356b78d28c09da1e41f9553122e184b750c2dd33ec96dc4a48  ./lab-assets/L
 812194079b9d4d71bf21f302c77cf091b7cbba19c359bfefab84bf4fe0e25e82  ./lab-assets/LAB-TF-08/starter/variables.tf
 7dfe50138e4b613f1b1a0834dcb397f53499156b92d76865b95796360685e41c  ./labs/capstone/LAB-CAP-01-end-to-end-devops.md
 959cfabfd245ccb5d3f259339f906ec1be308f675e21e06b0769f5713ca0ecdb  ./labs/docker/LAB-DOC-01-docker-first-container.md
-dfec2442f0cc99394427bbf940955e35ae2798b1d0d97530df2c3c5900070f2f  ./labs/docker/LAB-DOC-02-docker-volumes-env.md
+771ed1314491e76710c23cddec9670495c2cdb3456bcfb9c8987ec49366f1a8a  ./labs/docker/LAB-DOC-02-docker-volumes-env.md
 2277aab15c0ad2fe7a238ca3bce67c6a7d81c3a86f89e5028012191e403310cf  ./labs/docker/LAB-DOC-03-dockerfile-optimization.md
 60bf4a4aab58195e1744b4c4fb2f08a2ba420ef177b477476b2bed11bae9cbf2  ./labs/docker/LAB-DOC-04-docker-multistage-hardening.md
 9f30916f36dbc326e51770206a076c3ca5588ab4b80db94a20cb766b5988cfc2  ./labs/docker/LAB-DOC-05-docker-compose-multitier.md

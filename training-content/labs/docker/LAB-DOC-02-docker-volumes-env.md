@@ -21,11 +21,25 @@
 
 ## Adımlar
 
-### 1. Başlangıç dosyasını alın
+### 1. Çalışma dizinini ve başlangıç Compose dosyasını oluşturun
 
 ```bash
-cd labs/LAB-DOC-02
-cp -a starter/. .
+mkdir -p ~/devops-workspace/labs/LAB-DOC-02
+cd ~/devops-workspace/labs/LAB-DOC-02
+
+cat <<'YAML' > compose.yaml
+services:
+  database:
+    image: postgres:16-alpine
+    # TODO: environment, volume, port ve healthcheck alanlarını ekleyin.
+YAML
+```
+
+Dosyanın oluştuğunu doğrulayın:
+
+```bash
+cat compose.yaml
+docker compose version
 ```
 
 ### 2. Compose tanımını tamamlayın
@@ -37,8 +51,12 @@ cp -a starter/. .
 - Parolayı `LAB_POSTGRES_PASSWORD` değişkeninden alma
 - `/var/lib/postgresql/data` yoluna bağlı `pgdata` named volume
 - `5432:5432` port yönlendirmesi
+- `pg_isready -U devops -d training` komutunu kullanan healthcheck
 
 > İpucu: Zorunlu değişken için `${LAB_POSTGRES_PASSWORD:?parola gerekli}` yazımı kullanılabilir.
+
+Named volume tanımını `services` ile aynı girinti seviyesinde, dosyanın en altında
+`volumes:` başlığı altında oluşturun.
 
 ### 3. Parolayı terminal oturumuna verin
 
