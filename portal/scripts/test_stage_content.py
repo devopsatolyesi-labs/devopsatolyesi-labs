@@ -66,5 +66,125 @@ class StageContentTest(unittest.TestCase):
                 self.assertNotIn("## Kaynak", page)
 
 
+    def test_role_based_access_rules(self) -> None:
+        import re
+        catalog = json.loads((REPOSITORY / "training-content/catalog.json").read_text())
+        nginx_conf = (REPOSITORY / "portal/nginx.conf").read_text()
+        js_code = (REPOSITORY / "portal/docs/javascripts/open_in_new_tab.js").read_text()
+
+        # Extract map "$portal_course:$uri" $portal_allowed from nginx.conf
+        map_match = re.search(r'map\s+"\$portal_course:\$uri"\s+\$portal_allowed\s*\{([^}]+)\}', nginx_conf)
+        self.assertIsNotNone(map_match)
+        map_body = map_match.group(1)
+        nginx_patterns = []
+        for line in map_body.splitlines():
+            line = line.strip()
+            if not line or line.startswith("#") or line.startswith("default"):
+                continue
+            m = re.match(r'~([^ ]+)\s+([0-9]+);', line)
+            if m:
+                nginx_patterns.append((m.group(1), int(m.group(2))))
+
+        def check_nginx(role: str, uri: str) -> int:
+            key = f"{role}:{uri}"
+            for pat, val in nginx_patterns:
+                if re.search(pat, key):
+                    return val
+            return 0
+
+        def normalize_js_path(pathname: str) -> str:
+            p = pathname.split("?")[0].split("#")[0]
+            p = re.sub(r"/index\.html$", "", p)
+            p = re.sub(r"\.html$", "", p)
+            if len(p) > 1 and p.endswith("/"):
+                p = p[:-1]
+            return p
+
+        def can_open_js(pathname: str, access_role: str) -> bool:
+            if not pathname:
+                return True
+            if access_role == "admin":
+                return True
+            p = normalize_js_path(pathname)
+            if p.startswith("/env") or p.startswith("/labs") or p.startswith("/lab-assets") or p == "/devops-labs.zip":
+                return False
+            if p in ("", "/", "/index.html") or p.startswith("/search") or p.startswith("/reference"):
+                return True
+            if access_role == "devops":
+                if p.startswith("/curriculum") or p.startswith("/setup") or p.startswith("/projects") or p.startswith("/troubleshooting"):
+                    return True
+                if re.match(r"^/day[1-5]/LAB-[A-Za-z0-9_-]+$", p):
+                    return True
+                if re.match(r"^/downloads/LAB-[A-Za-z0-9_-]+\.zip$", p):
+                    return True
+                return False
+            if access_role in ("kubernetes", "docker"):
+                if p in ("/curriculum/02_2_DAY_DOCKER_KUBERNETES", "/curriculum/02_LAB_CATALOG_INDEX", "/curriculum/06_DEMO_APPLICATION_MAPPING"):
+                    return True
+                if p in (
+                    "/setup",
+                    "/setup/docker-engine",
+                    "/setup/kind-cluster",
+                    "/setup/kubeadm-cluster",
+                    "/setup/kubeconfig-management",
+                    "/setup/nfs-storageclass",
+                    "/setup/docker-kubernetes",
+                ):
+                    return True
+                if re.match(r"^/day[12]/LAB-DOC-[A-Za-z0-9_-]+$", p):
+                    return True
+                if re.match(r"^/day4/LAB-K8S-[A-Za-z0-9_-]+$", p):
+                    return True
+                if re.match(r"^/downloads/LAB-(?:DOC|K8S)-[A-Za-z0-9_-]+\.zip$", p):
+                    return True
+                return False
+            return False
+
+        # Verify JS contains dynamic pattern matching and not obsolete hardcoded slug regexes
+        self.assertIn(r"/^\/day[1-5]\/LAB-[A-Za-z0-9_-]+$/", js_code)
+        self.assertIn(r"/^\/day[12]\/LAB-DOC-[A-Za-z0-9_-]+$/", js_code)
+        self.assertIn(r"/^\/day4\/LAB-K8S-[A-Za-z0-9_-]+$/", js_code)
+        self.assertNotIn("01-kind-pods-deployments", js_code)
+        self.assertNotIn("JNK-01", js_code)
+
+        # Test each lab against both JS logic and Nginx configuration
+        for lab in catalog["labs"]:
+            lab_id = lab["id"]
+            filename = Path(lab["guide"]).name
+            slug = filename.replace(".md", "")
+            candidates = list((REPOSITORY / "portal/docs").glob(f"day*/{filename}")) + list((REPOSITORY / "portal/docs").glob(f"env/{filename}"))
+            self.assertTrue(len(candidates) == 1, f"Missing portal candidate for {lab_id}")
+            day_or_env = candidates[0].relative_to(REPOSITORY / "portal/docs").parts[0]
+            url = f"/{day_or_env}/{slug}/"
+            download_url = f"/downloads/{lab_id}.zip"
+
+            # Admin must access everything
+            self.assertTrue(can_open_js(url, "admin"))
+            self.assertEqual(check_nginx("admin", url), 1)
+
+            # DevOps role
+            if lab_id.startswith("LAB-ENV"):
+                self.assertFalse(can_open_js(url, "devops"))
+                self.assertEqual(check_nginx("devops", url), 0)
+            else:
+                self.assertTrue(can_open_js(url, "devops"), f"devops should access {url}")
+                self.assertTrue(can_open_js(download_url, "devops"), f"devops should download {download_url}")
+                self.assertEqual(check_nginx("devops", url), 1, f"nginx blocked devops on {url}")
+                self.assertEqual(check_nginx("devops", download_url), 1, f"nginx blocked devops on {download_url}")
+
+            # Kubernetes role
+            if lab_id.startswith("LAB-DOC") or lab_id.startswith("LAB-K8S"):
+                self.assertTrue(can_open_js(url, "kubernetes"), f"kubernetes should access {url}")
+                self.assertTrue(can_open_js(download_url, "kubernetes"), f"kubernetes should download {download_url}")
+                self.assertEqual(check_nginx("kubernetes", url), 1, f"nginx blocked kubernetes on {url}")
+                self.assertEqual(check_nginx("kubernetes", download_url), 1, f"nginx blocked kubernetes on {download_url}")
+            else:
+                self.assertFalse(can_open_js(url, "kubernetes"), f"kubernetes must NOT access {url}")
+                self.assertFalse(can_open_js(download_url, "kubernetes"), f"kubernetes must NOT download {download_url}")
+                self.assertEqual(check_nginx("kubernetes", url), 0, f"nginx allowed kubernetes on {url}")
+                self.assertEqual(check_nginx("kubernetes", download_url), 0, f"nginx allowed kubernetes on {download_url}")
+
+
 if __name__ == "__main__":
     unittest.main()
+

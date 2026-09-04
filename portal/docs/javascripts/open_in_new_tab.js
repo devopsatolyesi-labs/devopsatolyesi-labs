@@ -2,40 +2,87 @@ document.addEventListener("DOMContentLoaded", function() {
   var accessRole = null;
   var mermaidInitialized = false;
 
-  function isLabPage(pathname, expression) {
-    return expression.test(pathname);
+  function normalizePath(pathname) {
+    if (!pathname) return "";
+    var p = pathname.split("?")[0].split("#")[0];
+    p = p.replace(/\/index\.html$/, "").replace(/\.html$/, "");
+    if (p.length > 1 && p.charAt(p.length - 1) === "/") {
+      p = p.slice(0, -1);
+    }
+    return p;
   }
 
   function canOpen(pathname) {
     if (!pathname) return true;
     if (accessRole === "admin") return true;
 
-    // Platform environment admin setup and raw master archives are strictly admin-only
-    if (pathname.indexOf("/env/") === 0 || pathname.indexOf("/lab-assets/") === 0 || pathname === "/devops-labs.zip") {
+    var p = normalizePath(pathname);
+
+    // Platform environment admin setup, raw lab guides, and master zip are strictly admin-only
+    if (p.indexOf("/env") === 0 || p.indexOf("/labs") === 0 || p.indexOf("/lab-assets") === 0 || p === "/devops-labs.zip") {
       return false;
     }
 
-    // Portal home, general setup, curriculum syllabi, reference, troubleshooting, and search are available to students
-    if (pathname === "/" || pathname === "/index.html" || pathname === "") return true;
-    if (pathname.indexOf("/setup") === 0) return true;
-    if (pathname.indexOf("/curriculum") === 0) return true;
-    if (pathname.indexOf("/troubleshooting") === 0) return true;
-    if (pathname.indexOf("/reference") === 0) return true;
-    if (pathname.indexOf("/search") === 0) return true;
+    // Portal home, general search, and common static assets are available to all students
+    if (p === "" || p === "/" || p.indexOf("/search") === 0) {
+      return true;
+    }
 
+    // Reference matrices are accessible to all students
+    if (p.indexOf("/reference") === 0) {
+      return true;
+    }
+
+    // DevOps Practitioner Role (5-day comprehensive course):
+    // Full access across Day 1 to Day 5, Projects, Troubleshooting, Curriculum, and Setup.
     if (accessRole === "devops") {
-      if (pathname.indexOf("/projects") === 0) return true;
-      return isLabPage(pathname, /^\/day1\/LAB-(LNX-(01-linux-preflight|02-nginx-letsencrypt-ssl|03-ssh-tunnel-mysql)|GIT-01-git-workflow|DOC-(01-docker-first-container|02-docker-volumes-env))(\/|\.html)?$/) ||
-        isLabPage(pathname, /^\/day2\/LAB-DOC-(03-dockerfile-optimization|04-docker-multistage-hardening|05-docker-compose-multitier|06-trivy-harbor-integration|07-docker-java-spring-boot|08-docker-react-nginx|09-docker-networks-dns|10-docker-backup-restore|13-docker-compose-production-patterns)(\/|\.html)?$/) ||
-        isLabPage(pathname, /^\/day3\/LAB-(JNK-(01-jenkins-declarative-pipeline|02-jenkins-secure-pipeline)|GLB-01-gitlab-ci-pipeline|GHA-01-github-actions-ci|TF-(01-terraform-docker-provider|04-terraform-helm-centralized-monitoring|08-terraform-aws-vpc-architecture))(\/|\.html)?$/) ||
-        isLabPage(pathname, /^\/day4\/LAB-(K8S-(01-kind-pods-deployments|02-services-config-secrets|03-production-workloads)|HLM-01-helm-chart-deployment|ARG-01-argocd-gitops-sync)(\/|\.html)?$/) ||
-        isLabPage(pathname, /^\/day5\/LAB-(MON-(01-prometheus-grafana-metrics|02-alertmanager-rules)|LOG-(01-centralized-logging|02-elk-centralized-logging)|INC-01-k8s-crashloop-postmortem|CAP-01-end-to-end-devops)(\/|\.html)?$/);
+      if (p.indexOf("/curriculum") === 0) return true;
+      if (p.indexOf("/setup") === 0) return true;
+      if (p.indexOf("/projects") === 0) return true;
+      if (p.indexOf("/troubleshooting") === 0) return true;
+
+      // Matches ANY lab on Day 1 to Day 5 (all 64 active labs across Linux, Git, Docker, CI/CD, K8s, GitOps, Monitoring, Capstone)
+      if (/^\/day[1-5]\/LAB-[A-Za-z0-9_-]+$/.test(p)) return true;
+
+      // Downloads: any student lab package
+      if (/^\/downloads\/LAB-[A-Za-z0-9_-]+\.zip$/.test(p)) return true;
+
+      return false;
     }
-    if (accessRole === "docker" || accessRole === "kubernetes") {
-      return isLabPage(pathname, /^\/day1\/LAB-DOC-(01-docker-first-container|02-docker-volumes-env)(\/|\.html)?$/) ||
-        isLabPage(pathname, /^\/day2\/LAB-DOC-(03-dockerfile-optimization|04-docker-multistage-hardening|05-docker-compose-multitier|06-trivy-harbor-integration|07-docker-java-spring-boot|08-docker-react-nginx|09-docker-networks-dns|10-docker-backup-restore|13-docker-compose-production-patterns)(\/|\.html)?$/) ||
-        isLabPage(pathname, /^\/day4\/LAB-K8S-(01-kind-pods-deployments|02-services-config-secrets|03-production-workloads)(\/|\.html)?$/);
+
+    // Docker and Kubernetes Role (2-day focused course):
+    // Strictly Docker (all 20 labs) and Kubernetes (all 12 labs), plus 2-day curriculum and Docker/K8s setup.
+    if (accessRole === "kubernetes" || accessRole === "docker") {
+      // 2-Day specific curriculum and shared indexes ONLY (blocks 5-day curriculum)
+      if (p === "/curriculum/02_2_DAY_DOCKER_KUBERNETES" ||
+          p === "/curriculum/02_LAB_CATALOG_INDEX" ||
+          p === "/curriculum/06_DEMO_APPLICATION_MAPPING") {
+        return true;
+      }
+
+      // Docker & Kubernetes relevant setup guides only
+      if (p === "/setup" ||
+          p === "/setup/docker-engine" ||
+          p === "/setup/kind-cluster" ||
+          p === "/setup/kubeadm-cluster" ||
+          p === "/setup/kubeconfig-management" ||
+          p === "/setup/nfs-storageclass" ||
+          p === "/setup/docker-kubernetes") {
+        return true;
+      }
+
+      // All 20 Docker labs (Day 1 & Day 2: LAB-DOC-01 to LAB-DOC-20)
+      if (/^\/day[12]\/LAB-DOC-[A-Za-z0-9_-]+$/.test(p)) return true;
+
+      // All 12 Kubernetes labs (Day 4: LAB-K8S-01 to LAB-K8S-12)
+      if (/^\/day4\/LAB-K8S-[A-Za-z0-9_-]+$/.test(p)) return true;
+
+      // Downloads: strictly Docker and Kubernetes starter packages
+      if (/^\/downloads\/LAB-(?:DOC|K8S)-[A-Za-z0-9_-]+\.zip$/.test(p)) return true;
+
+      return false;
     }
+
     return false;
   }
 
@@ -110,20 +157,54 @@ document.addEventListener("DOMContentLoaded", function() {
     attachSearchFilter();
     if (accessRole === "admin") return;
 
-    // Filter sidebar navigation links and top desktop tabs
-    var links = document.querySelectorAll("a.md-nav__link[href], a.md-tabs__link[href]");
-    for (var i = 0; i < links.length; i++) {
-      var path = new URL(links[i].href, window.location.origin).pathname;
-      if (!canOpen(path)) {
-        var item = links[i].closest("li.md-nav__item, li.md-tabs__item");
-        if (item) item.remove();
+    // Redirect to home if current page is unauthorized for this role
+    if (!canOpen(window.location.pathname)) {
+      window.location.replace("/");
+      return;
+    }
+
+    // For 2-day role, adapt the top curriculum tab and navigation links so they point to 2-day curriculum
+    if (accessRole === "kubernetes" || accessRole === "docker") {
+      var curLinks = document.querySelectorAll("a.md-tabs__link[href*='01_5_DAY_CURRICULUM'], a.md-nav__link[href*='01_5_DAY_CURRICULUM']");
+      for (var c = 0; c < curLinks.length; c++) {
+        var link = curLinks[c];
+        var parentItem = link.closest("li.md-tabs__item, li.md-nav__item--nested");
+        if (parentItem && (link.classList.contains("md-tabs__link") || link.parentElement === parentItem)) {
+          link.setAttribute("href", "/curriculum/02_2_DAY_DOCKER_KUBERNETES/");
+        }
       }
     }
 
-    // Do not leave empty nested section containers
+    // 1. Filter desktop tabs
+    var tabs = document.querySelectorAll("li.md-tabs__item");
+    for (var t = 0; t < tabs.length; t++) {
+      var tabLink = tabs[t].querySelector("a.md-tabs__link[href]");
+      if (tabLink) {
+        var tabPath = new URL(tabLink.href, window.location.origin).pathname;
+        if (!canOpen(tabPath)) {
+          tabs[t].remove();
+        }
+      }
+    }
+
+    // 2. Filter sidebar leaf navigation links
+    var navLinks = document.querySelectorAll(".md-sidebar a.md-nav__link[href], .md-nav--primary a.md-nav__link[href]");
+    for (var i = 0; i < navLinks.length; i++) {
+      var path = new URL(navLinks[i].href, window.location.origin).pathname;
+      if (!canOpen(path)) {
+        var item = navLinks[i].closest("li.md-nav__item");
+        if (item && !item.classList.contains("md-nav__item--nested")) {
+          item.remove();
+        }
+      }
+    }
+
+    // 3. Clean up any empty nested section containers (bottom-up)
     var sections = document.querySelectorAll("li.md-nav__item--nested");
     for (var j = sections.length - 1; j >= 0; j--) {
-      if (!sections[j].querySelector("a.md-nav__link[href]")) sections[j].remove();
+      if (!sections[j].querySelector("a.md-nav__link[href]")) {
+        sections[j].remove();
+      }
     }
   }
 
