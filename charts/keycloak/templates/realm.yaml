@@ -3,6 +3,8 @@ kind: ConfigMap
 metadata:
   name: keycloak-realm
   namespace: identity-system
+  annotations:
+    devopsatolyesi.com/chart-version: {{ .Chart.Version | quote }}
 data:
   devops-atolyesi-realm.json: |
     {
