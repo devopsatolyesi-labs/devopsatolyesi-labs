@@ -1,21 +1,21 @@
 document.addEventListener("DOMContentLoaded", function() {
-  var username = null;
+  var accessRole = null;
 
   function isLabPage(pathname, expression) {
     return expression.test(pathname);
   }
 
   function canOpen(pathname) {
-    if (username === "admin") return true;
+    if (accessRole === "admin") return true;
     if (pathname.indexOf("/curriculum/") === 0 || pathname.indexOf("/env/") === 0 || pathname.indexOf("/lab-assets/") === 0 || pathname === "/devops-labs.zip") return false;
-    if (username === "devops") {
+    if (accessRole === "devops") {
       return isLabPage(pathname, /^\/day1\/LAB-(LNX-01-linux-preflight|GIT-01-git-workflow|DOC-01-docker-first-container|DOC-02-docker-volumes-env)(\/|\.html)?$/) ||
         isLabPage(pathname, /^\/day2\/LAB-DOC-(03-dockerfile-optimization|04-docker-multistage-hardening|05-docker-compose-multitier|06-trivy-harbor-integration|13-docker-compose-production-patterns)(\/|\.html)?$/) ||
         isLabPage(pathname, /^\/day3\/LAB-(JNK-01-jenkins-declarative-pipeline|JNK-02-jenkins-secure-pipeline|GLB-01-gitlab-ci-pipeline|TF-01-terraform-docker-provider|TF-04-terraform-helm-centralized-monitoring|TF-08-terraform-aws-vpc-architecture)(\/|\.html)?$/) ||
         isLabPage(pathname, /^\/day4\/LAB-(K8S-01-kind-pods-deployments|K8S-02-services-config-secrets|K8S-03-production-workloads|HLM-01-helm-chart-deployment|ARG-01-argocd-gitops-sync)(\/|\.html)?$/) ||
         isLabPage(pathname, /^\/day5\/LAB-(MON-01-prometheus-grafana-metrics|MON-02-alertmanager-rules|LOG-01-centralized-logging|LOG-02-elk-centralized-logging|INC-01-k8s-crashloop-postmortem|CAP-01-end-to-end-devops)(\/|\.html)?$/);
     }
-    if (username === "docker" || username === "kubernetes") {
+    if (accessRole === "docker" || accessRole === "kubernetes") {
       return isLabPage(pathname, /^\/day1\/LAB-DOC-(01-docker-first-container|02-docker-volumes-env)(\/|\.html)?$/) ||
         isLabPage(pathname, /^\/day2\/LAB-DOC-(03-dockerfile-optimization|05-docker-compose-multitier)(\/|\.html)?$/) ||
         isLabPage(pathname, /^\/day4\/LAB-K8S-(01-kind-pods-deployments|02-services-config-secrets|03-production-workloads)(\/|\.html)?$/);
@@ -23,19 +23,50 @@ document.addEventListener("DOMContentLoaded", function() {
     return false;
   }
 
+  function installLogoutButton() {
+    if (document.getElementById("portal-logout")) return;
+
+    var portalHome = window.location.origin + "/";
+    var keycloakLogout = "https://auth.devopsatolyesi.com/realms/devops-atolyesi/protocol/openid-connect/logout" +
+      "?client_id=labs-portal&post_logout_redirect_uri=" + encodeURIComponent(portalHome);
+    var logout = document.createElement("a");
+    logout.id = "portal-logout";
+    logout.className = "md-header__button";
+    logout.href = "/oauth2/sign_out?rd=" + encodeURIComponent(keycloakLogout);
+    logout.textContent = "Çıkış";
+    logout.setAttribute("title", "Portal ve kimlik oturumunu kapat");
+    logout.style.color = "inherit";
+    logout.style.fontWeight = "600";
+    logout.style.whiteSpace = "nowrap";
+
+    var header = document.querySelector(".md-header__inner");
+    if (header) header.appendChild(logout);
+  }
+
+  function installAdminButton() {
+    if (accessRole !== "admin" || document.getElementById("keycloak-admin")) return;
+
+    var admin = document.createElement("a");
+    admin.id = "keycloak-admin";
+    admin.className = "md-header__button";
+    admin.href = "https://auth.devopsatolyesi.com/admin/devops-atolyesi/console/";
+    admin.target = "_blank";
+    admin.rel = "noopener noreferrer";
+    admin.textContent = "Kullanıcı Yönetimi";
+    admin.setAttribute("title", "Keycloak kullanıcı ve grup yönetimi");
+    admin.style.color = "inherit";
+    admin.style.fontWeight = "600";
+    admin.style.whiteSpace = "nowrap";
+
+    var header = document.querySelector(".md-header__inner");
+    if (header) header.appendChild(admin);
+  }
+
   function applyCourseNavigation() {
-    if (!username) return;
-    var logout = document.querySelector(".md-header__source");
-    if (!logout) {
-      logout = document.createElement("a");
-      logout.className = "md-header__source";
-      logout.href = "/logout";
-      logout.textContent = "Çıkış";
-      logout.setAttribute("title", "Portal çıkışı");
-      var header = document.querySelector(".md-header__inner");
-      if (header) header.appendChild(logout);
-    }
-    if (username === "admin") return;
+    if (!accessRole) return;
+    installAdminButton();
+    installLogoutButton();
+    if (accessRole === "admin") return;
     var links = document.querySelectorAll("a.md-nav__link[href]");
     for (var i = 0; i < links.length; i++) {
       var path = new URL(links[i].href, window.location.origin).pathname;
@@ -55,11 +86,11 @@ document.addEventListener("DOMContentLoaded", function() {
         return response.json();
       })
       .then(function(identity) {
-        username = identity.username;
+        accessRole = identity.course;
         applyCourseNavigation();
       })
       .catch(function() {
-        username = "unauthorized";
+        accessRole = "unauthorized";
         applyCourseNavigation();
       });
   }

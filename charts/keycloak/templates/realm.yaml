@@ -27,6 +27,7 @@ data:
         "standardFlowEnabled": true,
         "directAccessGrantsEnabled": false,
         "redirectUris": ["https://labs.devopsatolyesi.com/*"],
-        "webOrigins": ["https://labs.devopsatolyesi.com"]
+        "webOrigins": ["https://labs.devopsatolyesi.com"],
+        "attributes": {"post.logout.redirect.uris": "https://labs.devopsatolyesi.com/*"}
       }]
     }
