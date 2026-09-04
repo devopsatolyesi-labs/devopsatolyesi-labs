@@ -1,14 +1,11 @@
 # LAB-TF-04 — Terraform ve Helm ile Merkezi Kubernetes İzleme (Centralized Monitoring)
 
-## Metadata
-- **Teknoloji:** Terraform 1.16.x, Helm v3.21.x, Kubernetes (kind v1.31.9), Prometheus, Grafana, ServiceMonitor
-- **Seviye:** PRACTITIONER / ADVANCED
-- **Önerilen Gün:** Gün 4 (Kubernetes & IaC Entegrasyonu)
-- **Tahmini Süre:** 60 dk
-- **Gerekli Profil:** `kubernetes` (~3.0 GB RAM)
-- **Çalışma Dizini:** `~/labs/LAB-TF-04`
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| İleri | 60 dakika | `kubernetes, monitoring` | `Küme içi` |
 
----
+[LAB-TF-04.zip](/downloads/LAB-TF-04.zip)
+
 
 ## 1. Lab Senaryosu
 
@@ -423,7 +420,7 @@ Tarayıcınızda açın:
 
 ---
 
-## 6. Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 
 `terraform apply` tamamlandığında:
 ```text
@@ -447,29 +444,3 @@ prometheus-kube-prometheus-stack-prometheus-0            2/2     Running   0    
 ```
 
 ---
-
-## 8. Sorun Giderme
-
-| Sorun / Hata Mesajı | Olası Kök Neden | Çözüm Adımı |
-|---|---|---|
-| `context deadline exceeded` or `timeout waiting for the condition` | Host bellek yetersizliği nedeniyle imaj çekimleri uzun sürdü. | `timeout = 900` değerini artırın veya `docker pull quay.io/prometheus/prometheus:v2.54.1` gibi imajları önceden çekin. |
-| Podlar `Pending` durumunda bekliyor | `kind` worker düğümlerinde bellek yetersizliği. | `kubectl describe nodes` ile MemoryPressure durumunu inceleyin; diğer Docker konteynerlerini durdurun. |
-| `failed to get client config: invalid context` | Kubeconfig context adı `kind-devops-cluster` ile eşleşmiyor. | `kubectl config current-context` çıktısını kontrol edip `variables.tf` içindeki `kube_context` değişkenine verin. |
-| Grafana girişinde `Invalid username or password` | `adminPassword` değişkeni set edilmemiş. | `values-monitoring.yaml` dosyasındaki şifreyi veya `set_sensitive` bloğunu kontrol edin. |
-
----
-
-## 10. Production Notu
-
-- **Helm Release State Kilitlemesi:** Üretim ortamlarında Terraform state dosyası uzak bir nesne depolama alanında (S3, GCS) ve DynamoDB / Cloud Storage kilit mekanizması ile saklanmalıdır.
-- **CRD Yaşam Döngüsü:** `kube-prometheus-stack` chartı CRD'leri güncellerken Helm'in `crd-install` kancaları kısıtlı olabilir. Büyük versiyon geçişlerinde CRD'lerin ayrı bir Terraform manifestosu veya kubectl ile yönetilmesi önerilir.
-- **Kalıcı Depolama (PV/PVC):** Gerçek üretim kümelerinde Prometheus ve Grafana için EBS, Ceph veya Persistent Disk tabanlı `StorageClass` bağlanarak pod yeniden başlama durumlarında metrik kaybı önlenmelidir.
-
----
-
-## 11. Challenge
-
-1. **Prometheus Alertmanager Slack / Webhook Entegrasyonu:**
-   `values-monitoring.yaml` içerisindeki `alertmanager.config` bloğunu düzenleyerek, Kubernetes pod çökmesi durumunda bir Discord/Slack webhook'una bildirim gönderecek kuralı ekleyin ve `terraform apply` ile güncelleyin.
-2. **Kişiselleştirilmiş Dashboard Provisioning:**
-   Grafana için bir ConfigMap oluşturarak NGINX veya Redis metriklerini gösteren hazır bir JSON dashboard'unu Terraform ile otomatik olarak Grafana paneline aktarın.

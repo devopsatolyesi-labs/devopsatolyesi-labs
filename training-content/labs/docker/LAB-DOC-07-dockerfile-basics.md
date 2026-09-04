@@ -1,11 +1,11 @@
 # LAB-DOC-07 — İlk Dockerfile ile İmaj Oluşturma
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 40 dakika | `docker` | `5000` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Orta | 40 dakika | `docker` | `5000` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-07.zip)](/downloads/LAB-DOC-07.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-DOC-07.zip](/downloads/LAB-DOC-07.zip)
+
 
 ---
 
@@ -199,35 +199,7 @@ docker logs my-order-api
 
 ---
 
-### Adım 7: Temizlik
-
-```bash
-docker rm -f my-order-api
-```
-
----
-
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: Dockerfile içinde `CMD` ile `ENTRYPOINT` arasındaki en temel fark nedir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        `ENTRYPOINT` konteynerin değişmez ana yürütülebilir ikili dosyasını (executable) tanımlar. `CMD` ise bu ana komuta varsayılan argümanları sağlar. `docker run <image> arg1` çalıştırıldığında `CMD` ezilir (override edilir), ancak `ENTRYPOINT` (`--entrypoint` bayrağı açıkça kullanılmadıkça) sabit kalır.
-
-??? question "Soru 2: Neden `COPY . .` yerine önce `COPY requirements.txt .` ve `RUN pip install` satırlarını yazıyoruz?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        **Docker Layer Cache (Katman Önbelleği)** verimliliği için. Kaynak kodunuz (`app.py`) sürekli değişirken `requirements.txt` nadiren güncellenir. Eğer bağımlılıkları önce yüklerseniz, kodunuzdaki küçük bir değişiklikte Docker `pip install` katmanını önbellekten anında çeker ve derleme süresi saniyelere iner.
-
-??? question "Soru 3: `.dockerignore` dosyası kullanılmazsa ne tür problemler ortaya çıkar?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        1. `.git`, yerel test veritabanları veya sanal ortamlar (`venv/`) gigabaytlarca boyuta sahip olabilir; derleme başladığında daemon'a aktarılmaları dakikalar sürer.
-        2. Yerel `.env` dosyaları veya hassas SSH anahtarları kazara konteyner imajının içine kopyalanıp imaj deposuna sızabilir.
-
----
-
-## Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 
 ```json
 {
@@ -240,8 +212,3 @@ docker rm -f my-order-api
 ```
 
 ---
-
-## Sorun Giderme
-
-- **Modül Bulunamadı (No module named 'flask'):** `requirements.txt` dosyasının `pip install` komutundan önce kopyalandığından emin olun.
-- **Port 5000 Meşgul (Address already in use):** MacOS sistemlerinde AirPlay Receiver varsayılan olarak 5000 portunu kullanabilir. Bu durumda `docker run -p 5001:5000` kullanıp `curl localhost:5001` ile test edin.

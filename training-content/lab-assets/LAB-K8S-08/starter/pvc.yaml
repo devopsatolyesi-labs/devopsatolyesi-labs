@@ -1,10 +1,12 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: storage-claim
+  name: app-data
+  namespace: lab-k8s-08
 spec:
   accessModes:
     - ReadWriteOnce
+  storageClassName: lab-k8s-08-local
   resources:
     requests:
       storage: 1Gi

@@ -48,34 +48,31 @@ markdown_extensions:
   - pymdownx.snippets
   - pymdownx.tabbed:
       alternate_style: true
-  - pymdownx.emoji:
-      emoji_index: !!python/name:material.extensions.emoji.twemoji
-      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - tables
   - attr_list
   - md_in_html
   - toc:
-      permalink: true
+      permalink: false
+
+extra:
+  generator: false
 
 extra_javascript:
   - https://unpkg.com/mermaid@10.9.1/dist/mermaid.min.js
-  - javascripts/open_in_new_tab.js?v=20260904-10
+  - javascripts/course_access.js?v=20260905-1
+  - javascripts/open_in_new_tab.js?v=20260905-1
 
 nav:
   - Ana Sayfa: index.md
-  - Eğitim Programı:
-      - DevOps Practitioner — 5 Gün: curriculum/01_5_DAY_CURRICULUM.md
-      - Docker and Kubernetes — 2 Gün: curriculum/02_2_DAY_DOCKER_KUBERNETES.md
-      - Lab Kataloğu (Zorluk Seviyeleri): curriculum/02_LAB_CATALOG_INDEX.md
-      - Zorunlu Lablar Planı: curriculum/03_MANDATORY_LABS_DETAILED.md
-      - Demo Uygulama Haritası: curriculum/06_DEMO_APPLICATION_MAPPING.md
+  - Eğitimim:
+      - DevOps Practitioner: courses/devops-practitioner-5-day.md
+      - Docker ve Kubernetes: courses/docker-kubernetes-2-day.md
   - Kurulum & Araç Hazırlığı:
       - Başlangıç ve Lab Dosyaları: setup/index.md
       - Docker Engine ve Compose Kurulumu: setup/docker-engine.md
       - kind ile Yerel Kubernetes Kümesi: setup/kind-cluster.md
       - Kubeadm ile Multi-Node K8s Kümesi: setup/kubeadm-cluster.md
       - Çoklu Kubeconfig Birleştirme: setup/kubeconfig-management.md
-      - Dynamic NFS StorageClass Kurulumu: setup/nfs-storageclass.md
       - Jenkins Kurulumu (Docker & K8s): setup/jenkins-installation.md
       - Harbor Private Registry ve TLS: setup/harbor-registry.md
       - Yerel GitLab CE ve Runner: setup/gitlab-ce.md
@@ -133,7 +130,7 @@ nav:
           - LAB-GLB-01 - GitLab CI/CD Pipeline: gitlab/LAB-GLB-01-gitlab-ci-pipeline.md
       - GitHub Actions:
           - LAB-GHA-01 - GitHub Actions CI: gitlab/LAB-GHA-01-github-actions-ci.md
-  - Infrastructure as Code:
+  - IaC:
       - LAB-TF-01 - Terraform Docker Provider: terraform/LAB-TF-01-terraform-docker-provider.md
       - LAB-TF-04 - Terraform Helm Centralized Monitoring: terraform/LAB-TF-04-terraform-helm-centralized-monitoring.md
       - LAB-TF-08 - Terraform AWS VPC Mimarisi: terraform/LAB-TF-08-terraform-aws-vpc-architecture.md
@@ -150,26 +147,18 @@ nav:
       - LAB-K8S-10 - Helm Temelleri ve Paket Yönetimi: kubernetes/LAB-K8S-10-helm.md
       - LAB-K8S-11 - Kubernetes Troubleshooting: kubernetes/LAB-K8S-11-troubleshooting.md
       - LAB-K8S-12 - Çok Katmanlı Microservice Mimarisi (Capstone): kubernetes/LAB-K8S-12-capstone.md
+      - LAB-K8S-13 - Headlamp Kurulumu ve Salt Okunur Erişim: kubernetes/LAB-K8S-13-headlamp.md
+      - LAB-K8S-14 - ResourceQuota ve LimitRange: kubernetes/LAB-K8S-14-resourcequota-limitrange.md
+      - LAB-K8S-15 - NFS Dynamic Provisioning ve RWX: kubernetes/LAB-K8S-15-nfs-dynamic-storage.md
   - GitOps:
       - LAB-HLM-01 - Helm Chart Deployment: helm/LAB-HLM-01-helm-chart-deployment.md
       - LAB-ARG-01 - Argo CD GitOps Senkronizasyonu: gitops/LAB-ARG-01-argocd-gitops-sync.md
-  - Gözlemlenebilirlik ve Olay Yönetimi:
+  - Monitoring:
       - LAB-MON-01 - Prometheus ve Grafana Metrikleri: monitoring/LAB-MON-01-prometheus-grafana-metrics.md
       - LAB-MON-02 - Alertmanager ve Bildirim Kuralları: monitoring/LAB-MON-02-alertmanager-rules.md
       - LAB-LOG-01 - Merkezi Loglama: logging/LAB-LOG-01-centralized-logging.md
       - LAB-LOG-02 - Enterprise ELK Stack Merkezi Loglama: logging/LAB-LOG-02-elk-centralized-logging.md
       - LAB-INC-01 - K8s CrashLoop Olay Müdahalesi: incident/LAB-INC-01-k8s-crashloop-postmortem.md
-  - Capstone:
-      - LAB-CAP-01 - End-to-End DevOps Capstone: capstone/LAB-CAP-01-end-to-end-devops.md
   - Projeler:
-      - Proje Kataloğu: projects/05_PROJECT_CATALOG.md
-      - Jenkins Python Flask CI/CD Hattı: projects/python-flask-ci-cd.md
-      - GitLab Python Flask CI/CD Hattı: projects/gitlab-python-flask-ci-cd.md
-      - GitLab DevOps Capstone Teslimat Hattı: projects/gitlab-devops-capstone.md
-      - Capstone Planı: projects/09_FINAL_CAPSTONE_BLUEPRINT.md
-  - Troubleshooting:
-      - Sorun Giderme Senaryoları: troubleshooting/07_TROUBLESHOOTING_SCENARIOS.md
-  - Hızlı Referans:
-      - Port ve Kaynak Matrisi: reference/13_RESOURCE_AND_PORT_MATRIX.md
-      - Versiyon Uyumluluk Matrisi: reference/16_2026_VERSION_COMPATIBILITY_MATRIX.md
-      - Üretim En İyi Uygulamaları: reference/08_PRODUCTION_BEST_PRACTICES_MATRIX.md
+      - Uçtan Uca DevOps Teslimat Projesi: projects/PROJECT-DEVOPS-01-uc-tan-uca-devops.md
+      - Container’dan Kubernetes’e Uygulama Teslimi: projects/PROJECT-DK-01-containerdan-kubernetese.md

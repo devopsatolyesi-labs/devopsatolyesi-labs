@@ -1,11 +1,11 @@
 # LAB-JEN-07 — Uygulama Derleme, Birim Testleri ve JUnit Test Raporlama
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `jenkins`, `python`, `pytest`, `junit` | `8080` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Orta | 45 dakika | `jenkins, python` | `8080` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-JEN-07.zip)](/downloads/LAB-JEN-07.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-JEN-07.zip](/downloads/LAB-JEN-07.zip)
+
 
 ---
 
@@ -223,26 +223,7 @@ curl -s -u admin:${JENKINS_TOKEN}   http://localhost:8080/job/05-unit-tests-and-
 
 ---
 
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: Birim testlerden biri başarısız olursa `archiveArtifacts` adımı çalışır mı?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Mevcut kodda `Package Artifact` aşaması `Run Unit Tests` aşamasından sonra gelmektedir. Eğer test aşamasında hata alınırsa pipeline kesilir ve `Package Artifact` aşaması çalışmaz; dolayısıyla bozuk/hatalı kod paketlenmez. Ancak `post { always { ... } }` içindeki `junit` raporlama adımı çalışarak başarısız testin detaylarını kaydeder.
-
-??? question "Soru 2: JUnit XML rapor formatı neden CI/CD platformlarında evrensel bir standarttır?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        JUnit XML şeması Java, Python (pytest), Node.js (jest), Go ve C# dahil tüm popüler test kütüphaneleri tarafından desteklenir. Jenkins, GitLab, Azure DevOps ve GitHub Actions gibi tüm CI/CD sunucuları bu XML'i doğrudan okuyup zengin grafikler ve hata detayları sunabilir.
-
-??? question "Soru 3: `archiveArtifacts` adımında `fingerprint: true` ne işe yarar?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Dosyanın MD5 özetini (fingerprint) çıkararak Jenkins veritabanına kaydeder. Bu sayede bu artefaktın hangi downstream job'lar tarafından kullanıldığı veya hangi dağıtım ortamına gittiği uçtan uca takip edilebilir (Provenance & Traceability).
-
----
-
-## Beklenen Sonuç & Sorun Giderme
+## Doğal Doğrulama ve Beklenen Sonuç
 
 | Hata | Çözüm |
 | :--- | :--- |

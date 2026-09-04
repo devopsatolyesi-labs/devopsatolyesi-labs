@@ -1,11 +1,11 @@
 # LAB-JEN-03 — İlk Freestyle Build Job ve Workspace Temelleri
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟢 **CORE** (Temel Seviye) | ⏱️ 35 dakika | `jenkins`, `bash` | `8080` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Temel | 35 dakika | `jenkins` | `8080` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-JEN-03.zip)](/downloads/LAB-JEN-03.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-JEN-03.zip](/downloads/LAB-JEN-03.zip)
+
 
 ---
 
@@ -115,26 +115,7 @@ docker exec jenkins-controller cat /var/jenkins_home/workspace/01-freestyle-work
 
 ---
 
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: Jenkins bir shell betiğinin başarısız olduğunu nasıl anlar?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        POSIX standartlarına göre çalışan süreçlerin çıkış koduna (exit status code) bakar. Exit code `0` ise işlem başarılıdır; `1` veya `0` harici herhangi bir değer dönerse Jenkins adımı ve build'i derhal `FAILURE` olarak işaretler.
-
-??? question "Soru 2: Neden modern DevOps dünyasında Freestyle job yerine Pipeline as Code (Jenkinsfile) tercih edilir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Freestyle job ayarları Jenkins UI üzerinde XML olarak saklanır; versiyonlanamaz, kod gibi PR/Code Review süreçlerinden geçemez, yedeklenmesi zordur ve projeyle birlikte Git'te yaşayamaz. Jenkinsfile ise kaynak kodla birlikte Git'te saklanan, dallara (branches) göre değişebilen ve taşınabilir bir standarttır.
-
-??? question "Soru 3: Arşivlenen artefaktlar (`build_output/**`) nerede saklanır?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Jenkins Controller üzerindeki `/var/jenkins_home/jobs/<JOB_NAME>/builds/<BUILD_ID>/archive/` dizininde saklanır ve kullanıcılar bu dosyaları doğrudan web arayüzünden indirebilir.
-
----
-
-## Beklenen Sonuç & Sorun Giderme
+## Doğal Doğrulama ve Beklenen Sonuç
 
 | Durum | Açıklama |
 | :--- | :--- |

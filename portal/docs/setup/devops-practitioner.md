@@ -1,6 +1,6 @@
 # DevOps Practitioner Lab Hazırlığı
 
-Bu kontrol yalnız **DevOps Practitioner — 5 Gün** eğitimine aittir.
+Bu kontrol yalnız **DevOps Practitioner** eğitimine aittir.
 
 ## Sunucuda Bulunması Gereken Araçlar
 
@@ -36,4 +36,4 @@ free -h
 df -h /
 ```
 
-Her lab kendi ZIP paketini ve gereken komutları içerir. Başka bir labın dizininden dosya kopyalamayın.
+Eğitim sayfasındaki tek ZIP paketi bütün başlangıç dosyalarını içerir. Başka bir labın dizininden dosya kopyalamayın.

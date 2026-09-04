@@ -1,14 +1,11 @@
 # LAB-MON-02 — Prometheus Alertmanager: High Latency & Pod Crash Alerts
 
-## Metadata
-- **Seviye:** PRACTITIONER
-- **Önerilen Gün:** Gün 5
-- **Tahmini Süre:** 45 dk
-- **Gerekli Profil:** `monitoring`
-- **Host Portları:** `9090:9090` (Prometheus), `9093:9093` (Alertmanager)
-- **Çalışma Dizini:** `~/labs/LAB-MON-02`
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Orta | 45 dakika | `monitoring` | `9090, 9093` |
 
----
+[LAB-MON-02.zip](/downloads/LAB-MON-02.zip)
+
 
 ## 1. Lab Senaryosu
 Metrikleri grafik panellerinde izlemek pasif bir operasyon yöntemidir; kesinti veya performans düşüşü yaşandığında mühendislerin anında haberdar edilmesi gerekir. Ancak anlık dalgalanmalarda yüzlerce gereksiz bildirim göndermek "Alert Fatigue" (alarm yorgunluğu) oluşturur. Prometheus kuralları (`for:` süresi) ile alarmları doğrular ve bildirimi Alertmanager bileşenine iletir. Alertmanager alarmları gruplar, tekilleştirir (deduplication) ve ilgili kanallara yönlendirir. Bu çalışmada kapalı bir servis üzerinden kasıtlı kesinti simülasyonu yapılır; `ServiceDown` alarmının `Pending` aşamasından `Firing` durumuna geçişi ve Alertmanager API v2 üzerindeki alarm kaydı doğrulanır.
@@ -147,7 +144,7 @@ curl -s http://localhost:9090/api/v1/alerts | jq '.data.alerts[0].state'
 curl -s http://localhost:9093/api/v2/alerts | jq '.[0].labels.alertname'
 ```
 
-## 6. Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 İlk sorgudaki `pending` durumu:
 ```json
 {
@@ -174,7 +171,7 @@ curl -s http://localhost:9093/api/v2/alerts | jq '.[0].labels.alertname'
 "ServiceDown"
 ```
 
-## 7. Doğrulama
+## Doğal Doğrulama ve Beklenen Sonuç
 `ServiceDown` alarmının Prometheus üzerinde `firing` durumunda olduğunu doğrulayın:
 ```bash
 ALERT_STATE=$(curl -s http://localhost:9090/api/v1/alerts | jq -r '.data.alerts[] | select(.labels.alertname=="ServiceDown") | .state')
@@ -185,44 +182,3 @@ else
   echo "VALIDATION FAILED: Expected state 'firing', got '$ALERT_STATE'." && exit 1
 fi
 ```
-
-## 8. Sorun Giderme
-
-### Belirti
-Prometheus başlatılırken kural yükleme hatası verir veya `/api/v1/rules` boş döner.
-
-### Kanıt
-`docker logs prometheus-alert-test` çıktısında `yaml: line X: did not find expected key` hatası görülür.
-
-### Kontrol Komutu
-```bash
-curl -s http://localhost:9090/api/v1/rules | jq .
-```
-
-### Muhtemel Neden
-`prometheus/alert.rules.yml` dosyasında girinti (indentation) veya sözdizimi hatası bulunmaktadır.
-
-### Çözüm
-Kural dosyasındaki YAML yapısını düzeltin ve servisi yeniden başlatın:
-```bash
-docker compose restart prometheus
-```
-
-### Tekrar Doğrulama
-```bash
-curl -s http://localhost:9090/api/v1/rules | jq '.data.groups[0].name'
-# "devops_service_alerts" dönmelidir.
-```
-
-## 9. Temizlik / Sıfırlama
-Konteynerleri kaldırın ve çalışma dizinini temizleyin:
-```bash
-docker compose down -v
-rm -rf ~/labs/LAB-MON-02
-```
-
-## 10. Production Notu
-Üretim ortamlarında her alarm kuralına mutlaka bir runbook linki (`annotations.runbook_url`) eklenmelidir; nöbetçi mühendisin arıza anında ilk yapacağı teşhis adımları alarmın içinde bulunmalıdır. Ayrıca kök neden arızalarında (örneğin veri merkezi veya ana şalter kesintisi) yüzlerce alt alarmın patlamasını engellemek için Alertmanager üzerinde `inhibit_rules` (baskılama kuralları) yapılandırılmalıdır.
-
-## 11. Challenge
-Alertmanager API v2 endpoint'ine (`POST /api/v2/silences`) cURL ile istek göndererek `ServiceDown` alarmını 1 saat boyunca bildirim göndermeyecek şekilde susturun (silence).

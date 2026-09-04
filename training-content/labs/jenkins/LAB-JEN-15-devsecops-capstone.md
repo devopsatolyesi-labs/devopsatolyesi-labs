@@ -1,11 +1,11 @@
 # LAB-JEN-15 — Uçtan Uca DevSecOps Pipeline Capstone Projesi
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🔴 **ADVANCED** (İleri Seviye) | ⏱️ 60 dakika | `jenkins`, `sonarqube`, `trivy`, `harbor`, `kubernetes` | `8080`, `9000`, `8082`, `80` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| İleri | 60 dakika | `jenkins, sonarqube, trivy, harbor, kubernetes` | `8080, 9000, 8082, 80` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-JEN-15.zip)](/downloads/LAB-JEN-15.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-JEN-15.zip](/downloads/LAB-JEN-15.zip)
+
 
 ---
 
@@ -284,21 +284,7 @@ Kaydedin ve **Build Now** butonuna basın.
 
 ---
 
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: Bu uçtan uca mimaride 'Shift-Left' güvenlik felsefesi nasıl uygulanmıştır?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Güvenlik denetimleri dağıtım sonrasına bırakılmamış, sürecin en soluna (geliştirme ve CI aşamasına) çekilmiştir: Kod kalitesi ve zafiyetler `SonarQube` ile kaynak kod seviyesinde yakalanır; paket açıkları `Trivy SCA` ile bağımlılıklarda taranır; konteyner açıkları `Trivy Image` ile registry'ye dahi gönderilmeden önce bloklanır.
-
-??? question "Soru 2: GitOps yaklaşımı (Argo CD) bu Jenkins pipeline'ının hangi aşamasının yerini alır?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Aşama 7 (`Kubernetes Continuous Deployment`) yerini alır. Jenkins kümede doğrudan `kubectl apply` çalıştırmak yerine, manifest deposundaki (GitOps repo) imaj etiketini güncelleyip Git'e `git push` eder. Argo CD ise bu Git değişikliğini algılayıp Kubernetes kümesine senkronize eder.
-
----
-
-## Beklenen Sonuç & Sorun Giderme
+## Doğal Doğrulama ve Beklenen Sonuç
 
 | Belirti | Çözüm |
 | :--- | :--- |

@@ -1,11 +1,11 @@
 # LAB-LNX-02 — Nginx Üzerinde Let's Encrypt SSL/TLS Kurulumu ve Otomatik Yenileme
 
-## Metadata
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Orta | 40 dakika | `docker` | `80, 443` |
 
-- **Seviye:** PRACTITIONER
-- **Süre:** 40 dakika
-- **Profil:** `docker`
-- **Port:** `80`, `443`
+[LAB-LNX-02.zip](/downloads/LAB-LNX-02.zip)
+
 
 ## Amaç
 
@@ -17,7 +17,7 @@ Bu labın amacı, Linux ve web sunucusu ortamlarında güvenli HTTP iletişimi (
 
 > [!IMPORTANT]
 > Bu labı uygulayabilmek için Linux sunucunuzda Nginx veya Docker ortamının hazır olması gerekir.
-> - Henüz kurulu değilse: [🛠️ Docker Engine Kurulum Rehberi](../../setup/docker-engine.md) adımlarını izleyin.
+> - Henüz kurulu değilse: [Docker Engine Kurulum Rehberi](/setup/docker-engine/) adımlarını izleyin.
 
 Hızlı sistem ön kontrolü:
 
@@ -142,19 +142,6 @@ docker rm -f nginx-ssl-test
 
 ---
 
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
+## Doğal Doğrulama ve Beklenen Sonuç
 
-??? question "Soru 1: Let's Encrypt sertifikalarının geçerlilik süresi neden 90 gündür ve yenileme otomasyonu nasıl kurulur?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        90 günlük kısa süre, çalınan sertifikaların zararını sınırlandırmak ve web yöneticilerini yenilemeyi zorunlu olarak otomatikleştirmeye teşvik etmek içindir. Linux'ta `systemd timer` veya `cron` ile günde iki kez `certbot renew --quiet --deploy-hook "systemctl reload nginx"` komutu çalıştırılarak otomatik yenilenir.
-
-??? question "Soru 2: HTTP'den HTTPS'e yönlendirirken neden 302 yerine 301 HTTP durum kodu kullanılır?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        `301 Moved Permanently` arama motorlarına ve tarayıcılara bu adresin kalıcı olarak HTTPS'e taşındığını bildirir. Tarayıcılar bu yanıtı önbelleğe alır ve sonraki ziyaretlerde doğrudan HTTPS portuna bağlanarak performansı artırır ve arama motoru (SEO) sıralamasını korur.
-
-??? question "Soru 3: Nginx'te `ssl_protocols TLSv1.2 TLSv1.3;` satırı ile SSLv3 ve TLSv1.0/1.1 neden devre dışı bırakılır?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        SSLv3, TLS 1.0 ve TLS 1.1 protokolleri POODLE, BEAST ve Heartbleed gibi kritik şifreleme açıklarına karşı savunmasızdır. PCI-DSS ve güncel web güvenlik standartları yalnızca TLS 1.2 ve TLS 1.3 kullanımını zorunlu kılar.
+`curl -I http://localhost:8080/` isteği HTTPS adresine yönlendiren bir `301` yanıtı, `curl -k https://localhost:8443/` isteği ise Nginx uygulama içeriğini döndürmelidir. Konteyner loglarında sertifika dosyası veya Nginx yapılandırma hatası bulunmamalıdır.

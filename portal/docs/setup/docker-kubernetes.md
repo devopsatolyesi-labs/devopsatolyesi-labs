@@ -1,6 +1,6 @@
 # Docker ve Kubernetes Lab Hazırlığı
 
-Bu kontrol yalnız **Docker and Kubernetes — 2 Gün** eğitimine aittir.
+Bu kontrol yalnız **Docker ve Kubernetes** eğitimine aittir.
 
 ## Sunucuda Bulunması Gereken Araçlar
 
@@ -26,4 +26,4 @@ free -h
 df -h /
 ```
 
-Her lab kendi ZIP paketini ve gereken komutları içerir. Başka bir labın dizininden dosya kopyalamayın.
+Eğitim sayfasındaki tek ZIP paketi bütün başlangıç dosyalarını içerir. Başka bir labın dizininden dosya kopyalamayın.

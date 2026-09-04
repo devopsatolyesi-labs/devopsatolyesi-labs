@@ -1,17 +1,11 @@
 # LAB-LOG-01 — 2026 ELK Yığını: Nginx Loglarını Uçtan Uca Merkezileştirme
 
-## Metadata
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Orta | 75 dakika | `logging` | `Küme içi` |
 
-- **Teknoloji:** Elasticsearch, Logstash, Kibana ve Filebeat 8.17.8; Nginx 1.27
-- **Seviye:** PRACTITIONER
-- **Önerilen Gün:** Gün 5
-- **Tahmini Süre:** 75 dakika
-- **Gerekli Profil:** `logging`
-- **Hedef Dizin:** `~/labs/LAB-LOG-01`
-- **Portlar:** `5601` (Kibana), `8088` (lab Nginx), `127.0.0.1:9200` (Elasticsearch API)
-- **Canlı GCP Kibana:** `https://elk1.devopsatolyesi.com` (mevcut `devops`/`admin` Basic Auth hesabı)
-- **Kaynak:** [Prepare.sh — The Definitive Guide to the ELK Stack in 2026](https://prepare.sh/articles/the-definitive-guide-to-the-elk-stack-in-2026-from-zero-to-production-ready-observability)
-- **Runtime kanıtı:** Ubuntu 24.04, Docker 29.7.2 ve 8 GB RAM sınıfındaki GCP `training-ci-01` üzerinde doğrulandı
+[LAB-LOG-01.zip](/downloads/LAB-LOG-01.zip)
+
 
 ## 1. Lab Senaryosu
 
@@ -116,16 +110,6 @@ cd ~/labs/LAB-LOG-01
 
 Her dosyayı `nano` ile açın ve bağlantıdaki içeriği terminale yapıştırın. Hazır kurulum betiği kullanmayın:
 
-- `nano compose.yaml` → [`compose.yaml`](../../lab-assets/LAB-LOG-01/solution/compose.yaml)
-- `nano filebeat/filebeat.yml` → [`filebeat.yml`](../../lab-assets/LAB-LOG-01/solution/filebeat/filebeat.yml)
-- `nano logstash/config/logstash.yml` → [`logstash.yml`](../../lab-assets/LAB-LOG-01/solution/logstash/config/logstash.yml)
-- `nano logstash/config/pipelines.yml` → [`pipelines.yml`](../../lab-assets/LAB-LOG-01/solution/logstash/config/pipelines.yml)
-- `nano logstash/pipeline/nginx.conf` → [`nginx.conf`](../../lab-assets/LAB-LOG-01/solution/logstash/pipeline/nginx.conf)
-- `nano elasticsearch/ilm-policy.json` → [`ilm-policy.json`](../../lab-assets/LAB-LOG-01/solution/elasticsearch/ilm-policy.json)
-- `nano elasticsearch/index-template.json` → [`index-template.json`](../../lab-assets/LAB-LOG-01/solution/elasticsearch/index-template.json)
-- `nano nginx/default.conf` → [`default.conf`](../../lab-assets/LAB-LOG-01/solution/nginx/default.conf)
-- `nano nginx/html/index.html` → [`index.html`](../../lab-assets/LAB-LOG-01/solution/nginx/html/index.html)
-
 Native Nginx varsa gerçek log dizinini, yoksa boş lab dizinini elle seçin:
 
 ```bash
@@ -178,8 +162,6 @@ Kibana'da **Stack Management → Data Views → Create data view** yolunu izleyi
 
 Bu temel labda Data View veya dashboard API ile otomatik oluşturulmaz.
 
-Tam Compose: [`../../lab-assets/LAB-LOG-01/solution/compose.yaml`](../../lab-assets/LAB-LOG-01/solution/compose.yaml)
-
 ### Adım 6 — Nginx log kaynağını doğrulayın
 
 ```bash
@@ -204,8 +186,6 @@ Native Nginx yoksa boş bir lab dizini kullanılır; lab Nginx kaynağı çalı�
 sed -n '1,220p' ~/labs/LAB-LOG-01/filebeat/filebeat.yml
 ```
 
-Tam dosya: [`../../lab-assets/LAB-LOG-01/solution/filebeat/filebeat.yml`](../../lab-assets/LAB-LOG-01/solution/filebeat/filebeat.yml)
-
 Dört benzersiz `filestream` input, lab/host access ve error loglarını okur. `fingerprint.length: 64`, küçük lab dosyalarının hemen izlenmesini sağlar. Yalnız düz metin `access.log` ve `access.log.1` seçilir; `.gz` dosyaları metinmiş gibi okunmaz.
 
 ### Adım 8 — Gerçek Nginx biçimine göre Grok filtresini inceleyin
@@ -213,8 +193,6 @@ Dört benzersiz `filestream` input, lab/host access ve error loglarını okur. `
 ```bash
 sed -n '1,240p' ~/labs/LAB-LOG-01/logstash/pipeline/nginx.conf
 ```
-
-Tam dosya: [`../../lab-assets/LAB-LOG-01/solution/logstash/pipeline/nginx.conf`](../../lab-assets/LAB-LOG-01/solution/logstash/pipeline/nginx.conf)
 
 | Ham bölüm | Elasticsearch alanı | Tip |
 |---|---|---|
@@ -237,10 +215,6 @@ curl -s http://localhost:9200/_ilm/policy/devops-nginx-7d | jq .
 ```
 
 Tam dosyalar:
-
-- [`logstash.yml`](../../lab-assets/LAB-LOG-01/solution/logstash/config/logstash.yml)
-- [`ilm-policy.json`](../../lab-assets/LAB-LOG-01/solution/elasticsearch/ilm-policy.json)
-- [`index-template.json`](../../lab-assets/LAB-LOG-01/solution/elasticsearch/index-template.json)
 
 Eğitim profilinde indeksler yedi gün sonra silinir; küçük öğrenci diskinin kontrolsüz log büyümesiyle dolması önlenir.
 
@@ -290,7 +264,7 @@ tags: "_grok_nginx_access_failure"
 
 Son sorgu sıfır sonuç döndürmelidir.
 
-## 6. Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 
 GCP testinde `host-nginx` kaynağından 138, `lab-nginx` kaynağından 37 belge işlendi. Gerçek host HTTP/2 kaydı şu yapıya dönüştü:
 
@@ -309,7 +283,7 @@ GCP testinde `host-nginx` kaynağından 138, `lab-nginx` kaynağından 37 belge 
 
 Sayılar trafiğe göre değişir; alan yapısı ve sıfır Grok hatası kabul kriteridir.
 
-## 7. Doğrulama
+## Doğal Doğrulama ve Beklenen Sonuç
 
 ```bash
 cd ~/labs/LAB-LOG-01
@@ -328,87 +302,3 @@ curl -s -H 'Content-Type: application/json' \
 ```
 
 Kabul kriterleri: dört servis `healthy`, Filebeat `running`, indeks ve parse edilmiş belge sayısı sıfırdan büyük, Grok access hatası sıfır, HTTP 500 aranabilir ve Kibana Data View mevcut.
-
-## 8. Sorun Giderme
-
-### Elasticsearch: `vm.max_map_count is too low`
-
-```bash
-sudo sysctl -w vm.max_map_count=262144
-printf 'vm.max_map_count=262144\n' | sudo tee /etc/sysctl.d/99-lab-log-01.conf
-```
-
-### Logstash sağlıklı değil
-
-```bash
-cd ~/labs/LAB-LOG-01
-sudo docker compose logs --tail=100 logstash
-sudo docker compose run --rm logstash \
-  /usr/share/logstash/bin/logstash --config.test_and_exit \
-  -f /usr/share/logstash/pipeline/nginx.conf
-```
-
-### Grok hatası var
-
-```bash
-curl -s -H 'Content-Type: application/json' \
-  'http://localhost:9200/devops-nginx-*/_search' \
-  -d '{"size":5,"query":{"term":{"tags":"_grok_nginx_access_failure"}},"_source":["message","service.name"]}' \
-  | jq '.hits.hits[]._source'
-```
-
-`.gz` rotasyon dosyalarını düz metin input'a eklemeyin. Farklı `log_format` varsa Grok kalıbını varsaymak yerine gerçek örnek satıra göre güncelleyin.
-
-### Kibana Discover boş
-
-```bash
-curl -s http://localhost:9200/devops-nginx-*/_count | jq .count
-curl -s http://localhost:5601/api/data_views/data_view/devops-nginx-logs \
-  -H 'kbn-xsrf: true' | jq '.data_view.title'
-```
-
-Zaman aralığını genişletin ve `Nginx Logları` Data View'unu seçin.
-
-## 9. Temizlik / Sıfırlama
-
-```bash
-cd ~/labs/LAB-LOG-01
-sudo docker compose down
-```
-
-Yalnız laba ait konteyner, ağ ve volume verileri silinir; host `/var/log/nginx` dosyaları korunur.
-
-Lab volume verilerini de silmek için önce doğru dizinde olduğunuzu doğrulayın:
-
-```bash
-pwd
-sudo docker compose down -v
-```
-
-## 10. Production Notu
-
-- Labdaki `xpack.security.enabled=false` üretimde kullanılmaz; TLS, kimlik doğrulama ve en az yetkili RBAC zorunludur.
-- Elasticsearch REST portu internete açılmaz. Labda dahi `9200` yalnız `127.0.0.1` üzerinde yayınlanır.
-- Tek node yalnız eğitim içindir. Üretimde hata alanlarına dağıtılmış master/data node rolleri tasarlanır.
-- JVM heap ve shard sayısı gerçek ingest hacmiyle kapasite testine tabi tutulur.
-- Persistent Queue ve DLQ dolulukları izlenir; DLQ kayıtları düzeltilip yeniden işlenir.
-- ILM yanında ayrı depoda snapshot alınır ve restore düzenli test edilir.
-- Parola, token, Authorization header ve kişisel veri loglanmaz; ingest öncesi maskelenir.
-- Reverse proxy arkasında `client.ip` proxy IP'si olabilir. Yalnız güvenilir proxy CIDR'leriyle `real_ip_header` yapılandırılır; rastgele `X-Forwarded-For` başlığına güvenilmez.
-- Log, metric ve trace korelasyonu için ortak `service.name`, `environment`, `trace.id` ve OpenTelemetry semantik alanları kullanılır.
-
-## 11. Challenge
-
-1. Kibana Lens ile toplam istek, durum kodu dağılımı, ilk beş URL ve `event.outcome: failure` panellerinden oluşan dashboard hazırlayın.
-2. Nginx formatına `$request_time` ekleyin; Logstash ile `event.duration` üretirken eski `combined` kayıtlarını da destekleyin.
-3. Elasticsearch'i iki dakika durdurup trafik üretin; yeniden açıldığında Persistent Queue kayıtlarının kaybolmadan indekslendiğini kanıtlayın:
-
-```bash
-cd ~/labs/LAB-LOG-01
-sudo docker compose stop elasticsearch
-curl -s http://localhost:8088/ >/dev/null
-curl -s http://localhost:8088/test-500 >/dev/null
-sudo docker compose start elasticsearch
-sleep 30
-curl -s http://localhost:9200/devops-nginx-*/_count | jq .count
-```

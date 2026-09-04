@@ -1,11 +1,11 @@
 # LAB-DOC-16 — Trivy Güvenlik Taraması, SBOM ve Harbor Entegrasyonu
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 50 dakika | `docker` | `80`, `443` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Orta | 50 dakika | `docker` | `80, 443` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-16.zip)](/downloads/LAB-DOC-16.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-DOC-16.zip](/downloads/LAB-DOC-16.zip)
+
 
 ---
 
@@ -160,30 +160,7 @@ test -s sbom.json && echo "SBOM üretimi BAŞARILI"
 
 ---
 
-### Adım 8: Temizlik
-
-```bash
-docker rmi -f vulnerable-app:1.0 secured-app:1.0
-rm -f sbom.json
-```
-
----
-
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: SBOM (Software Bill of Materials) modern DevOps ve tedarik zinciri güvenliğinde (Supply Chain Security) neden zorunlu hale gelmiştir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Log4j (Log4Shell) gibi sıfırıncı gün (0-day) açıkları ortaya çıktığında, şirketlerin yüzlerce mikroservis imajını tek tek kaynak kodundan incelemesi günler sürebilir. İmajla birlikte saklanan SBOM dosyaları sayesinde tek bir sorguyla (`grep log4j *.sbom.json`) hangi prodüksiyon imajının riskli kütüphaneyi barındırdığı saniyeler içinde tespit edilir.
-
-??? question "Soru 2: `--ignore-unfixed` bayrağının Trivy taramasındaki önemi nedir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Bazı CVE'ler için açık kaynak geliştiricileri henüz bir yama (fix) yayınlamamış olabilir. `--ignore-unfixed` bayrağı geliştiricinin elinden bir şey gelmeyen bu açıkları rapordan filtreleyerek CI/CD pipeline'larının gereksiz yere kilitlenmesini önler ve sadece aksiyon alınabilecek açıklara odaklanılmasını sağlar.
-
----
-
-## Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 
 - İlk taramada `vulnerable-app:1.0` için CVE tablosu listelenir.
 - `--exit-code 1` komutu hata vererek pipeline'ı durdurur.

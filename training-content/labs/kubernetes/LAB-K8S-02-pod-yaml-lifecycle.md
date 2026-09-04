@@ -1,11 +1,11 @@
 # LAB-K8S-02 — İlk Pod, YAML ve Pod Yaşam Döngüsü
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟢 **CORE** (Temel Seviye) | ⏱️ 40 dakika | `kubernetes`, `kubectl` | `8080` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Temel | 40 dakika | `kubernetes` | `Küme içi` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-K8S-02.zip)](/downloads/LAB-K8S-02.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-K8S-02.zip](/downloads/LAB-K8S-02.zip)
+
 
 ---
 
@@ -180,26 +180,7 @@ kubectl get pods | grep -q "declarative-web" || echo "DOĞRULAMA BAŞARILI: Teki
 
 ---
 
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: Üretim ortamlarında neden doğrudan tekil Pod manifesti (`kind: Pod`) kullanılmaz?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Tekil Pod'lar efemerdir (geçicidir). Pod'un çalıştığı fiziksel düğüm çökerse, düğüm bakıma alınırsa veya pod bir şekilde silinirse Kubernetes onu yeniden başlatmaz. Kendi kendini onarma (self-healing), otomatik yeniden oluşturma ve sıfır kesinti güncelleme yetenekleri için pod'lar her zaman **Deployment** veya **StatefulSet** gibi üst düzey kontrolcüler tarafından yönetilmelidir.
-
-??? question "Soru 2: Bir Pod içinde birden fazla container (Sidecar pattern) çalıştırılabilir mi?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Evet. Bir Pod birden fazla container barındırabilir. Bu container'lar aynı ağ ad alanını (network namespace), IP adresini, port aralığını ve isteğe bağlı olarak aynı disk birimlerini (volumes) paylaşırlar. Birbirleriyle `localhost` üzerinden çok yüksek hızda haberleşebilirler.
-
-??? question "Soru 3: `kubectl describe pod` çıktısında en çok hangi bölüme dikkat edilmelidir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        En alttaki **Events** tablosu. Pod'un neden başlamadığı, imaj çekme hataları (`ImagePullBackOff`), kaynak yetersizliği veya sağlık kontrolü arızaları doğrudan Events bölümünde açık hata metinleriyle listelenir.
-
----
-
-## Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 
 - Adım 5'te `curl -I http://localhost:8080` komutu `HTTP/1.1 200 OK` döner.
 - Adım 6'da tekil Pod silindiğinde yerine yenisinin gelmediği (`No resources found`) doğrulanır.

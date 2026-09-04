@@ -1,11 +1,11 @@
 # LAB-DOC-11 — Java Spring Boot Konteynerleştirme ve JVM Optimizasyonu
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 50 dakika | `docker` | `8080` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Orta | 50 dakika | `docker` | `8080` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-11.zip)](/downloads/LAB-DOC-11.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-DOC-11.zip](/downloads/LAB-DOC-11.zip)
+
 
 ---
 
@@ -237,29 +237,7 @@ docker stats --no-stream spring-demo
 
 ---
 
-### Adım 6: Temizlik
-
-```bash
-docker rm -f spring-demo
-```
-
----
-
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: Eski Java sürümlerinde konteyner RAM sınırları (`-m 512m`) neden OutOfMemory (OOMKilled) hatasına yol açıyordu?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Java 8u131 öncesindeki JVM'ler Linux `cgroups` limitlerini okuyamıyor; ana makinenin (host) toplam fiziksel RAM'ini (örneğin 64 GB) görüyordu. Bu nedenle varsayılan olarak 16 GB heap ayırmaya çalışıyor ve konteyner 512 MB sınırını aştığı anda Linux çekirdeği tarafından acımasızca öldürülüyordu (Exit Code 137). `-XX:+UseContainerSupport` ile JVM doğrudan cgroup limitlerine tabi hale getirilmiştir.
-
-??? question "Soru 2: Spring Boot'un `layertools` ile katmanlara ayrılması Docker build önbelleğine nasıl katkı sağlar?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Tek parça (fat/uber) JAR kullanıldığında, tek satırlık bir kod değişikliğinde bile 60-80 MB'lık tüm JAR dosyası yeniden kopyalanır ve tüm katman geçersiz kalır. Katmanlı JAR'da ise 50 MB'lık üçüncü parti bağımlılıklar (`dependencies/`) ayrı bir Docker katmanında tutulur ve kod değişikliğinde sadece birkaç kilobaytlık `application/` katmanı güncellenir; transfer saniyeler sürer.
-
----
-
-## Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 
 ```json
 {
@@ -272,7 +250,3 @@ docker rm -f spring-demo
 ```
 
 ---
-
-## Sorun Giderme
-
-- **OOMKilled Hatası:** Konteyner RAM limitini 512MB'tan aşağı çekmeyin; Spring Boot minimum 300-400MB JVM yüküne ihtiyaç duyar.

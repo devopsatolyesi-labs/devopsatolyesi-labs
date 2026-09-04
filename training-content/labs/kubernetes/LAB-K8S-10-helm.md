@@ -1,11 +1,11 @@
 # LAB-K8S-10 — Helm ile Uygulama Kurulumu ve Güncelleme
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 50 dakika | `kubernetes`, `helm` | `8080` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Orta | 45 dakika | `kubernetes, helm` | `Küme içi` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-K8S-10.zip)](/downloads/LAB-K8S-10.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-K8S-10.zip](/downloads/LAB-K8S-10.zip)
+
 
 ---
 
@@ -211,26 +211,7 @@ helm status training-app | grep -q "STATUS: deployed" && echo "DOĞRULAMA BAŞAR
 
 ---
 
-### Adım 6: Temizlik (Helm Uninstall)
-
-```bash
-helm uninstall training-app
-```
-
-Tüm deployment, service ve pod'ların tek komutla temizlendiğini teyit edin (`kubectl get pods -l app=training-app`).
-
----
-
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: `kubectl apply -f manifest.yaml` varken neden Helm gibi bir paket yöneticisine ihtiyaç duyarız?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Düz YAML dosyaları statiktir; ortamdan ortama (dev, staging, prod) değişen replika sayısı, CPU limitleri veya domain adları için onlarca kopya oluşturmak gerekir. Helm, YAML dosyalarını dinamik şablonlara (templates) dönüştürür. Ayrıca versiyonlama, tek komutla yükseltme (`upgrade`), geçmiş izleme (`history`), otomatik geri alma (`rollback`) ve temiz kaldırma (`uninstall`) yetenekleri sağlar.
-
----
-
-## Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 
 - `helm list` komutunun `training-app` release'ini listelemesi.
 - `helm rollback` sonrası revizyonun güncellenmesi.

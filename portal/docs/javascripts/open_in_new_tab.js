@@ -18,75 +18,18 @@ document.addEventListener("DOMContentLoaded", function() {
 
     var p = normalizePath(pathname);
 
-    // Platform environment admin setup, raw lab guides, and master zip are strictly admin-only
+    // Platform sources and raw assets are admin-only.
     if (p.indexOf("/env") === 0 || p.indexOf("/labs") === 0 || p.indexOf("/lab-assets") === 0 || p === "/devops-labs.zip") {
       return false;
     }
 
-    // Portal home, general search, and common static assets are available to all students
+    // Portal shell is common; all course content is an exact generated allow-list.
     if (p === "" || p === "/" || p.indexOf("/search") === 0) {
       return true;
     }
-
-    // Reference matrices are accessible to all students
-    if (p.indexOf("/reference") === 0) {
-      return true;
-    }
-
-    // DevOps Practitioner Role (5-day comprehensive course):
-    // Full access across all canonical topic families, projects, troubleshooting, curriculum, and setup.
-    if (accessRole === "devops") {
-      if (p.indexOf("/curriculum") === 0) return true;
-      if (p.indexOf("/setup") === 0) return true;
-      if (p.indexOf("/projects") === 0) return true;
-      if (p.indexOf("/troubleshooting") === 0) return true;
-
-      // Matches ANY lab across all topic families
-      if (/^\/(?:linux|git|docker|jenkins|gitlab|terraform|kubernetes|helm|gitops|monitoring|logging|incident|capstone)\/LAB-[A-Za-z0-9_-]+$/.test(p)) return true;
-
-      // Legacy fallback matching
-      if (/^\/day[1-5]\/LAB-[A-Za-z0-9_-]+$/.test(p)) return true;
-
-      // Downloads: any student lab package
-      if (/^\/downloads\/LAB-[A-Za-z0-9_-]+\.zip$/.test(p)) return true;
-
-      return false;
-    }
-
-    // Docker and Kubernetes Role (2-day focused course):
-    // Strictly Docker (all 20 labs) and Kubernetes (all 12 labs), plus 2-day curriculum and Docker/K8s setup.
-    if (accessRole === "kubernetes" || accessRole === "docker") {
-      // 2-Day specific curriculum and shared indexes ONLY (blocks 5-day curriculum)
-      if (p === "/curriculum/02_2_DAY_DOCKER_KUBERNETES" ||
-          p === "/curriculum/02_LAB_CATALOG_INDEX" ||
-          p === "/curriculum/06_DEMO_APPLICATION_MAPPING") {
-        return true;
-      }
-
-      // Docker & Kubernetes relevant setup guides only
-      if (p === "/setup" ||
-          p === "/setup/docker-engine" ||
-          p === "/setup/kind-cluster" ||
-          p === "/setup/kubeadm-cluster" ||
-          p === "/setup/kubeconfig-management" ||
-          p === "/setup/nfs-storageclass" ||
-          p === "/setup/docker-kubernetes") {
-        return true;
-      }
-
-      // All 20 Docker labs
-      if (/^\/(?:docker|day[12])\/LAB-DOC-[A-Za-z0-9_-]+$/.test(p)) return true;
-
-      // All 12 Kubernetes labs
-      if (/^\/(?:kubernetes|day4)\/LAB-K8S-[A-Za-z0-9_-]+$/.test(p)) return true;
-
-      // Downloads: strictly Docker and Kubernetes starter packages
-      if (/^\/downloads\/LAB-(?:DOC|K8S)-[A-Za-z0-9_-]+\.zip$/.test(p)) return true;
-
-      return false;
-    }
-
-    return false;
+    var policies = window.PORTAL_ACCESS_POLICY && window.PORTAL_ACCESS_POLICY.roles;
+    var policy = policies && policies[accessRole];
+    return Boolean(policy && policy.paths && policy.paths.indexOf(p) !== -1);
   }
 
   function installLogoutButton() {
@@ -166,15 +109,12 @@ document.addEventListener("DOMContentLoaded", function() {
       return;
     }
 
-    // For 2-day role, adapt the top curriculum tab and navigation links so they point to 2-day curriculum
+    // The tab uses its first child as target; point it to the enrolled course.
     if (accessRole === "kubernetes" || accessRole === "docker") {
-      var curLinks = document.querySelectorAll("a.md-tabs__link[href*='01_5_DAY_CURRICULUM'], a.md-nav__link[href*='01_5_DAY_CURRICULUM']");
+      var curLinks = document.querySelectorAll("a.md-tabs__link[href*='devops-practitioner-5-day']");
       for (var c = 0; c < curLinks.length; c++) {
         var link = curLinks[c];
-        var parentItem = link.closest("li.md-tabs__item, li.md-nav__item--nested");
-        if (parentItem && (link.classList.contains("md-tabs__link") || link.parentElement === parentItem)) {
-          link.setAttribute("href", "/curriculum/02_2_DAY_DOCKER_KUBERNETES/");
-        }
+        link.setAttribute("href", "/courses/docker-kubernetes-2-day/");
       }
     }
 

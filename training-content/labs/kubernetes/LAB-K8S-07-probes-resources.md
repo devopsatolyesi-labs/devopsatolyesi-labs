@@ -1,11 +1,11 @@
 # LAB-K8S-07 — Liveness, Readiness ve Resource Limits
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🔴 **ADVANCED** (İleri Seviye) | ⏱️ 50 dakika | `kubernetes`, `kubectl` | `8080` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Orta | 50 dakika | `kubernetes` | `Küme içi` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-K8S-07.zip)](/downloads/LAB-K8S-07.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-K8S-07.zip](/downloads/LAB-K8S-07.zip)
+
 
 ---
 
@@ -177,30 +177,7 @@ kubectl describe pod oom-tester | grep -E "(OOMKilled|Exit Code)"
 
 ---
 
-### Adım 5: Temizlik
-
-```bash
-kubectl delete pod probe-pod oom-tester
-kubectl delete service probe-svc
-```
-
----
-
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: Bir pod'a liveness probe eklemeden yalnızca readiness probe eklersek ne olur?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Uygulama deadlock olduğunda veya hata verdiğinde readiness probe başarısız olur ve servisten trafik kesilir. Ancak Kubernetes pod'u asla yeniden başlatmaz (restart etmez). Pod sonsuza kadar `Running (Ready 0/1)` durumunda asılı kalır. Otomatik kurtarma için iki probe birlikte kullanılmalıdır.
-
-??? question "Soru 2: `requests` değeri ile `limits` değeri Kubernetes Scheduler için ne anlama gelir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        `requests`, Kubernetes Scheduler'ın bu Pod'u yerleştireceği uygun düğümü (node) seçerken baktığı garantili minimum kaynak miktarıdır. `limits` ise Pod'un o düğümde en fazla ne kadar CPU/RAM tüketebileceğini belirleyen tavandır.
-
----
-
-## Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 
 - Readiness dosyası silindiğinde `kubectl get endpoints` çıktısının `<none>` olması.
 - OOM testinde `Reason: OOMKilled` ve `Exit Code: 137` doğrulaması.

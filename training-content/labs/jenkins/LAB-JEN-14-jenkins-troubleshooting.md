@@ -1,11 +1,11 @@
 # LAB-JEN-14 — Jenkins Troubleshooting ve Sorun Giderme Senaryoları
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🔴 **ADVANCED** (İleri Seviye) | ⏱️ 50 dakika | `jenkins`, `troubleshooting`, `bash` | `8080` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| İleri | 50 dakika | `jenkins` | `8080` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-JEN-14.zip)](/downloads/LAB-JEN-14.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-JEN-14.zip](/downloads/LAB-JEN-14.zip)
+
 
 ---
 
@@ -23,23 +23,6 @@ Bu laboratuvar bir **War Room / Diagnostic Challenge** formatındadır. Gerçek 
 ## Ön Koşullar
 
 - LAB-JEN-01 ila LAB-JEN-13 arasındaki tüm kavramlara hakim olunmalıdır.
-
----
-
-## Sorun Giderme Karar Ağacı
-
-```mermaid
-graph TD
-    Fail[Pipeline Build FAILED] --> CheckLog[Konsol Loglarını Oku]
-    CheckLog --> Case1{permission denied: docker.sock?}
-    Case1 -->|Evet| Fix1[Kullanıcı ID / Socket İzinlerini Düzelt]
-    Case1 -->|Hayır| Case2{WorkflowScript syntax error?}
-    Case2 -->|Evet| Fix2[Jenkinsfile DSL Sözdizimini Düzelt]
-    Case2 -->|Hayır| Case3{No space left on device?}
-    Case3 -->|Evet| Fix3[cleanWs() ve logRotator Ekle]
-    Case3 -->|Hayır| Case4{Could not find credentials?}
-    Case4 -->|Evet| Fix4[Credential ID ve Scope Doğrula]
-```
 
 ---
 
@@ -130,21 +113,7 @@ Eğer konsolda `Could not find credentials entry with ID 'gitlab-token'` hatası
 
 ---
 
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: Jenkins Controller'da disk dolduğunda Jenkins UI neden aniden kilitlenir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Jenkins tüm build durumlarını, logları ve XML yapılandırma dosyalarını diske senkron olarak yazar. Disk tamamen dolduğunda JVM dosya yazamaz ve thread'ler kilitlenir. Bu nedenle her controller'da `buildDiscarder` ve periyodik disk alanı izleme (Disk Allocation Alert) zorunludur.
-
-??? question "Soru 2: `cleanWs()` adımı build failure olduğunda da çalıştırılmalı mıdır?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Debug yapılması gerekiyorsa failure durumunda workspace silinmeyebilir (`cleanWhenFailure: false`). Ancak üretim ortamlarında büyük dosyalar diski doldurabileceğinden veya hassas dosyalar diskte kalabileceğinden dikkatli yönetilmelidir.
-
----
-
-## Beklenen Sonuç & Sorun Giderme
+## Doğal Doğrulama ve Beklenen Sonuç
 
 | Problem | Teşhis | Çözüm |
 | :--- | :--- | :--- |

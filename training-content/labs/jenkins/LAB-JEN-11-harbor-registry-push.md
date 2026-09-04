@@ -1,11 +1,11 @@
 # LAB-JEN-11 — Harbor Private Registry Entegrasyonu ve İmaj Dağıtımı
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `jenkins`, `harbor`, `docker` | `8080`, `8082` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Orta | 45 dakika | `jenkins, harbor` | `8080, 8082` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-JEN-11.zip)](/downloads/LAB-JEN-11.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-JEN-11.zip](/downloads/LAB-JEN-11.zip)
+
 
 ---
 
@@ -151,21 +151,7 @@ docker images | grep localhost:8082/production-apps/order-api
 
 ---
 
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: Jenkins'in Harbor'a bağlanırken kişisel yönetici hesabı yerine Robot Account kullanmasının önemi nedir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Robot Account'lar sadece ilgili projeye ve sadece `push/pull` izinlerine sahiptir. Kullanıcı ayrıldığında silinmez, kişisel şifrelerin açığa çıkmasını önler, sistemler arası güvenliği sağlar ve Harbor denetim loglarında (Audit Logs) hangi otomasyonun hangi imajı yüklediğini net olarak ayrıştırır.
-
-??? question "Soru 2: Harbor'da **Immutability (Değişmezlik)** kuralı ne işe yarar?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Belirli bir etiketle (örneğin `v1.0.0`) bir kez imaj yüklendikten sonra, hiç kimsenin (yöneticiler dahil) aynı etiketin üzerine yeni bir imaj yazmasını (overwrite) engeller. Bu kural, üretimdeki bir versiyonun sessizce değiştirilmesini önleyerek yazılım tedarik zinciri güvenliğini (Supply Chain Security) garanti altına alır.
-
----
-
-## Beklenen Sonuç & Sorun Giderme
+## Doğal Doğrulama ve Beklenen Sonuç
 
 | Hata | Çözüm |
 | :--- | :--- |

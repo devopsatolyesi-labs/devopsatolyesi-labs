@@ -1,11 +1,11 @@
 # LAB-K8S-03 — Deployment, ReplicaSet ve Self-Healing
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟢 **CORE** (Temel Seviye) | ⏱️ 45 dakika | `kubernetes`, `kubectl` | `80` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Temel | 45 dakika | `kubernetes` | `Küme içi` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-K8S-03.zip)](/downloads/LAB-K8S-03.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-K8S-03.zip](/downloads/LAB-K8S-03.zip)
+
 
 ---
 
@@ -171,29 +171,7 @@ READY_COUNT=$(kubectl get deployment web-deployment -o jsonpath='{.status.readyR
 
 ---
 
-### Adım 6: Temizlik
-
-```bash
-kubectl delete -f web-deployment.yaml
-```
-
----
-
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: Neden Deployment doğrudan Pod oluşturmak yerine araya bir ReplicaSet nesnesi koyar?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Sürüm yükseltmeleri (Rolling Update) ve geri almalar (Rollback) için. Deployment güncellendiğinde yeni bir ReplicaSet yaratılır ve yeni sürüm pod'lar yavaş yavaş burada açılırken, eski ReplicaSet'teki pod'lar kademeli olarak kapatılır. Geri alma (rollback) gerektiğinde ise tek yapılan işlem eski ReplicaSet'in replika sayısını tekrar artırmaktır.
-
-??? question "Soru 2: `spec.selector.matchLabels` ile `spec.template.metadata.labels` birbiriyle uyuşmazsa ne olur?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Kubernetes API Server manifesti reddeder ve hata fırlatır (`field.status: Invalid value ... selector does not match template labels`). Deployment'ın yöneteceği pod'ları bulabilmesi için selector ile template label'ları birebir eşleşmek zorundadır.
-
----
-
-## Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 
 - `kubectl get deployment` çıktısında `UP-TO-DATE` ve `AVAILABLE` değerlerinin replika sayısıyla eşit olması.
 - Silinen pod'un yerine anında yeni bir pod'un yaratılması.

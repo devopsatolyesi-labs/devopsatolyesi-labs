@@ -1,11 +1,11 @@
 # LAB-GHA-01 — GitHub Actions ile Sürekli Entegrasyon (CI) ve Otomatik Test
 
-## Metadata
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Orta | 45 dakika | `docker` | `Küme içi` |
 
-- **Seviye:** PRACTITIONER
-- **Süre:** 45 dakika
-- **Profil:** `docker`
-- **Port:** Yok
+[LAB-GHA-01.zip](/downloads/LAB-GHA-01.zip)
+
 
 ## Amaç
 
@@ -72,6 +72,20 @@ EOF
 
 ---
 
+## Doğal Doğrulama ve Beklenen Sonuç
+
+Workflow dosyasını gönderin ve son koşumu GitHub CLI ile inceleyin:
+
+```bash
+git add .github/workflows/ci.yml
+git commit -m "Add CI workflow"
+git push
+gh run list --workflow ci.yml --limit 1
+gh run view "$(gh run list --workflow ci.yml --limit 1 --json databaseId --jq '.[0].databaseId')" --log-failed
+```
+
+Son koşum `completed` ve `success` olmalı; lint, test ve image build işleri başarıyla bitmelidir. `--log-failed` başarılı koşumda hata günlüğü döndürmemelidir.
+
 ### Adım 3: GitHub Actions Workflow Dosyasını Oluşturun
 
 `.github/workflows/ci.yml` dosyasını oluşturun:
@@ -135,15 +149,3 @@ EOF
 ```
 
 ---
-
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: GitHub Actions'da `strategy.matrix` mekanizmasının avantajı nedir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Aynı test kodunu tek bir job tanımıyla farklı parametre kombinasyonlarında (örneğin Python 3.10, 3.11, 3.12 veya Ubuntu, macOS, Windows) paralel olarak çalıştırmayı sağlar. Bu sayede uygulamanın farklı işletim sistemlerinde ve runtime sürümlerinde uyumlu çalıştığı dakikalar içinde test edilir.
-
-??? question "Soru 2: `build` job'ında `needs: test` tanımlanmazsa ne olur?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Varsayılan olarak GitHub Actions tüm job'ları paralel çalıştırır. `needs: test` eklenmediğinde, `test` ve `build` job'ları aynı anda başlar. Eğer kodda bir birim test hatası varsa bile Docker imajı derlenmeye devam eder. `needs: test` bağımlılık tanımlayarak imaj derleme aşamasının ancak tüm birim testler başarılı olduğunda başlamasını garanti eder.

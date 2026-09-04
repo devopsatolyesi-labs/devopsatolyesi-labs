@@ -1,11 +1,11 @@
 # LAB-DOC-19 — Production Docker Compose Desenleri
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🔴 **ADVANCED** (İleri Seviye) | ⏱️ 50 dakika | `docker` | `80`, `3000` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| İleri | 50 dakika | `docker` | `80, 3000` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-19.zip)](/downloads/LAB-DOC-19.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-DOC-19.zip](/downloads/LAB-DOC-19.zip)
+
 
 ---
 
@@ -159,25 +159,7 @@ docker compose logs api | grep "production_enterprise_user" && echo "Secret ente
 
 ---
 
-### Adım 7: Temizlik
-
-```bash
-docker compose --profile debug down -v
-rm -rf secrets
-```
-
----
-
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: Docker Compose Profilleri (`profiles:`) hangi senaryolarda hayat kurtarır?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Aynı compose dosyasında yer alan fakat her ortamda veya sürekli çalışması gerekmeyen servisler için (örneğin veritabanı migration scriptleri, Swagger API belgelendirme UI'ı, Prometheus/Grafana gibi monitoring araçları veya hata ayıklama araçları) kullanılır. `--profile <isim>` verilmedikçe bu servisler başlatılmaz.
-
----
-
-## Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 
 - `docker compose config` birleşik geçerli YAML çıktısı verir.
 - API konteyneri gizli veriyi `/run/secrets/db_user` üzerinden okur.

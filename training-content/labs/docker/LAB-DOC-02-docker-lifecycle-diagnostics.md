@@ -1,11 +1,11 @@
 # LAB-DOC-02 — Konteyner Yaşam Döngüsü ve Teşhis Komutları
 
-## Metadata
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Temel | 40 dakika | `docker` | `8080` |
 
-- **Seviye:** CORE
-- **Süre:** 40 dakika
-- **Profil:** `docker`
-- **Port:** `8081`
+[LAB-DOC-02.zip](/downloads/LAB-DOC-02.zip)
+
 
 ## Amaç
 
@@ -151,45 +151,10 @@ docker rm crash-test
 
 ---
 
-### Adım 8: Temizlik
-
-```bash
-docker rm -f diagnostics-demo
-```
-
----
-
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: `docker stop` ile `docker kill` arasındaki teknik fark nedir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        `docker stop`, konteyner içindeki ana sürece önce `SIGTERM (15)` sinyali gönderir ve sürecin açık bağlantıları, dosyaları düzgünce kapatması (graceful shutdown) için 10 saniye bekler. Süre dolarsa `SIGKILL (9)` yollar. `docker kill` ise hiç beklemeden doğrudan `SIGKILL (9)` göndererek süreci anında zorla sonlandırır.
-
-??? question "Soru 2: Bir konteyner `docker run -d alpine` komutuyla başlatıldığında neden hemen durur (`Exited (0)`)?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Bir konteyner, Dockerfile'daki ana süreci (`PID 1`) çalıştığı sürece ayakta kalır. `alpine` imajının varsayılan komutu `sh` kabuğudur. Arka planda (`-d`) stdin/tty bağlı olmadan başlatıldığında `sh` anında EOF alır ve `exit 0` ile sonlanır. Ayakta tutmak için `-it` bayrağıyla veya sürekli çalışan bir komutla (`sleep infinity`) başlatılmalıdır.
-
-??? question "Soru 3: Üretim ortamında çalışan bir konteynerde `docker inspect` ile sadece sağlık durumunu (health status) tek satırda nasıl okuruz?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Go template formatı kullanarak:
-        ```bash
-        docker inspect --format '{{ .State.Health.Status }}' <container_name>
-        ```
-
----
-
-## Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 
 - `curl http://localhost:8081/test.txt` komutu `DevOps Atolyesi Diagnostics Test` yanıtını döner.
 - `docker inspect` komutları IP adresi ve PID değerini tek satırda listeler.
 - `crash-test` konteyneri `137` çıkış kodunu üretir.
 
 ---
-
-## Sorun Giderme
-
-- **Log Takibi Askıda Kalırsa:** Terminalde `Ctrl + C` tuşlayarak log akışından çıkabilirsiniz.
-- **Port 8081 Meşgulse:** `docker ps --filter publish=8081` ile çalışan eski konteyneri tespit edip silin.

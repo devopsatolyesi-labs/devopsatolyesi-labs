@@ -1,14 +1,11 @@
 # LAB-MON-01 — Prometheus Architecture, Scrape Targets & PromQL Basics
 
-## Metadata
-- **Seviye:** PRACTITIONER
-- **Önerilen Gün:** Gün 5
-- **Tahmini Süre:** 45 dk
-- **Gerekli Profil:** `monitoring`
-- **Host Portları:** `9090:9090` (Prometheus), `3000:3000` (Grafana), `9100:9100` (Node Exporter), `8000:8000` (Order API)
-- **Çalışma Dizini:** `~/labs/LAB-MON-01`
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Orta | 45 dakika | `monitoring` | `3000, 8000, 9090, 9100` |
 
----
+[LAB-MON-01.zip](/downloads/LAB-MON-01.zip)
+
 
 ## 1. Lab Senaryosu
 Mikroservis mimarilerinde sistemlerin sağlıklı çalıştığını yalnızca sunucunun ayakta olmasına bakarak anlamak mümkün değildir. Uygulamaların saniye başına işlediği istek sayısı (RPS), HTTP 5xx hata oranları ve 95. yüzdelik (p95) yanıt gecikmeleri gibi "Golden Signals" metriklerinin sürekli toplanması ve görselleştirilmesi gerekir. Prometheus, çekme (pull) mimarisiyle çalışan endüstri standardı zaman serisi veritabanıdır. Bu çalışmada Python FastAPI mikroservisine metrik enstrümantasyonu eklenir; Prometheus 3.x LTS ile metrik kazıma hedefleri tanımlanır ve Grafana 13 panellerinde PromQL sorguları ile görselleştirilir.
@@ -65,7 +62,6 @@ flowchart LR
 
 > [!NOTE]
 > **Çekme (Pull) vs İtme (Push) Modeli:** Prometheus, metrikleri uygulamaların kendisine göndermesini (push) beklemez; konfigürasyonundaki hedeflerin `/metrics` uç noktalarını periyodik olarak (burada her 5 saniyede bir) yoklayarak (pull) zaman serisi veritabanına kaydeder.
-
 
 ## 4. Ön Koşullar
 - Docker Engine ve Docker Compose v2 çalışır durumda olmalıdır
@@ -230,7 +226,7 @@ done
 curl -s "http://localhost:9090/api/v1/query?query=rate(http_requests_total%5B1m%5D)" | jq .
 ```
 
-## 6. Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 Adım 5'teki PromQL JSON sorgu çıktısı:
 ```json
 {
@@ -251,7 +247,7 @@ Adım 5'teki PromQL JSON sorgu çıktısı:
 }
 ```
 
-## 7. Doğrulama
+## Doğal Doğrulama ve Beklenen Sonuç
 Prometheus üzerinde 3 hedefin (`prometheus`, `node-exporter`, `order-api`) `UP` durumunda olduğunu doğrulayın:
 ```bash
 TARGETS_UP=$(curl -s http://localhost:9090/api/v1/targets | jq '[.data.activeTargets[] | select(.health=="up")] | length')
@@ -262,44 +258,3 @@ else
   echo "VALIDATION FAILED: Active UP targets: $TARGETS_UP" && exit 1
 fi
 ```
-
-## 8. Sorun Giderme
-
-### Belirti
-Prometheus arayüzünde (`http://localhost:9090/targets`) `order-api` hedefi `DOWN` görünür ve `connection refused` hatası verir.
-
-### Kanıt
-Target endpoint adresinde Docker iç ağı yerine `localhost` yazıldığı görülür.
-
-### Kontrol Komutu
-```bash
-curl -s http://localhost:9090/api/v1/targets | jq '.data.activeTargets[] | select(.job=="order-api")'
-```
-
-### Muhtemel Neden
-`prometheus.yml` dosyasında hedef `localhost:8000` olarak girilmiştir; Docker köprü ağında konteynerler kendi servis isimleriyle (`order-api:8000`) erişilmelidir.
-
-### Çözüm
-`prometheus/prometheus.yml` dosyasında hedefi `order-api:8000` olarak güncelleyin ve Prometheus servisini yeniden başlatın:
-```bash
-docker restart prometheus
-```
-
-### Tekrar Doğrulama
-```bash
-curl -s http://localhost:9090/api/v1/targets | jq '.data.activeTargets[] | select(.job=="order-api") | .health'
-# "up" yanıtı dönmelidir.
-```
-
-## 9. Temizlik / Sıfırlama
-Konteynerleri, ağları ve oluşturulan dizini temizleyin:
-```bash
-docker compose down -v
-rm -rf ~/labs/LAB-MON-01
-```
-
-## 10. Production Notu
-Üretim ortamlarında TSDB (Time Series Database) disk doluluğunu engellemek için veri saklama süresi (`--storage.tsdb.retention.time=15d` veya boyut sınırı `--storage.tsdb.retention.size=50GB`) kesinlikle belirlenmelidir. Ayrıca karmaşık PromQL sorgularının her dashboard yenilemesinde veritabanını yormaması için Recording Rules tanımlanarak önceden hesaplanmış zaman serileri oluşturulmalıdır.
-
-## 11. Challenge
-Grafana arayüzünde (`http://localhost:3000`) 95. yüzdelik yanıt süresini hesaplayan şu PromQL sorgusuyla yeni bir panel oluşturun: `histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))`

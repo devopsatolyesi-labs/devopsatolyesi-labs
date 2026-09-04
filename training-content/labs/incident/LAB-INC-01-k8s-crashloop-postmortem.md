@@ -1,14 +1,11 @@
 # LAB-INC-01 — War Room: Kubernetes CrashLoopBackOff, ImagePullBackOff & Postmortem
 
-## Metadata
-- **Seviye:** PRACTITIONER / CHALLENGE
-- **Önerilen Gün:** Gün 5
-- **Tahmini Süre:** 45 dk
-- **Gerekli Profil:** `kubernetes`
-- **Host Portları:** - (Küme İçi Kriz Masası Simülasyonu)
-- **Çalışma Dizini:** `~/labs/LAB-INC-01`
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| İleri | 45 dakika | `kubernetes` | `Küme içi` |
 
----
+[LAB-INC-01.zip](/downloads/LAB-INC-01.zip)
+
 
 ## 1. Lab Senaryosu
 Üretim ortamına yeni bir mikroservis sürümü dağıtıldıktan hemen sonra müşteri sipariş akışı durmuş ve sistem alarmları tetiklenmiştir. Canlı kümede aynı anda üç farklı arıza yaşanmaktadır: Ödeme servisi eksik ortam değişkeni nedeniyle sürekli çökmekte (`CrashLoopBackOff`), sepet servisi yazım hatası içeren bir imaj etiketi nedeniyle başlatılamamakta (`ImagePullBackOff`), katalog servisi ise yanlış port dinleyen bir sağlık probu yüzünden trafik alamamaktadır (`0/1 Ready`). Bu çalışmada SRE ve DevOps kriz masası (War Room) metodolojisi uygulanır; `kubectl describe`, `kubectl logs --previous` ve event kayıtları incelenerek üç arıza teşhis edilir, onarılır ve kurumsal bir Blameless Postmortem raporu düzenlenir.
@@ -199,7 +196,7 @@ cat <<'EOF' > reports/postmortem-incident-101.md
 EOF
 ```
 
-## 6. Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 Adım 1'deki arıza tablosu:
 ```text
 NAME                               READY   STATUS             RESTARTS
@@ -216,7 +213,7 @@ catalog-service-xxxxxxxx-xxxxx     1/1     Running   0
 payment-service-xxxxxxxx-xxxxx     1/1     Running   0
 ```
 
-## 7. Doğrulama
+## Doğal Doğrulama ve Beklenen Sonuç
 `production-incident` ad alanındaki 3 podun da 1/1 Running durumuna ulaştığını ve Postmortem raporunun hazır olduğunu doğrulayın:
 ```bash
 READY_PODS=$(kubectl get pods -n production-incident --no-headers | grep -c "1/1")
@@ -227,41 +224,3 @@ else
   echo "VALIDATION FAILED: Not all pods ready or report missing." && exit 1
 fi
 ```
-
-## 8. Sorun Giderme
-
-### Belirti
-`kubectl logs` komutu çalıştırıldığında çıktı boş döner ve podun neden çöktüğü anlaşılamaz.
-
-### Kanıt
-Pod sürekli yeniden başladığı için mevcut konteyner henüz çıktı üretmeden sonlanmaktadır.
-
-### Kontrol Komutu
-```bash
-kubectl logs <pod-name> -n production-incident --previous
-```
-
-### Muhtemel Neden
-Pod restart olduktan sonra varsayılan `kubectl logs` yalnızca aktif konteynerin loglarını okur; çöken konteynerin logu okunamaz.
-
-### Çözüm
-Bir önceki çöküşün loglarını almak için mutlaka `--previous` parametresini kullanın.
-
-### Tekrar Doğrulama
-```bash
-kubectl logs -l app=payment-service -n production-incident --previous
-# Hata mesajı ekranda görüntülenmelidir.
-```
-
-## 9. Temizlik / Sıfırlama
-Olay ad alanını ve çalışma dizinini silin:
-```bash
-kubectl delete namespace production-incident 2>/dev/null || true
-rm -rf ~/labs/LAB-INC-01
-```
-
-## 10. Production Notu
-Kurumsal SRE kültüründe arızalar bireysel suçlama (Blameless Culture) ile değil; süreç, araç ve mimari eksiklikleri giderecek şekilde analiz edilir. CI boru hatlarına `kubeconform` veya `conftest` eklenerek hatalı port ve eksik değişken içeren manifestoların cluster'a uygulanması otomatik olarak engellenmelidir.
-
-## 11. Challenge
-`kubectl get events -n production-incident --sort-by='.metadata.creationTimestamp'` komutunu kullanarak kümedeki olay akışını kronolojik sırada listeleyen bir olay zaman çizelgesi (timeline) çıkarın.

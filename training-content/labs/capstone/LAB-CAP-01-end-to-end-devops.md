@@ -1,14 +1,11 @@
 # LAB-CAP-01 — Final Integrated DevOps Delivery Pipeline: Code to Observability
 
-## Metadata
-- **Seviye:** PRACTITIONER / CAPSTONE
-- **Önerilen Gün:** Gün 5
-- **Tahmini Süre:** 90 dk
-- **Gerekli Profil:** `phased` (Aşamalı Profil: CI -> K8s/GitOps -> Observability)
-- **Host Portları:** `8000:8000` (Order API), `8082:8082` (Harbor), `8085:443` (Argo CD), `9090:9090` (Prometheus), `3000:3000` (Grafana)
-- **Çalışma Dizini:** `~/labs/LAB-CAP-01`
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| İleri | 90 dakika | `secure-ci, harbor, kubernetes, argocd, monitoring` | `3000, 8000, 8082, 8085, 9090` |
 
----
+[LAB-CAP-01.zip](/downloads/LAB-CAP-01.zip)
+
 
 ## 1. Lab Senaryosu
 Modern yazılım mühendisliği organizasyonlarında DevOps ve SRE ekipleri, geliştiricinin yazdığı kaynak kodun test edilmesinden üretim ortamında canlı izlenmesine kadar uzanan zincirin tamamını otomatik ve güvenli hale getirmekle yükümlüdür. Parçalı çalışan araçlar yerine uçtan uca birbirine entegre bir teslimat boru hattı (Continuous Delivery Chain) kurulmalıdır. Bu bitirme çalışmasında (Capstone) Python FastAPI sipariş servisi için tam teşekküllü bir üretim döngüsü icra edilir: Birim testler (pytest/JUnit), multi-stage non-root OCI derlemesi, Trivy güvenlik tarama kapısı, GitOps deklaratif dağıtımı (Argo CD ve kind K8s), Prometheus Golden Signals metrikleri ve Vector ile Elasticsearch'e yapılandırılmış JSON log akışı tek bir orkestrasyonda birleştirilir.
@@ -81,7 +78,6 @@ flowchart TD
 
 > [!NOTE]
 > **Uçtan Uca Bütünlük:** Capstone çalışmasında her bir aşama bir sonrakinin önkoşuludur. Testler başarısız olursa derleme yapılmaz; Trivy kritik bir zafiyet yakalarsa Kubernetes kümesine rollout başlatılmaz. Bu mekanizma modern GitOps ve DevSecOps boru hatlarının omurgasıdır.
-
 
 ## 4. Ön Koşullar
 - Docker Engine, kind, kubectl, helm ve trivy araçları kurulu olmalıdır
@@ -357,7 +353,7 @@ Tüm aşamaları tek seferde tetikleyin:
 ./scripts/ci_pipeline_runner.sh
 ```
 
-## 6. Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 Adım 4'teki boru hattı çıktısı:
 ```text
 ==========================================================
@@ -387,7 +383,7 @@ Canli Kume Yaniti: {"message":"Capstone Order Service v2.0.0 is Live & Resilient
 ==========================================================
 ```
 
-## 7. Doğrulama
+## Doğal Doğrulama ve Beklenen Sonuç
 `capstone-prod` ad alanında 2/2 podun Ready çalıştığını ve birim test raporunun üretildiğini doğrulayın:
 ```bash
 READY_CNT=$(kubectl get deployment capstone-order-api -n capstone-prod -o jsonpath='{.status.readyReplicas}')
@@ -398,45 +394,3 @@ else
   echo "VALIDATION FAILED: Pod count is $READY_CNT" && exit 1
 fi
 ```
-
-## 8. Sorun Giderme
-
-### Belirti
-Boru hattı Aşama 4'te `ImagePullBackOff` hatası vererek zaman aşımına uğrar.
-
-### Kanıt
-`kubectl get pods -n capstone-prod` çıktısında imajın çekilemediği görülür.
-
-### Kontrol Komutu
-```bash
-kubectl describe pod -l app=capstone-order-api -n capstone-prod | grep -A 3 "Events:"
-```
-
-### Muhtemel Neden
-Derlenen yerel konteyner imajı kind kümesinin node ortamına aktarılmamıştır (`kind load docker-image`).
-
-### Çözüm
-İmajı kind kümesine yükleyin ve rollout işlemini yeniden tetikleyin:
-```bash
-kind load docker-image localhost:8082/devops/capstone-order-api:v2.0.0 --name devops-cluster
-kubectl rollout restart deployment/capstone-order-api -n capstone-prod
-```
-
-### Tekrar Doğrulama
-```bash
-kubectl rollout status deployment/capstone-order-api -n capstone-prod
-```
-
-## 9. Temizlik / Sıfırlama
-Capstone ad alanını ve yerel derleme dosyalarını temizleyin:
-```bash
-kubectl delete namespace capstone-prod 2>/dev/null || true
-docker rmi localhost:8082/devops/capstone-order-api:v2.0.0 2>/dev/null || true
-rm -rf .venv reports ~/labs/LAB-CAP-01
-```
-
-## 10. Production Notu
-Kurumsal DevOps mimarilerinde imajlar doğrudan küme düğümlerine elle yüklenmez; CI boru hattı tarafından Harbor veya bulut OCI deposuna push edilir; Kubernetes ise `imagePullSecrets` ile güvenli kimlik doğrulayarak imajı çeker. Üretim dağıtımlarında `maxUnavailable: 0` ve `maxSurge: 1` kuralı korunarak sıfır kesintili dağıtım garantilenmelidir.
-
-## 11. Challenge
-`gitops-manifests/deployment.yaml` dosyasındaki replika sayısını 2'den 5'e çıkarın ve `kubectl rollout status` komutuyla podların kademeli ve kesintisiz ölçeklenmesini canlı olarak gözlemleyin.

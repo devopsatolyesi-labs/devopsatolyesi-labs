@@ -1,11 +1,11 @@
 # LAB-JEN-05 — İlk Declarative Jenkins Pipeline ve Jenkinsfile Temelleri
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟢 **CORE** (Temel Seviye) | ⏱️ 45 dakika | `jenkins`, `groovy`, `git` | `8080` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Temel | 45 dakika | `jenkins` | `8080` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-JEN-05.zip)](/downloads/LAB-JEN-05.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-JEN-05.zip](/downloads/LAB-JEN-05.zip)
+
 
 ---
 
@@ -183,26 +183,7 @@ Sonucun `"result":"SUCCESS"` veya `"result":"FAILURE"` olarak döndüğünü do�
 
 ---
 
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: Declarative Pipeline ile Scripted Pipeline arasındaki temel fark nedir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Declarative Pipeline (`pipeline { ... }`), katı, önceden tanımlı ve okunması kolay bir sözdizimi yapısına sahiptir; hata yapma riskini azaltır ve Jenkins UI ile tam entegredir. Scripted Pipeline (`node { ... }`) ise saf Groovy diline dayanır, tamamen esnektir ancak karmaşık mantıklar içerdiğinde bakım maliyeti çok yükselir. Jenkins topluluğu modern CI/CD için Declarative Pipeline'ı standart kabul eder.
-
-??? question "Soru 2: Bir aşama (stage) başarısız olduğunda sonraki aşamaların yine de çalışmasını istiyorsak ne yapmalıyız?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        İlgili stage bloğuna `catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { ... }` veya `options { retry(3) }` eklenebilir. Böylece o aşama hata alsa bile genel build'in veya sonraki aşamaların kesilmesi engellenebilir.
-
-??? question "Soru 3: `post { always { ... } }` bloğunun çalışması garanti midir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Evet, pipeline ister başarıyla tamamlansın, ister herhangi bir aşamada hata alsın, ister kullanıcı tarafından iptal (ABORTED) edilsin, `always` bloğu daima çalıştırılır. Bu nedenle kaynak temizliği, geçici dosyaların silinmesi ve genel bildirimler için en ideal yerdir.
-
----
-
-## Beklenen Sonuç & Sorun Giderme
+## Doğal Doğrulama ve Beklenen Sonuç
 
 | Hata / Durum | Çözüm |
 | :--- | :--- |

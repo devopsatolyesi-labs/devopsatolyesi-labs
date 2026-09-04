@@ -1,11 +1,11 @@
 # LAB-DOC-08 — Dockerfile Katmanları ve BuildKit Cache
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `docker` | `8080` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Orta | 45 dakika | `docker` | `8080` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-08.zip)](/downloads/LAB-DOC-08.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-DOC-08.zip](/downloads/LAB-DOC-08.zip)
+
 
 ---
 
@@ -188,40 +188,9 @@ docker logs cache-test
 
 ---
 
-### Adım 7: Temizlik
-
-```bash
-docker rm -f cache-test
-```
-
----
-
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: Dockerfile'da `RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*` komutları neden tek bir satırda birleştirilir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Docker'da her `RUN` komutu yeni ve değiştirilemez (read-only) bir katman oluşturur. Eğer `rm -rf /var/lib/apt/lists/*` ayrı bir `RUN` satırında yazılırsa, önceki katmanda diske yazılmış olan paket listesi fiziksel olarak imaj katmanında kalmaya devam eder ve toplam boyuttan düşmez. Tek satırda zincirlendiğinde (`&&`), aynı katman içinde yazılıp silindiği için nihai imaja hiç dahil olmaz.
-
-??? question "Soru 2: BuildKit `--mount=type=cache` kullanmanın standart `npm install` komutuna göre avantajı nedir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Standart `npm install` konteyner katmanına npm'in yerel önbelleğini de yazar ve imajı şişirir. `--mount=type=cache,target=/root/.npm` kullanıldığında ise npm cache'i imaj katmanına yazılmaz; Docker BuildKit ana makinesinde izole bir önbellekte saklanır. Böylece hem imaj temiz ve küçük kalır hem de farklı derlemelerde bağımlılıklar internetten tekrar indirilmez.
-
-??? question "Soru 3: Docker derlemesinde önbelleği tamamen devre dışı bırakıp temiz bir derleme yapmak için hangi bayrak kullanılır?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        `docker build --no-cache -t myapp:fresh .` bayrağı kullanılır.
-
----
-
-## Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 
 - Optimize derlemede `COPY server.js` dışındaki katmanların `CACHED` olarak işaretlenmesi.
 - İkinci derlemenin 0.5 - 1.5 saniye arasında tamamlanması.
 
 ---
-
-## Sorun Giderme
-
-- **BuildKit syntax hatası:** `# syntax=docker/dockerfile:1` satırının dosyanın en başında olduğundan emin olun.

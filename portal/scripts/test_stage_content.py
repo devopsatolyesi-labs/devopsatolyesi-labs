@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
+import hashlib
 import json
+import re
 import shutil
 import subprocess
 import tempfile
@@ -7,183 +9,131 @@ import unittest
 import zipfile
 from pathlib import Path
 
-
 REPOSITORY = Path(__file__).resolve().parents[2]
 
 
+def stage(root: Path) -> Path:
+    docs = root / "docs"
+    shutil.copytree(REPOSITORY / "portal/docs", docs)
+    subprocess.run([
+        "python3", str(REPOSITORY / "portal/scripts/stage-content.py"),
+        str(REPOSITORY / "training-content"), str(docs),
+    ], check=True)
+    return docs
+
+
+def normalized_routes(lab: dict) -> set[str]:
+    folder = Path(lab["guide"]).parent.name
+    route = f"/{folder}/{lab['slug']}"
+    return {route, route + "/", route + ".html", f"/downloads/{lab['id']}.zip"}
+
+
 class StageContentTest(unittest.TestCase):
-    def test_portal_javascript_handles_tabs_and_mermaid(self) -> None:
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.catalog = json.loads((REPOSITORY / "training-content/catalog.json").read_text())
+        cls.temporary = tempfile.TemporaryDirectory()
+        cls.docs = stage(Path(cls.temporary.name))
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        cls.temporary.cleanup()
+
+    def test_catalog_contract_and_membership_are_consistent(self) -> None:
+        required = {"id", "slug", "title", "topic", "difficulty", "estimated_minutes", "prerequisites", "profiles", "ports", "guide", "assets", "validation_mode", "learning_paths", "access_tags"}
+        lab_ids = {lab["id"] for lab in self.catalog["labs"]}
+        self.assertEqual(len(lab_ids), len(self.catalog["labs"]))
+        for lab in self.catalog["labs"]:
+            self.assertFalse(required - lab.keys(), f"missing fields for {lab['id']}")
+            self.assertTrue((REPOSITORY / lab["guide"]).is_file())
+            self.assertTrue((REPOSITORY / lab["assets"]).is_dir())
+        for course in self.catalog["courses"]:
+            module_ids = [item for module in course["modules"] for item in module["labs"]]
+            self.assertEqual(course["lab_ids"], module_ids)
+            self.assertTrue(set(course["lab_ids"]) <= lab_ids)
+            self.assertEqual(len(course["topic_headings"]), len(course["coverage"]))
+            self.assertNotIn("source", course)
+            project_ids = set(course["project_ids"])
+            for coverage in course["coverage"]:
+                self.assertIn(coverage["heading"], course["topic_headings"])
+                self.assertIn(coverage["status"], {"covered", "partial", "missing"})
+                self.assertTrue(coverage["targets"])
+                self.assertTrue(set(coverage["targets"]) <= (set(course["lab_ids"]) | project_ids))
+
+    def test_student_pages_are_plain_and_not_duplicated(self) -> None:
+        prohibited = ("[!TIP]", "İnteraktif Alıştırmalar", "Production Notu", "## Challenge", "## Kaynak", "Cheat Sheet", "/solution/")
+        for lab in self.catalog["labs"]:
+            page = self.docs / Path(lab["guide"]).parent.name / Path(lab["guide"]).name
+            content = page.read_text()
+            self.assertEqual(content.count("| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |"), 1, lab["id"])
+            self.assertEqual(content.count(f"[{lab['id']}.zip]"), 1, lab["id"])
+            for phrase in prohibited:
+                self.assertNotIn(phrase, content, f"{phrase} leaked into {lab['id']}")
+
+    def test_lab_archives_publish_starter_files_without_solutions(self) -> None:
+        lab_archives = sorted((self.docs / "downloads").glob("LAB-*.zip"))
+        self.assertEqual(len(lab_archives), len(self.catalog["labs"]))
+        for lab in self.catalog["labs"]:
+            with zipfile.ZipFile(self.docs / "downloads" / f"{lab['id']}.zip") as archive:
+                names = archive.namelist()
+                self.assertIn(f"{lab['id']}/README.md", names)
+                self.assertFalse(any("/solution/" in name for name in names))
+                self.assertFalse(any("__pycache__" in name or name.endswith(".pyc") for name in names))
+
+    def test_course_archives_are_exact_reproducible_and_unbranded(self) -> None:
+        second_root = Path(tempfile.mkdtemp(dir=self.temporary.name))
+        second_docs = stage(second_root)
+        projects = {project["id"]: project for project in self.catalog["projects"]}
+        for course in self.catalog["courses"]:
+            archive_path = self.docs / "downloads" / f"{course['id']}.zip"
+            second_path = second_docs / "downloads" / f"{course['id']}.zip"
+            self.assertEqual(hashlib.sha256(archive_path.read_bytes()).digest(), hashlib.sha256(second_path.read_bytes()).digest())
+            with zipfile.ZipFile(archive_path) as archive:
+                names = archive.namelist()
+                root = course["id"]
+                self.assertIn(f"{root}/README.md", names)
+                self.assertIn(f"{root}/EGITIM_KONULARI.md", names)
+                packaged_labs = {match.group(1) for name in names if (match := re.search(r"/labs/\d+-(LAB-[A-Z0-9-]+)/README\.md$", name))}
+                self.assertEqual(packaged_labs, set(course["lab_ids"]))
+                packaged_projects = {match.group(1) for name in names if (match := re.search(r"/projects/\d+-(PROJECT-[A-Z0-9-]+)/README\.md$", name))}
+                self.assertEqual(packaged_projects, set(course["project_ids"]))
+                self.assertTrue(set(course["project_ids"]) <= projects.keys())
+                self.assertFalse(any("/solution/" in name for name in names))
+                text = "\n".join(archive.read(name).decode("utf-8", "ignore") for name in names if name.endswith(".md"))
+                self.assertNotIn("bilginc.com", text.lower())
+                self.assertNotIn("bilginç", text.lower())
+
+    def test_server_and_browser_share_exact_generated_policy(self) -> None:
+        nginx = (REPOSITORY / "portal/nginx.conf").read_text()
+        self.assertIn("include /etc/nginx/course-access.map;", nginx)
+        policy_js = (self.docs / "javascripts/course_access.js").read_text()
+        policy = json.loads(policy_js.removeprefix("window.PORTAL_ACCESS_POLICY = ").removesuffix(";\n"))
+        map_text = (self.docs.parent / "course-access.map").read_text()
+        labs = {lab["id"]: lab for lab in self.catalog["labs"]}
+        for course in self.catalog["courses"]:
+            allowed = set(policy["roles"][course["access_role"]]["paths"])
+            expected = set().union(*(normalized_routes(labs[lab_id]) for lab_id in course["lab_ids"]))
+            self.assertTrue(expected <= allowed)
+            for route in expected:
+                self.assertIn(f"~^{course['access_role']}:{re.escape(route)}$ 1;", map_text)
+        kubernetes_allowed = set(policy["roles"]["kubernetes"]["paths"])
+        self.assertNotIn("/docker/LAB-DOC-11-docker-java-spring-boot", kubernetes_allowed)
+        self.assertIn("/docker/LAB-DOC-10-docker-runtime-security", kubernetes_allowed)
+        self.assertNotIn("/projects/PROJECT-DEVOPS-01-uc-tan-uca-devops", kubernetes_allowed)
+        self.assertIn("/projects/PROJECT-DK-01-containerdan-kubernetese", kubernetes_allowed)
+
+    def test_navigation_is_simplified(self) -> None:
+        config = (REPOSITORY / "portal/mkdocs.yml").read_text()
+        self.assertIn("- IaC:", config)
+        self.assertIn("- Monitoring:", config)
+        self.assertNotIn("- Capstone:", config)
+        self.assertNotIn("- Troubleshooting:", config)
+        self.assertNotIn("- Hızlı Referans:", config)
         javascript = (REPOSITORY / "portal/docs/javascripts/open_in_new_tab.js").read_text()
-        self.assertIn("a.md-tabs__link[href]", javascript)
+        self.assertIn("window.PORTAL_ACCESS_POLICY", javascript)
+        self.assertNotIn("All 20 Docker labs", javascript)
         self.assertIn("window.mermaid.run", javascript)
-        self.assertIn('typeof document$ !== "undefined"', javascript)
-
-    def test_student_pages_and_archives_use_the_same_safe_files(self) -> None:
-        catalog = json.loads((REPOSITORY / "training-content/catalog.json").read_text())
-        with tempfile.TemporaryDirectory() as temporary:
-            docs = Path(temporary) / "docs"
-            shutil.copytree(REPOSITORY / "portal/docs", docs)
-            subprocess.run(
-                [
-                    "python3",
-                    str(REPOSITORY / "portal/scripts/stage-content.py"),
-                    str(REPOSITORY / "training-content"),
-                    str(docs),
-                ],
-                check=True,
-            )
-
-            archives = sorted((docs / "downloads").glob("*.zip"))
-            self.assertEqual(len(archives), len(catalog["labs"]))
-
-            for lab in catalog["labs"]:
-                archive_path = docs / "downloads" / f"{lab['id']}.zip"
-                self.assertTrue(archive_path.is_file())
-                with zipfile.ZipFile(archive_path) as archive:
-                    names = archive.namelist()
-                    self.assertIn(f"{lab['id']}/README.md", names)
-                    self.assertFalse(any("/solution/" in name for name in names))
-                    self.assertFalse(any("__pycache__" in name or name.endswith(".pyc") for name in names))
-
-                    assets = REPOSITORY / lab["assets"]
-                    for area in ("starter", "scripts"):
-                        directory = assets / area
-                        if not directory.is_dir():
-                            continue
-                        for source in directory.rglob("*"):
-                            if not source.is_file() or source.is_symlink() or "__pycache__" in source.parts or source.suffix == ".pyc":
-                                continue
-                            relative = source.relative_to(directory).as_posix()
-                            name = f"{lab['id']}/{area}/{relative}"
-                            self.assertEqual(archive.read(name), source.read_bytes())
-
-                source_name = Path(lab["guide"]).name
-                folder_name = Path(lab["guide"]).parent.name
-                target_page = docs / folder_name / source_name
-                self.assertTrue(target_page.is_file(), f"Expected staged file at {target_page}")
-                page = target_page.read_text()
-                self.assertNotIn("## Metadata", page)
-                self.assertIn(f"/downloads/{lab['id']}.zip", page)
-                self.assertNotIn("## Kaynak", page)
-
-
-    def test_role_based_access_rules(self) -> None:
-        import re
-        catalog = json.loads((REPOSITORY / "training-content/catalog.json").read_text())
-        nginx_conf = (REPOSITORY / "portal/nginx.conf").read_text()
-        js_code = (REPOSITORY / "portal/docs/javascripts/open_in_new_tab.js").read_text()
-
-        # Extract map "$portal_course:$uri" $portal_allowed from nginx.conf
-        map_match = re.search(r'map\s+"\$portal_course:\$uri"\s+\$portal_allowed\s*\{([^}]+)\}', nginx_conf)
-        self.assertIsNotNone(map_match)
-        map_body = map_match.group(1)
-        nginx_patterns = []
-        for line in map_body.splitlines():
-            line = line.strip()
-            if not line or line.startswith("#") or line.startswith("default"):
-                continue
-            m = re.match(r'~([^ ]+)\s+([0-9]+);', line)
-            if m:
-                nginx_patterns.append((m.group(1), int(m.group(2))))
-
-        def check_nginx(role: str, uri: str) -> int:
-            key = f"{role}:{uri}"
-            for pat, val in nginx_patterns:
-                if re.search(pat, key):
-                    return val
-            return 0
-
-        def normalize_js_path(pathname: str) -> str:
-            p = pathname.split("?")[0].split("#")[0]
-            p = re.sub(r"/index\.html$", "", p)
-            p = re.sub(r"\.html$", "", p)
-            if len(p) > 1 and p.endswith("/"):
-                p = p[:-1]
-            return p
-
-        def can_open_js(pathname: str, access_role: str) -> bool:
-            if not pathname:
-                return True
-            if access_role == "admin":
-                return True
-            p = normalize_js_path(pathname)
-            if p.startswith("/env") or p.startswith("/labs") or p.startswith("/lab-assets") or p == "/devops-labs.zip":
-                return False
-            if p in ("", "/", "/index.html") or p.startswith("/search") or p.startswith("/reference"):
-                return True
-            if access_role == "devops":
-                if p.startswith("/curriculum") or p.startswith("/setup") or p.startswith("/projects") or p.startswith("/troubleshooting"):
-                    return True
-                if re.match(r"^/(?:linux|git|docker|jenkins|gitlab|terraform|kubernetes|helm|gitops|monitoring|logging|incident|capstone)/LAB-[A-Za-z0-9_-]+$", p):
-                    return True
-                if re.match(r"^/day[1-5]/LAB-[A-Za-z0-9_-]+$", p):
-                    return True
-                if re.match(r"^/downloads/LAB-[A-Za-z0-9_-]+\.zip$", p):
-                    return True
-                return False
-            if access_role in ("kubernetes", "docker"):
-                if p in ("/curriculum/02_2_DAY_DOCKER_KUBERNETES", "/curriculum/02_LAB_CATALOG_INDEX", "/curriculum/06_DEMO_APPLICATION_MAPPING"):
-                    return True
-                if p in (
-                    "/setup",
-                    "/setup/docker-engine",
-                    "/setup/kind-cluster",
-                    "/setup/kubeadm-cluster",
-                    "/setup/kubeconfig-management",
-                    "/setup/nfs-storageclass",
-                    "/setup/docker-kubernetes",
-                ):
-                    return True
-                if re.match(r"^/(?:docker|day[12])/LAB-DOC-[A-Za-z0-9_-]+$", p):
-                    return True
-                if re.match(r"^/(?:kubernetes|day4)/LAB-K8S-[A-Za-z0-9_-]+$", p):
-                    return True
-                if re.match(r"^/downloads/LAB-(?:DOC|K8S)-[A-Za-z0-9_-]+\.zip$", p):
-                    return True
-                return False
-            return False
-
-        # Verify JS contains dynamic pattern matching and not obsolete hardcoded slug regexes
-        self.assertIn(r"/^\/(?:linux|git|docker|jenkins|gitlab|terraform|kubernetes|helm|gitops|monitoring|logging|incident|capstone)\/LAB-[A-Za-z0-9_-]+$/", js_code)
-        self.assertNotIn("01-kind-pods-deployments", js_code)
-        self.assertNotIn("JNK-01", js_code)
-
-        # Test each lab against both JS logic and Nginx configuration
-        for lab in catalog["labs"]:
-            lab_id = lab["id"]
-            guide_path = Path(lab["guide"])
-            folder_name = guide_path.parent.name
-            slug = guide_path.stem
-            url = f"/{folder_name}/{slug}/"
-            download_url = f"/downloads/{lab_id}.zip"
-
-            # Admin must access everything
-            self.assertTrue(can_open_js(url, "admin"))
-            self.assertEqual(check_nginx("admin", url), 1)
-
-            # DevOps role
-            if lab_id.startswith("LAB-ENV"):
-                self.assertFalse(can_open_js(url, "devops"))
-                self.assertEqual(check_nginx("devops", url), 0)
-            else:
-                self.assertTrue(can_open_js(url, "devops"), f"devops should access {url}")
-                self.assertTrue(can_open_js(download_url, "devops"), f"devops should download {download_url}")
-                self.assertEqual(check_nginx("devops", url), 1, f"nginx blocked devops on {url}")
-                self.assertEqual(check_nginx("devops", download_url), 1, f"nginx blocked devops on {download_url}")
-
-            # Kubernetes role
-            if lab_id.startswith("LAB-DOC") or lab_id.startswith("LAB-K8S"):
-                self.assertTrue(can_open_js(url, "kubernetes"), f"kubernetes should access {url}")
-                self.assertTrue(can_open_js(download_url, "kubernetes"), f"kubernetes should download {download_url}")
-                self.assertEqual(check_nginx("kubernetes", url), 1, f"nginx blocked kubernetes on {url}")
-                self.assertEqual(check_nginx("kubernetes", download_url), 1, f"nginx blocked kubernetes on {download_url}")
-            else:
-                self.assertFalse(can_open_js(url, "kubernetes"), f"kubernetes must NOT access {url}")
-                self.assertFalse(can_open_js(download_url, "kubernetes"), f"kubernetes must NOT download {download_url}")
-                self.assertEqual(check_nginx("kubernetes", url), 0, f"nginx allowed kubernetes on {url}")
-                self.assertEqual(check_nginx("kubernetes", download_url), 0, f"nginx allowed kubernetes on {download_url}")
 
 
 if __name__ == "__main__":
     unittest.main()
-

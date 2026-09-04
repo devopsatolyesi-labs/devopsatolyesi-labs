@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dk-project
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  namespace: dk-project
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+        - name: web
+          image: TODO_IMAGE:TODO_TAG
+          ports:
+            - containerPort: 8080
+          # TODO: probes, resources ve volumeMounts alanlarını tamamlayın.
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+  namespace: dk-project
+spec:
+  selector:
+    app: web
+  ports:
+    - port: 80
+      targetPort: 8080

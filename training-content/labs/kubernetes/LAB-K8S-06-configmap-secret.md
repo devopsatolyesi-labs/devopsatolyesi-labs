@@ -1,11 +1,11 @@
 # LAB-K8S-06 — ConfigMap ve Secret ile Yapılandırma
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 40 dakika | `kubernetes`, `kubectl` | `80` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Orta | 40 dakika | `kubernetes` | `Küme içi` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-K8S-06.zip)](/downloads/LAB-K8S-06.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-K8S-06.zip](/downloads/LAB-K8S-06.zip)
+
 
 ---
 
@@ -160,31 +160,7 @@ kubectl exec secure-app -- cat /etc/config/APP_NAME
 
 ---
 
-### Adım 5: Temizlik
-
-```bash
-kubectl delete pod secure-app
-kubectl delete configmap app-config
-kubectl delete secret app-secrets
-```
-
----
-
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: ConfigMap ortam değişkeni olarak mı yoksa Volume Mount olarak mı bağlanmalıdır?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Eğer ayarlar ortam değişkeni (`env`) olarak verilirse, ConfigMap güncellendiğinde Pod yeniden başlatılana (restart) kadar yeni değerleri **ALAMAZ**. Ancak Volume Mount (`/etc/config`) olarak bağlanırsa, Kubernetes arka planda symlink'leri günceller ve Pod yeniden başlatılmadan saniyeler içinde yeni değerler dosya sistemine yansır.
-
-??? question "Soru 2: Kubernetes Secret'ları varsayılan olarak etcd veritabanında nasıl saklanır?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Varsayılan Kubernetes kurulumlarında Secret'lar etcd içerisinde **düz metin (plaintext/base64)** olarak saklanır! Üretim ortamlarında etcd düzeyinde şifreleme (**Encryption at Rest**) veya HashiCorp Vault / External Secrets Operator gibi harici kasalar kullanılmalıdır.
-
----
-
-## Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 
 - `kubectl exec secure-app -- env` komutunun `DATABASE_USER=pgadmin` değerini döndürmesi.
 - `/etc/config/APP_NAME` dosyasının `Payment Gateway API` içeriğini barındırması.

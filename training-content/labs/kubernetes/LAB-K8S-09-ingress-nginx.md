@@ -1,11 +1,11 @@
 # LAB-K8S-09 — Ingress NGINX ile Uygulama Yayınlama
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `kubernetes`, `ingress` | `80`, `443` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Orta | 45 dakika | `kubernetes` | `80, 443` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-K8S-09.zip)](/downloads/LAB-K8S-09.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-K8S-09.zip](/downloads/LAB-K8S-09.zip)
+
 
 ---
 
@@ -201,23 +201,6 @@ curl -s -H "Host: shop.local" http://localhost/api
 
 ---
 
-### Adım 5: Temizlik
-
-```bash
-kubectl delete -f ingress-rules.yaml -f app-stack.yaml
-```
-
----
-
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: Neden her mikroservis için ayrı bir `NodePort` açmak yerine `Ingress` tercih edilir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        `NodePort` kullanıldığında her servis için 30000-32767 aralığında garip bir port açılır ve dış firewall kuralları karmaşıklaşır. `Ingress` ise tek bir 80/443 IP adresini paylaşır; SSL sonlandırma (TLS Termination), alan adı tabanlı yönlendirme (`api.sirket.com`, `app.sirket.com`) ve yol tabanlı yönlendirmeyi tek bir noktadan yönetir.
-
----
-
-## Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 
 - `curl -s -H "Host: shop.local" http://localhost/api` çıktısında `{"service":"Product Catalog API","version":"1.0.0"}` JSON metninin alınması.

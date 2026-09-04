@@ -1,11 +1,11 @@
 # LAB-DOC-01 — İlk Docker Konteyneri ve Temel Komutlar
 
-## Metadata
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Temel | 35 dakika | `docker` | `8080` |
 
-- **Seviye:** CORE
-- **Süre:** 35 dakika
-- **Profil:** `docker`
-- **Port:** `8080`
+[LAB-DOC-01.zip](/downloads/LAB-DOC-01.zip)
+
 
 ## Amaç
 
@@ -125,26 +125,7 @@ docker rm first-web-container
 
 ---
 
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: `docker run` komutunda `-p 8080:80` yerine sadece `-p 80` yazılırsa ne olur?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Docker, host üzerinde rastgele boş bir yüksek port (genellikle 32768 - 60999 aralığında) seçer ve konteynerin 80 portuna bağlar. Hangi portun atandığını `docker port <container_name>` veya `docker ps` çıktısından öğrenebilirsiniz.
-
-??? question "Soru 2: Çalışan bir konteyneri durdurmadan doğrudan `docker rm first-web-container` komutu verirsek ne olur?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Docker hata verir: `You cannot remove a running container... Stop the container before attempting removal or force remove`. Çalışan konteyneri zorla silmek için `docker rm -f` kullanılabilir (önce SIGKILL sinyali gönderir, ardından siler).
-
-??? question "Soru 3: Konteyner silindiğinde indirdiğimiz `nginx:alpine` imajı da silinir mi?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Hayır. İmajlar ve konteynerler bağımsız nesnelerdir. Konteyner silinse bile imaj yerel diskte kalır (`docker images`). İmajı silmek için `docker rmi nginx:alpine` komutu çalıştırılmalıdır.
-
----
-
-## Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 
 ```text
 HTTP/1.1 200 OK
@@ -152,8 +133,3 @@ Server: nginx/1.27.x-alpine
 ```
 
 ---
-
-## Sorun Giderme
-
-- **Port 8080 Çakışması:** `bind: address already in use` hatası alırsanız, `sudo lsof -i :8080` veya `docker ps` ile portu kullanan servisi bulun ve durdurun.
-- **İzin Hatası:** `permission denied while trying to connect to the Docker daemon socket` hatasında kullanıcınızın docker grubunda olduğunu doğrulayın (`groups`).

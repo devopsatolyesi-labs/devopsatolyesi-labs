@@ -1,11 +1,11 @@
 # LAB-K8S-01 — Kind ile Kubernetes Cluster Kurulumu ve kubectl
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟢 **CORE** (Temel Seviye) | ⏱️ 30 dakika | `kubernetes`, `kind` | `80`, `443` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Temel | 30 dakika | `kubernetes` | `80, 443` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-K8S-01.zip)](/downloads/LAB-K8S-01.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-K8S-01.zip](/downloads/LAB-K8S-01.zip)
+
 
 ---
 
@@ -174,26 +174,7 @@ kubectl config view --minify --output 'jsonpath={..namespace}' | grep -q "traini
 
 ---
 
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: Kind kümesinde `extraPortMappings` kullanmanın amacı nedir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Kind node'ları aslında host üzerinde çalışan bağımsız Docker container'larıdır. Host makinenin `80` ve `443` portlarına gelen HTTP/HTTPS isteklerini doğrudan control-plane node konteynerine iletmek ve Ingress Controller üzerinden mikroservislere ulaştırmak için bu port yönlendirmesi tanımlanır.
-
-??? question "Soru 2: `kubectl cluster-info` komutunda API Server adresi olarak neden `127.0.0.1:<rastgele-port>` görünür?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Kind, control-plane container'ının içindeki `6443` API Server portunu ana makinede rastgele boş bir porta yönlendirir ve yerel `~/.kube/config` dosyasına bu adresi yazar. Böylece host üzerindeki `kubectl`, doğrudan Docker konteynerine güvenli TLS bağlantısı kurabilir.
-
-??? question "Soru 3: Bir Pod'u `kube-system` yerine `default` veya `training` namespace'inde çalıştırmanın avantajı nedir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        İzolasyon ve güvenlik. `kube-system` Kubernetes'in kritik kontrol bileşenlerini (DNS, etcd, apiserver) barındırır. Uygulama iş yüklerinin sistem pod'larıyla karışması hem kazara sistem servislerinin bozulmasına yol açabilir hem de RBAC (erişim yetkisi) ve kaynak kotası (ResourceQuota) yönetimini imkansız kılar.
-
----
-
-## Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 
 ```text
 NAME                           STATUS   ROLES           AGE   VERSION
@@ -203,8 +184,3 @@ devops-cluster-worker2         Ready    <none>          2m    v1.29.x
 ```
 
 ---
-
-## Sorun Giderme
-
-- **Docker daemon not running:** `docker info` komutunun başarılı çalıştığından emin olun.
-- **Port 80/443 meşgul:** Host üzerinde Apache, Nginx veya eski Docker konteynerleri 80/443 portunu dinliyorsa durdurun (`sudo lsof -i :80`).

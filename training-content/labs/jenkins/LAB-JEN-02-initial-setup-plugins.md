@@ -1,11 +1,11 @@
 # LAB-JEN-02 — Jenkins İlk Yapılandırma, Yönetici Hesabı ve Eklenti Yönetimi
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟢 **CORE** (Temel Seviye) | ⏱️ 35 dakika | `jenkins`, `jenkins-cli`, `curl` | `8080` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Temel | 35 dakika | `jenkins` | `8080` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-JEN-02.zip)](/downloads/LAB-JEN-02.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-JEN-02.zip](/downloads/LAB-JEN-02.zip)
+
 
 ---
 
@@ -122,26 +122,7 @@ Jenkins Controller otomatik olarak yeniden başlayacaktır (yaklaşık 30-45 san
 
 ---
 
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: Jenkins otomasyonlarında neden kullanıcı şifresi yerine API Token kullanılmalıdır?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        API Token'lar belirli izinlere bağlıdır, kullanıcının ana kimlik bilgilerini (LDAP/SSO şifresi) açığa çıkarmaz, istendiğinde tek tıkla iptal edilebilir (revoke) ve CSRF koruma mekanizmalarından (crumb) bağımsız olarak REST API çağrılarına izin verir.
-
-??? question "Soru 2: Jenkins eklentisi kurulurken `-restart` bayrağı verildiğinde çalışan job'lar ne olur?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Jenkins "Quiet Down" (Sakinleşme) moduna geçer. Mevcut çalışan pipeline job'larının tamamlanmasını bekler, yeni job kabul etmez ve tüm işler bittiğinde güvenli bir şekilde yeniden başlar (Safe Restart).
-
-??? question "Soru 3: Eklenti güncellemelerinden sonra pipeline'ların bozulmaması için üretimde hangi yöntem izlenmelidir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Jenkins Configuration as Code (JCasC) ve `plugins.txt` dosyası kullanılarak eklenti sürümleri sabitlenmeli (pinned versions), doğrudan üretimde GUI'den güncelleme yapılmamalı, önce test/staging Jenkins örneğinde doğrulanmalıdır.
-
----
-
-## Beklenen Sonuç & Sorun Giderme
+## Doğal Doğrulama ve Beklenen Sonuç
 
 | Belirti / Hata | Olası Neden | Çözüm |
 | :--- | :--- | :--- |

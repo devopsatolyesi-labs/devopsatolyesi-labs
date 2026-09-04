@@ -1,14 +1,11 @@
 # LAB-ENV-00 — Ubuntu Server 24.04 LTS Üzerinde DevOps Ortamı Kurulumu ve Doğrulama
 
-## Metadata
-- **Teknoloji:** Temel DevOps Araçları, Konteyner Motorları, Orkestrasyon ve Ağır Servis Profilleri
-- **Seviye:** FOUNDATION / PRE-TRAINING
-- **Önerilen Zaman:** Eğitim Öncesi / Gün 1 Başı
-- **Tahmini Süre:** 90 dk
-- **Gerekli Sistem:** Boş Ubuntu Server 24.04 LTS (x86_64, minimum 8 GB RAM, 4 CPU, 40 GB Boş Disk)
-- **Çalışma Dizini:** `~/devops-workspace`
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Temel | 90 dakika | `base` | `Küme içi` |
 
----
+[LAB-ENV-00.zip](/downloads/LAB-ENV-00.zip)
+
 
 ## 1. Lab Senaryosu ve Öğretim İlkesi
 
@@ -103,16 +100,11 @@ Ağ bağlantısını ve DNS çözümlemesini test edin:
 curl -sf https://www.google.com > /dev/null && echo "OS Network & DNS: PASSED"
 ```
 
-#### 9. Beklenen Sonuç
+#### Doğal Doğrulama ve Beklenen Sonuç
 ```text
 OS Network & DNS: PASSED
 vm.max_map_count = 262144
 ```
-
-#### 10. Sorun Giderme
-- DNS hatası alınırsa: `/etc/resolv.conf` dosyasına `nameserver 8.8.8.8` veya `nameserver 1.1.1.1` ekleyin.
-
----
 
 ### 2.2. Git
 
@@ -158,16 +150,11 @@ rm -rf "$TEMP_REPO"
 echo "Git Functional Test: PASSED"
 ```
 
-#### 9. Beklenen Sonuç
+#### Doğal Doğrulama ve Beklenen Sonuç
 ```text
 git version 2.43.0 (veya 2.44+)
 Git Functional Test: PASSED
 ```
-
-#### 10. Sorun Giderme
-- `Author identity unknown` hatası alınırsa: `git config --global user.name` ve `user.email` komutlarını çalıştırın.
-
----
 
 ### 2.3. Docker Engine
 
@@ -227,16 +214,11 @@ Resmi `hello-world` test imajını çekip çalıştırın:
 docker run --rm hello-world
 ```
 
-#### 9. Beklenen Sonuç
+#### Doğal Doğrulama ve Beklenen Sonuç
 ```text
 Hello from Docker!
 This message shows that your installation appears to be working correctly.
 ```
-
-#### 10. Sorun Giderme
-- `permission denied while trying to connect to the Docker daemon socket`: Kullanıcınız henüz gruba yansımamıştır; `sudo chmod 666 /var/run/docker.sock` veya `newgrp docker` uygulayın.
-
----
 
 ### 2.4. Docker Compose
 
@@ -284,16 +266,11 @@ rm -rf "$TEMP_DIR"
 echo "Docker Compose Smoke Test: PASSED"
 ```
 
-#### 9. Beklenen Sonuç
+#### Doğal Doğrulama ve Beklenen Sonuç
 ```text
 Docker Compose version v2.32.4 (veya v2.x)
 Docker Compose Smoke Test: PASSED
 ```
-
-#### 10. Sorun Giderme
-- `compose is not a docker command` hatası alınırsa: `sudo apt-get install --reinstall docker-compose-plugin` çalıştırın.
-
----
 
 ### 2.5. Terraform
 
@@ -353,17 +330,12 @@ rm -rf "$TEMP_TF"
 echo "Terraform Smoke Test: PASSED"
 ```
 
-#### 9. Beklenen Sonuç
+#### Doğal Doğrulama ve Beklenen Sonuç
 ```text
 Terraform v1.16.0 (veya 1.16.x)
 Success! The configuration is valid.
 Terraform Smoke Test: PASSED
 ```
-
-#### 10. Sorun Giderme
-- `Certificate verification failed`: `sudo apt-get install --reinstall ca-certificates` çalıştırın.
-
----
 
 ### 2.6. kubectl
 
@@ -413,17 +385,12 @@ Bağımsız port gerektirmez.
 kubectl version --client | grep -q "gitVersion" && echo "kubectl Smoke Test: PASSED"
 ```
 
-#### 9. Beklenen Sonuç
+#### Doğal Doğrulama ve Beklenen Sonuç
 ```text
 clientVersion:
   gitVersion: v1.31.9 (veya v1.31.x)
 kubectl Smoke Test: PASSED
 ```
-
-#### 10. Sorun Giderme
-- `The connection to the server localhost:8080 was refused`: Bu bir hata değildir; henüz bir küme çalışmadığını gösterir. `--client` bayrağı ile istemci testi yapılmalıdır.
-
----
 
 ### 2.7. kind (Kubernetes in Docker)
 
@@ -470,7 +437,7 @@ kind delete cluster --name test-smoke
 echo "kind Smoke Test: PASSED"
 ```
 
-#### 9. Beklenen Sonuç
+#### Doğal Doğrulama ve Beklenen Sonuç
 ```text
 kind v0.30.0
 Creating cluster "test-smoke" ...
@@ -479,11 +446,6 @@ test-smoke-control-plane   Ready    control-plane   10s   v1.31.9
 Deleted clusters: ["test-smoke"]
 kind Smoke Test: PASSED
 ```
-
-#### 10. Sorun Giderme
-- `failed to create cluster: docker: command not found`: Docker servisinin ayakta olduğunu (`sudo systemctl status docker`) teyit edin.
-
----
 
 ### 2.8. Helm
 
@@ -525,17 +487,12 @@ rm -rf "$TEMP_CHART"
 echo "Helm Smoke Test: PASSED"
 ```
 
-#### 9. Beklenen Sonuç
+#### Doğal Doğrulama ve Beklenen Sonuç
 ```text
 version.BuildInfo{Version:"v3.21.0", ...}
 1 chart(s) linted, 0 chart(s) failed
 Helm Smoke Test: PASSED
 ```
-
-#### 10. Sorun Giderme
-- `helm: command not found`: Binary'nin `/usr/local/bin` altında olduğundan ve PATH değişkeninde bulunduğundan emin olun.
-
----
 
 ### 2.9. Trivy (Konteyner Güvenlik Taraması)
 
@@ -581,18 +538,13 @@ trivy image --severity CRITICAL alpine:3.20
 echo "Trivy Smoke Test: PASSED"
 ```
 
-#### 9. Beklenen Sonuç
+#### Doğal Doğrulama ve Beklenen Sonuç
 ```text
 Version: 0.74.0
 alpine:3.20 (alpine 3.20.x)
 Total: 0 (CRITICAL: 0)
 Trivy Smoke Test: PASSED
 ```
-
-#### 10. Sorun Giderme
-- `DB download timeout`: Ağ proxy veya güvenlik duvarı engelliyorsa `trivy image --download-db-only` komutunu manuel koşturun.
-
----
 
 ### 2.10. Jenkins
 
@@ -659,16 +611,11 @@ sleep 10
 curl -sf http://localhost:8080/login | grep -q "Jenkins" && echo "Jenkins Smoke Test: PASSED"
 ```
 
-#### 9. Beklenen Sonuç
+#### Doğal Doğrulama ve Beklenen Sonuç
 ```text
 2.568.2
 Jenkins Smoke Test: PASSED
 ```
-
-#### 10. Sorun Giderme
-- `Connection refused`: Jenkins'in açılması 15–30 saniye sürebilir; `docker logs -f jenkins-server` çıktısında `Jenkins is fully up and running` satırını bekleyin.
-
----
 
 ### 2.11. SonarQube Community Build
 
@@ -740,15 +687,10 @@ done
 [ "$STATUS" = "UP" ] && echo "SonarQube Smoke Test: PASSED (Status: UP)"
 ```
 
-#### 9. Beklenen Sonuç
+#### Doğal Doğrulama ve Beklenen Sonuç
 ```text
 SonarQube Smoke Test: PASSED (Status: UP)
 ```
-
-#### 10. Sorun Giderme
-- SonarQube konteyneri çöküyorsa `sysctl vm.max_map_count` değerinin 262144 olduğunu teyit edin.
-
----
 
 ### 2.12. GitLab CE & GitLab Runner
 
@@ -835,16 +777,11 @@ Sağlık endpoint'ini sorgulayın:
 curl -sf http://localhost:8081/-/health && echo "GitLab Smoke Test: PASSED"
 ```
 
-#### 9. Beklenen Sonuç
+#### Doğal Doğrulama ve Beklenen Sonuç
 ```text
 GitLab OK
 GitLab Smoke Test: PASSED
 ```
-
-#### 10. Sorun Giderme
-- İlk açılış 2–3 dakika sürebilir. `docker logs -f gitlab-server` ile Puma servisinin başladığını izleyin.
-
----
 
 ### 2.13. Harbor Container Registry
 
@@ -901,16 +838,11 @@ Harbor ping endpoint'ini test edin:
 curl -sf http://localhost:8082/api/v2.0/ping && echo -e "\nHarbor Smoke Test: PASSED"
 ```
 
-#### 9. Beklenen Sonuç
+#### Doğal Doğrulama ve Beklenen Sonuç
 ```text
 pong
 Harbor Smoke Test: PASSED
 ```
-
-#### 10. Sorun Giderme
-- 8082 portu çakışıyorsa host port eşlemesini `compose.yaml` içinde güncelleyin.
-
----
 
 ### 2.14. Argo CD
 
@@ -960,16 +892,11 @@ argocd app list
 echo "Argo CD Smoke Test: PASSED"
 ```
 
-#### 9. Beklenen Sonuç
+#### Doğal Doğrulama ve Beklenen Sonuç
 ```text
 'admin:login' logged in successfully
 Argo CD Smoke Test: PASSED
 ```
-
-#### 10. Sorun Giderme
-- Podlar `Pending` kalırsa `kubectl describe nodes` ile düğüm kaynaklarını kontrol edin.
-
----
 
 ### 2.15. Headlamp (Kubernetes Web Arayüzü)
 
@@ -1011,15 +938,10 @@ ss -lntp | grep :8088
 curl -sf http://localhost:8088/ | grep -q "Headlamp" && echo "Headlamp Smoke Test: PASSED"
 ```
 
-#### 9. Beklenen Sonuç
+#### Doğal Doğrulama ve Beklenen Sonuç
 ```text
 Headlamp Smoke Test: PASSED
 ```
-
-#### 10. Sorun Giderme
-- Küme bilgisi görünmezse kubeconfig içindeki server adresinin `127.0.0.1` yerine Docker host IP'si olduğundan emin olun.
-
----
 
 ### 2.16. Prometheus & Grafana
 
@@ -1094,16 +1016,11 @@ curl -sf http://localhost:9090/-/healthy | grep -q "Healthy" && echo "Prometheus
 curl -sf http://localhost:3000/api/health | grep -q "ok" && echo "Grafana: HEALTHY"
 ```
 
-#### 9. Beklenen Sonuç
+#### Doğal Doğrulama ve Beklenen Sonuç
 ```text
 Prometheus: HEALTHY
 Grafana: HEALTHY
 ```
-
-#### 10. Sorun Giderme
-- Grafana'ya bağlanılamıyorsa `admin/admin` varsayılan kimlik bilgileriyle `http://localhost:3000` adresini açın.
-
----
 
 ### 2.17. Elasticsearch, Kibana & Vector
 
@@ -1206,16 +1123,11 @@ Elasticsearch küme sağlığını sorgulayın:
 curl -sf http://localhost:9200/_cluster/health | grep -q "status" && echo "Elasticsearch Smoke Test: PASSED"
 ```
 
-#### 9. Beklenen Sonuç
+#### Doğal Doğrulama ve Beklenen Sonuç
 ```text
 "8.17.8"
 Elasticsearch Smoke Test: PASSED
 ```
-
-#### 10. Sorun Giderme
-- Elasticsearch anında çöküyorsa `docker logs log-elasticsearch` ile bellek hatasını inceleyin; `sudo sysctl -w vm.max_map_count=262144` uygulayın.
-
----
 
 ## 3. Servis Profil Mantığı ve RAM Yönetimi (8–16 GB Bütçesi)
 

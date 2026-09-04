@@ -1,11 +1,11 @@
 # LAB-DOC-09 — Multi-Stage Build ve Boyut Optimizasyonu
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `docker` | `8080` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Orta | 45 dakika | `docker` | `8080` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-09.zip)](/downloads/LAB-DOC-09.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-DOC-09.zip](/downloads/LAB-DOC-09.zip)
+
 
 ---
 
@@ -197,34 +197,7 @@ HTTP yanıtında `Runtime: "Multi-Stage Minimal Binary"` ve `200 OK` alındığ�
 
 ---
 
-### Adım 6: Temizlik
-
-```bash
-docker rm -f payment-service
-```
-
----
-
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: Go derleme komutundaki `-ldflags="-w -s"` parametreleri ne işe yarar?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        `-w` debug sembollerini (DWARF), `-s` ise sembol tablosunu ikili dosyadan ayıklar (strip eder). Programın çalışmasında hiçbir fark yaratmaz; ancak ikili dosya boyutunu %30-40 oranında küçülterek Docker imajını daha da hafifletir.
-
-??? question "Soru 2: İkinci aşamada `FROM scratch` kullanmak mümkün müdür ve ne zaman tercih edilir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Evet, mümkündür. `scratch`, Docker'ın sıfır baytlık tamamen boş temel imajıdır. `CGO_ENABLED=0` ile derlenen bağımsız Go/Rust binary'leri işletim sistemi kabuğuna (shell) dahi ihtiyaç duymadığı için doğrudan `scratch` üzerine kopyalanabilir. Bu durumda nihai imaj boyutu sadece ikili dosyanın boyutu kadar (~8 MB) olur. Tek dezavantajı içinde `sh` veya `curl` olmadığı için `docker exec` ile içine girilemez.
-
-??? question "Soru 3: Multi-stage bir Dockerfile'da belirli bir aşamayı tek başına nasıl derleyebiliriz?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        `docker build --target builder -t my-builder:dev .` komutu ile `--target` bayrağı kullanılarak sadece hedeflenen aşama derlenebilir.
-
----
-
-## Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 
 ```text
 REPOSITORY    TAG         SIZE
@@ -233,7 +206,3 @@ payment-api   bloated     ~320MB
 ```
 
 ---
-
-## Sorun Giderme
-
-- **Exec format error:** Go ikili dosyasını derlerken `GOOS=linux` bayrağının verildiğinden emin olun (host MacOS/ARM olsa dahi konteyner Linux çekirdeğinde çalışır).

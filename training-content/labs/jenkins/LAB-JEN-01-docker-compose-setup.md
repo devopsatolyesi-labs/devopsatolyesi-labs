@@ -1,11 +1,11 @@
 # LAB-JEN-01 — Docker Compose ile Jenkins Kurulumu ve Nginx Reverse Proxy
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟢 **CORE** (Temel Seviye) | ⏱️ 40 dakika | `jenkins`, `docker`, `nginx` | `8080`, `8443` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Temel | 40 dakika | `jenkins, docker, nginx` | `8080, 8443` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-JEN-01.zip)](/downloads/LAB-JEN-01.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-JEN-01.zip](/downloads/LAB-JEN-01.zip)
+
 
 ---
 
@@ -195,26 +195,7 @@ docker exec jenkins-controller cat /var/jenkins_home/secrets/initialAdminPasswor
 
 ---
 
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: Jenkins container'ına `/var/run/docker.sock` bağlandığında hangi güvenlik riski ortaya çıkar?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Docker daemon socket'ine erişim, ana makinede (host) sınırsız root yetkisine eşdeğerdir. Jenkins üzerinde çalışan herhangi bir kötü amaçlı script veya kullanıcı, host üzerinde yeni container'lar başlatabilir, host dosya sistemini bağlayabilir veya host'u ele geçirebilir. Üretim ortamlarında Docker-in-Docker (dind), kısıtlı Docker agent'ları veya Kubernetes ephemerial agent mimarileri tercih edilmelidir.
-
-??? question "Soru 2: Jenkins container'ı silinse bile job ve yapılandırmalarımız neden kaybolmaz?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        `docker-compose.yml` içinde `jenkins_data` adında bir named volume tanımlanmıştır ve container içindeki `/var/jenkins_home` dizinine bağlanmıştır. Docker, container silinse dahi bu volume'ü saklar (`docker compose down` volume'ü silmez, yalnızca `docker compose down -v` siler).
-
-??? question "Soru 3: Nginx reverse proxy yapılandırmasında `proxy_set_header X-Forwarded-Proto https;` satırının önemi nedir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Jenkins Controller kendisi düz HTTP (8080) üzerinde çalışmaktadır. İstemci ile Nginx arasındaki iletişim ise HTTPS (8443) üzerindedir. Bu header eklenmezse Jenkins yönlendirmeleri `http://` protokolü ile yapar ve tarayıcılarda "Mixed Content" veya "Broken Reverse Proxy Setup" uyarıları oluşur.
-
----
-
-## Beklenen Sonuç & Sorun Giderme
+## Doğal Doğrulama ve Beklenen Sonuç
 
 | Belirti / Hata | Olası Neden | Çözüm |
 | :--- | :--- | :--- |

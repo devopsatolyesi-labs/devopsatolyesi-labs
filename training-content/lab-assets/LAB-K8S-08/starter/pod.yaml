@@ -1,16 +1,17 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: storage-demo
+  name: writer
+  namespace: lab-k8s-08
 spec:
   volumes:
   - name: my-data
     persistentVolumeClaim:
-      claimName: storage-claim
+      claimName: app-data
   containers:
   - name: writer
-    image: alpine
-    command: ["sh", "-c", "echo 'Stored data at $(date)' >> /data/log.txt && sleep 3600"]
+    image: busybox:1.36.1
+    command: ["sh", "-c", "date -u > /data/evidence.txt; cat /data/evidence.txt; sleep 3600"]
     volumeMounts:
     - name: my-data
       mountPath: /data

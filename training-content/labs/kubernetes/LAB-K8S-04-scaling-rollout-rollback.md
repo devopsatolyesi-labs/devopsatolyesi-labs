@@ -1,11 +1,11 @@
 # LAB-K8S-04 — Scaling, Rolling Update ve Rollback
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `kubernetes`, `kubectl` | `80` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Orta | 45 dakika | `kubernetes` | `Küme içi` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-K8S-04.zip)](/downloads/LAB-K8S-04.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-K8S-04.zip](/downloads/LAB-K8S-04.zip)
+
 
 ---
 
@@ -165,29 +165,7 @@ IMAGE=$(kubectl get deployment rollout-app -o jsonpath='{.spec.template.spec.con
 
 ---
 
-### Adım 6: Temizlik
-
-```bash
-kubectl delete -f rollout-app.yaml
-```
-
----
-
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: `maxUnavailable: 0` ve `maxSurge: 1` parametreleri production ortamında ne sağlar?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        **Sıfır Kesinti (Zero Downtime).** `maxUnavailable: 0`, yeni sürüm pod sağlıklı olup trafiği karşılamaya başlamadan önce eski pod'ların asla kapatılmayacağını garanti eder. `maxSurge: 1` ise kümede geçici olarak en fazla 1 ilave pod için kaynak tüketileceğini belirler.
-
-??? question "Soru 2: Belirli bir geçmiş revizyona (örneğin 1. revizyona) doğrudan nasıl dönebiliriz?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        `kubectl rollout undo deployment/rollout-app --to-revision=1` komutu kullanılarak istenen spesifik revizyona dönülebilir.
-
----
-
-## Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 
 - `rollout undo` sonrası tüm pod'ların `Running` durumunda olması.
 - `kubectl rollout history` çıktısında revizyon kayıtlarının görülmesi.

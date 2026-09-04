@@ -1,11 +1,11 @@
 # LAB-JEN-10 — Trivy ile Dosya Sistemi ve İmaj Güvenlik Taraması (DevSecOps Gate)
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `jenkins`, `trivy`, `docker` | `8080` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Orta | 45 dakika | `jenkins, trivy` | `8080` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-JEN-10.zip)](/downloads/LAB-JEN-10.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-JEN-10.zip](/downloads/LAB-JEN-10.zip)
+
 
 ---
 
@@ -184,21 +184,7 @@ echo "Trivy Cikis Kodu: $?"
 
 ---
 
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: Trivy komutuna `--ignore-unfixed` parametresi eklenmesinin amacı nedir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Açık kaynak dünyasında bazı CVE'ler raporlanmış olsa da üretici tarafından henüz yaması (fix) yayınlanmamış olabilir. `--ignore-unfixed` bayrağı verilmezse, geliştiricinin hiçbir şekilde düzeltemeyeceği bir açık yüzünden pipeline sürekli kırılır. Bu parametre yalnızca düzeltmesi (fix version) hazır olan açıkları dikkate alarak pipeline'ın kilitlenmesini önler.
-
-??? question "Soru 2: CI pipeline'ında her build sırasında Trivy veritabanının sıfırdan indirilmesi nasıl optimize edilir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Trivy cache dizini (`/root/.cache/trivy`) host makinede bir volume olarak bağlanmalıdır (`-v trivy_cache:/root/.cache/trivy`). Bu sayede her build'de yüzlerce megabaytlık veritabanı tekrar indirilmez; yalnızca delta güncellemeler çekilerek saniyeler içinde tarama başlar.
-
----
-
-## Beklenen Sonuç & Sorun Giderme
+## Doğal Doğrulama ve Beklenen Sonuç
 
 | Belirti | Çözüm |
 | :--- | :--- |

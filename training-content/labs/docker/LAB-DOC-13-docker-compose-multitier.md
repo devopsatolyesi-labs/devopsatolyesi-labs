@@ -1,11 +1,11 @@
 # LAB-DOC-13 — Docker Compose ile Çok Katmanlı Mimari
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 50 dakika | `docker` | `80`, `3000`, `5432` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Orta | 50 dakika | `docker` | `80, 3000, 5432` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-13.zip)](/downloads/LAB-DOC-13.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-DOC-13.zip](/downloads/LAB-DOC-13.zip)
+
 
 ---
 
@@ -240,29 +240,7 @@ docker compose logs api
 
 ---
 
-### Adım 6: Temizlik
-
-```bash
-docker compose down -v
-```
-
----
-
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: Veritabanı (`db`) servisinde neden `ports: ["5432:5432"]` tanımlanmadı?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Güvenlik ve en az yetki (least privilege) prensibi gereğince veritabanı portunun host üzerinden dış dünyaya açılmaması gerekir. Servisler arası iletişim Docker Compose dahili ağı (`backend-net`) üzerinden `db:5432` adresi ile güvenli ve izole olarak yapılır.
-
-??? question "Soru 2: `docker compose down` ile `docker compose down -v` komutları arasındaki kritik fark nedir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        `docker compose down` sadece konteynerleri ve ağları siler; `volumes:` altında tanımlı veritabanı verilerini korur. `-v` (volumes) bayrağı eklendiğinde ise kalıcı disk birimleri de tamamen imha edilir.
-
----
-
-## Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 
 ```json
 {

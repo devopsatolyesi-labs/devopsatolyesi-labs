@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-echo "==> Validating LAB-K8S-08: PVC and Pod volume mounts..."
-kubectl apply --dry-run=client -f pvc.yaml
-kubectl apply --dry-run=client -f pod.yaml
-echo "[PASS] PVC and Pod storage manifests are valid."
+kubectl get pv lab-k8s-08-local-pv -o jsonpath='{.status.phase}' | grep -qx Bound
+kubectl get pvc app-data -n lab-k8s-08 -o jsonpath='{.status.phase}' | grep -qx Bound
+kubectl exec -n lab-k8s-08 reader -- test -s /data/evidence.txt
+echo "[PASS] Static PV/PVC binding and persistence verified."

@@ -1,11 +1,11 @@
 # LAB-K8S-12 — Çok Katmanlı Kubernetes Final Projesi (Capstone)
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🏆 **CAPSTONE** (Bitiş Projesi) | ⏱️ 90 dakika | `kubernetes`, `helm` | `80`, `443` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| İleri | 60 dakika | `kubernetes` | `80, 443` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-K8S-12.zip)](/downloads/LAB-K8S-12.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-K8S-12.zip](/downloads/LAB-K8S-12.zip)
+
 
 ---
 
@@ -336,19 +336,3 @@ kubectl exec -i "$NEW_PG" -- psql -U store_admin -d store -c "SELECT COUNT(*) FR
 ```
 
 ---
-
-### Adım 6: Temizlik
-
-```bash
-kubectl delete namespace production
-kubectl config set-context --current --namespace=default
-```
-
----
-
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: Bu capstone mimarisinde hangi bileşen yüksek erişilebilirlik (HA - High Availability) için hazır değildir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        PostgreSQL veritabanı Deployment'ı. PostgreSQL `replicas: 1` ile çalışmaktadır ve PVC'si `ReadWriteOnce` olarak tek bir pod'a bağlıdır. Gerçek üretimde ilişkisel veritabanları ya yönetilen bulut servisi (AWS RDS, Cloud SQL) olarak dışarıda tutulur ya da CloudNativePG / Zalando Postgres Operator gibi StatefulSet tabanlı replikasyon operatörleri ile kurulur.

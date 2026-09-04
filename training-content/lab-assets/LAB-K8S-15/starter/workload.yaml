@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: lab-k8s-15
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: shared-data
+  namespace: lab-k8s-15
+spec:
+  accessModes: [ReadWriteMany]
+  storageClassName: lab-nfs
+  resources:
+    requests:
+      storage: 256Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: writers
+  namespace: lab-k8s-15
+spec:
+  replicas: 2
+  selector:
+    matchLabels: {app: writers}
+  template:
+    metadata:
+      labels: {app: writers}
+    spec:
+      securityContext: {runAsUser: 65534, runAsGroup: 65534, fsGroup: 65534}
+      containers:
+        - name: writer
+          image: busybox:1.36.1
+          command: ["sh", "-c", "while true; do echo $(hostname) >> /shared/writers.txt; sleep 5; done"]
+          volumeMounts:
+            - {name: shared, mountPath: /shared}
+      volumes:
+        - name: shared
+          persistentVolumeClaim: {claimName: shared-data}

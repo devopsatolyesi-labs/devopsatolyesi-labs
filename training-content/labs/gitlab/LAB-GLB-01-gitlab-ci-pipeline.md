@@ -1,14 +1,11 @@
 # LAB-GLB-01 — GitLab CI/CD Fundamentals: Stages, Jobs, Artifacts & Registry
 
-## Metadata
-- **Seviye:** PRACTITIONER
-- **Önerilen Gün:** Gün 3
-- **Tahmini Süre:** 45 dk
-- **Gerekli Profil:** `gitlab-ci`
-- **Host Portları:** `8081:80` (GitLab CE Web UI)
-- **Çalışma Dizini:** `~/labs/LAB-GLB-01`
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Orta | 45 dakika | `gitlab-ci` | `8081` |
 
----
+[LAB-GLB-01.zip](/downloads/LAB-GLB-01.zip)
+
 
 ## 1. Lab Senaryosu
 Modern yazılım projelerinde kaynak kod yönetimi, issue takibi ve sürekli entegrasyon süreçlerinin tek bir çatı altında birleştirilmesi operasyonel verimliliği artırır. GitLab CI/CD, repoya push edilen her commit ile tetiklenen deklaratif `.gitlab-ci.yml` mimarisiyle çalışır. Hatalı kurgulanan artifact ve cache yapılandırmaları bağımlılıkların her seferinde baştan indirilmesine veya derleme çıktılarının sonraki aşamalara aktarılamamasına neden olur. Bu çalışmada Node.js mikroservisi için test, Trivy güvenlik taraması ve Docker imaj paketleme aşamalarını içeren gerçek bir GitLab CI/CD boru hattı kurgulanır.
@@ -66,7 +63,6 @@ flowchart LR
 
 > [!NOTE]
 > **Docker-in-Docker (DinD) Mimarisi:** GitLab Runner'ın konteyner içinde yeni bir Docker imajı derleyebilmesi için `docker:27.5.1-dind` yardımcı servisi (`services:`) başlatılır. `docker:27.5.1-cli` işi, TLS üzerinden DinD daemon'ına bağlanarak izole ortamda imaj derler ve tarama yapar.
-
 
 ## 4. Ön Koşullar
 - GitLab CE Web UI (port 8081) ve GitLab Runner çalışır durumda olmalıdır
@@ -201,14 +197,14 @@ npm test
 cd ..
 ```
 
-## 6. Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 Adım 3'teki birim test çıktısı:
 ```text
 Running unit tests...
 ALL TESTS PASSED (1/1)
 ```
 
-## 7. Doğrulama
+## Doğal Doğrulama ve Beklenen Sonuç
 `.gitlab-ci.yml` dosyasının sözdiziminin eksiksiz olduğunu ve tüm aşamaları içerdiğini doğrulayın:
 ```bash
 python3 -c "
@@ -221,42 +217,3 @@ assert 'docker-build' in data
 print('VALIDATION SUCCESS: .gitlab-ci.yml syntax is valid and fully formatted.')
 "
 ```
-
-## 8. Sorun Giderme
-
-### Belirti
-GitLab CI job'ı çalışırken `Cannot connect to the Docker daemon at tcp://docker:2375. Is the docker daemon running?` hatası alınır.
-
-### Kanıt
-GitLab Runner job konsolunda Docker daemon ile TCP iletişimi kurulamadığı görülür.
-
-### Kontrol Komutu
-```bash
-docker ps | grep gitlab-runner
-```
-
-### Muhtemel Neden
-Runner `config.toml` dosyasında `privileged = true` modu aktif edilmemiştir veya `dind` servisi ayağa kalkamamıştır.
-
-### Çözüm
-GitLab Runner yapılandırmasında `privileged = true` parametresini tanımlayın ve Runner servisini yeniden başlatın:
-```bash
-sudo sed -i 's/privileged = false/privileged = true/g' /etc/gitlab-runner/config.toml 2>/dev/null || true
-sudo gitlab-runner restart 2>/dev/null || true
-```
-
-### Tekrar Doğrulama
-Pipeline'ı yeniden tetikleyerek job çıktısını kontrol edin.
-
-## 9. Temizlik / Sıfırlama
-Geçici bağımlılıkları ve çalışma dizinini temizleyin:
-```bash
-rm -rf app/node_modules
-rm -rf ~/labs/LAB-GLB-01
-```
-
-## 10. Production Notu
-Üretim ortamlarında `cache` ve `artifacts` mekanizmaları birbirine karıştırılmamalıdır. `cache`, yalnızca sonraki derlemeleri hızlandırmak için kullanılan geçici bir önbellektir ve her zaman varlığı garanti edilmez. `artifacts` ise derleme çıktılarının (binary, paket, test raporu) aşamalar arasında deterministik olarak aktarılması için zorunludur.
-
-## 11. Challenge
-`.gitlab-ci.yml` dosyasına `needs: []` yönergesini ekleyerek `unit-tests` ve `dependency-scan` işlerinin sırayla değil, birbirini beklemeden tam paralel (DAG Pipeline) çalışmasını sağlayın.

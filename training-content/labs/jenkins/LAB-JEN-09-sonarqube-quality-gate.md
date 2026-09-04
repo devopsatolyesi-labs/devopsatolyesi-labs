@@ -1,11 +1,11 @@
 # LAB-JEN-09 — SonarQube ile Statik Kod Analizi ve Quality Gate Entegrasyonu
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 50 dakika | `jenkins`, `sonarqube`, `quality-gate` | `8080`, `9000` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Orta | 50 dakika | `jenkins, sonarqube` | `8080, 9000` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-JEN-09.zip)](/downloads/LAB-JEN-09.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-JEN-09.zip](/downloads/LAB-JEN-09.zip)
+
 
 ---
 
@@ -207,21 +207,7 @@ Durumun `"status":"OK"` veya `"status":"ERROR"` olduğunu teyit edin.
 
 ---
 
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: `waitForQualityGate()` adımı neden polling yerine webhook kullanır?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        SonarQube analizleri arka planda kuyruğa girer (Compute Engine task) ve kod boyutuna göre saniyeler veya dakikalar sürebilir. Jenkins sürekli SonarQube'e "bitti mi?" diye istek atarsa sistem kaynaklarını tüketir. Bunun yerine webhook ile Jenkins pasif dinleme moduna geçer, SonarQube analiz bitince Jenkins'e tek bir HTTP POST ile sonucu iletir.
-
-??? question "Soru 2: Bir geliştirici bilerek Quality Gate'i geçersiz kılmak için pipeline'a ne yazabilir ve bunu nasıl engelleriz?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Geliştirici `catchError` ekleyebilir veya komut sonuna `|| true` yazabilir. Bunu engellemek için kurumsal Jenkins'te **Pipeline Shared Library** ile merkezi zorunlu adımlar tanımlanmalı veya `Jenkinsfile` üzerinde Pull Request onay kuralları (Branch Protection) uygulanmalıdır.
-
----
-
-## Beklenen Sonuç & Sorun Giderme
+## Doğal Doğrulama ve Beklenen Sonuç
 
 | Hata | Çözüm |
 | :--- | :--- |

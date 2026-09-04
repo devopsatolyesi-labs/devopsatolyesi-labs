@@ -1,17 +1,11 @@
 # LAB-TF-08 / PROJECT-TF-VPC — Terraform ile Üretim Standartlarında AWS VPC: Public & Private Subnet Mimarisi
 
-## Metadata
-- **Teknoloji:** Terraform 1.10.x+, AWS Provider v5.80.x (veya LocalStack 3.x), AWS VPC, Subnets, Internet Gateway, NAT Gateway, Elastic IP, Route Tables, Security Groups, EC2 Bastion
-- **Seviye:** PRACTITIONER / CLOUD INFRASTRUCTURE AS CODE
-- **Önerilen Gün:** Gün 4 (Terraform & Bulut Ağ Mimarisi)
-- **Tahmini Süre:** 60–75 dk
-- **Gerekli Profil:** `docker` (LocalStack yerel modu) veya Geçerli AWS Hesabı (`aws configure`)
-- **Host Portları:** `4566` (LocalStack modu durumunda), SSH Bastion (22)
-- **Çalışma Dizini:** `~/labs/LAB-TF-08`
-- **Hedef Repo Yolu:** `~/devops-workspace/projects/PROJECT-TF-VPC`
-- **Referans:** [Bryant Son — How to Build an AWS VPC with Public and Private Subnets using Terraform](https://bryantson.medium.com/how-to-build-an-aws-vpc-with-public-and-private-subnets-using-terraform-5eac1dc69b83)
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| İleri | 75 dakika | `docker, localstack` | `4566` |
 
----
+[LAB-TF-08.zip](/downloads/LAB-TF-08.zip)
+
 
 ## 1. Lab / Proje Senaryosu
 
@@ -784,92 +778,3 @@ fi
 ```
 
 ---
-
-## 8. Break/Fix ve Sorun Giderme (Troubleshooting)
-
-### Senaryo 1: Private EC2 İnternete Çıkamıyor (`apt-get` veya `curl` zaman aşımına uğruyor)
-* **Belirti:** Private sunucuda `curl https://checkip.amazonaws.com` komutu 30 saniye bekleyip `Connection timed out` hatası veriyor.
-* **Teşhis:**
-  1. Private subnet'in hangi Route Table'a bağlı olduğunu kontrol edin: `aws ec2 describe-route-tables --filters "Name=association.subnet-id,Values=<subnet-id>"`.
-  2. NAT Gateway durumunu kontrol edin: `aws ec2 describe-nat-gateways --nat-gateway-ids <nat-gw-id>`.
-* **Kök Neden:** Private Subnet, `Private Route Table` yerine yanlışlıkla varsayılan (Main) Route Table'a bağlanmış veya Private Route Table içindeki `0.0.0.0/0` kuralı NAT Gateway ID'sini içermiyor.
-* **Onarım:**
-  `routing.tf` dosyasında `aws_route_table_association.private` bloğunu doğrulayın ve `terraform apply` çalıştırarak rotayı düzeltin:
-  ```hcl
-  resource "aws_route_table_association" "private" {
-    count          = length(aws_subnet.private)
-    subnet_id      = aws_subnet.private[count.index].id
-    route_table_id = aws_route_table.private.id
-  }
-  ```
-
----
-
-### Senaryo 2: Bastion Host SSH Bağlantısı Zaman Aşımına Uğruyor (`Port 22: Connection timed out`)
-* **Belirti:** `ssh -i lab_key.pem ubuntu@<bastion-ip>` komutu yanıt vermiyor.
-* **Teşhis:**
-  1. Bastion hostun `map_public_ip_on_launch = true` olan bir **Public Subnet** içinde olup olmadığını kontrol edin.
-  2. Public Subnet'in bağlı olduğu Route Table'da `0.0.0.0/0 -> igw-...` rotasının varlığını teyit edin.
-  3. `security_groups.tf` içindeki `allowed_ssh_cidr` değişkeninin öğrencinin dış IP adresini kapsayıp kapsamadığını kontrol edin.
-* **Kök Neden:** Public Subnet'e Internet Gateway rotası atanmamış veya Security Group Port 22 girişine izin vermiyor.
-
----
-
-### Senaryo 3: Subnet CIDR Blok Çakışması (`CIDRAddressOverlap`)
-* **Belirti:** `terraform apply` esnasında `InvalidSubnet.Conflict: The CIDR '10.0.1.0/24' conflicts with another subnet` hatası alınması.
-* **Kök Neden:** `public_subnet_cidrs` ve `private_subnet_cidrs` listelerinde aynı veya kesişen IP bloklarının verilmesi.
-* **Onarım:**
-  Her subnet'in benzersiz CIDR bloğuna sahip olduğunu doğrulayın (`10.0.1.0/24`, `10.0.2.0/24`, `10.0.11.0/24`, `10.0.12.0/24`).
-
----
-
-## 10. Kurumsal Üretim Notları (Production Best Practices)
-
-1. **Yüksek Erişilebilirlik (HA) İçin Dual NAT Gateway:**
-   - Bu eğitim labında maliyeti düşük tutmak amacıyla tek bir NAT Gateway (`us-east-1a`) kullanılmıştır.
-   - Ancak üretim ortamlarında (Production), `us-east-1a` veri merkezinde bir arıza meydana gelirse `us-east-1b`'deki sunucular da internete çıkamaz. Bu nedenle üretimde **her Availability Zone için ayrı bir NAT Gateway** konuşlandırılmalıdır.
-2. **VPC Gateway Endpoints ile Veri Transfer Maliyetlerini Sıfırlama:**
-   - AWS S3 ve DynamoDB servislerine erişim varsayılan olarak internet üzerinden NAT Gateway aracılığıyla yapılır ve GB başına $0.045 veri işleme ücreti yazar.
-   - Bir **VPC Gateway Endpoint (com.amazonaws.us-east-1.s3)** tanımlayarak S3 trafiği tamamen AWS iç omurgasına (private backbone) yönlendirilmeli, hem hız artırılmalı hem de maliyet sıfırlanmalıdır.
-3. **SSH Bastion Yerine AWS Systems Manager (SSM) Session Manager:**
-   - Bastion hostlar açık port 22 gerektirdiği için potansiyel bir saldırı yüzeyidir.
-   - Modern üretim mimarilerinde Bastion hostların port 22'si tamamen kapatılır; sunuculara IAM rolleri atanarak `aws ssm start-session --target <instance-id>` ile şifresiz ve anahtarsız tünel kurulur.
-4. **VPC Flow Logs ile Ağ Denetimi:**
-   - Kimin hangi IP ve porta bağlandığını izlemek için VPC Flow Logs açılarak CloudWatch Logs veya S3'e yönlendirilmelidir.
-5. **State Kilitleme ve Şifreleme:**
-   - `terraform.tfstate` dosyası oluşturulan kaynakların hassas bilgilerini içerir. State mutlaka S3 üzerinde şifreli (AES-256 / KMS) saklanmalı ve DynamoDB tablosu ile eşzamanlı değişikliklere karşı kilitlenmelidir (`backend "s3"`).
-
----
-
-## 11. Challenge / Hızlı Sınıf Eklentileri (Fast-Class Extensions)
-
-Labı erken tamamlayan öğrenciler için 3 ileri düzey görev:
-
-### Challenge 1: S3 Gateway Endpoint Ekleyerek NAT Gateway'i Devre Dışı Bırakma
-`vpc_endpoints.tf` dosyası oluşturarak S3 trafiğini AWS omurgasına bağlayın:
-```hcl
-resource "aws_vpc_endpoint" "s3" {
-  vpc_id       = aws_vpc.main.id
-  service_name = "com.amazonaws.${var.aws_region}.s3"
-  vpc_endpoint_type = "Gateway"
-  route_table_ids = [
-    aws_route_table.public.id,
-    aws_route_table.private.id
-  ]
-  tags = { Name = "${var.environment}-s3-endpoint" }
-}
-```
-
-### Challenge 2: VPC Flow Logs ile Trafik Analizi
-VPC üzerindeki tüm REDDEDİLEN (REJECT) paketleri yakalayan bir CloudWatch Log Group ve IAM rolü tanımlayarak `aws_flow_log` kaynağını ekleyin.
-
-### Challenge 3: Kodu Yeniden Kullanılabilir Bir Terraform Modülüne Dönüştürme
-Mevcut kod yapısını `modules/vpc` dizini altına taşıyıp root modülden çağrılabilir hale getirin (`module "vpc" { source = "./modules/vpc" ... }`).
-
----
-
-## 12. Codex Implementation Notes
-
-- **Otomasyon ve Test:** Lab assetleri `outputs/lab-assets/LAB-TF-08/` dizininde eksiksiz olarak oluşturulmuştur.
-- **LocalStack Uyumluluğu:** AWS kimlik bilgisi bulunmayan test koşumlarında `enable_localstack = true` yapılarak Docker tabanlı LocalStack üzerinde test edilebilir.
-- **Güvenli Temizlik:** Terraform `destroy` komutu ile cloud leakage / fatura riskleri engellenmiştir.

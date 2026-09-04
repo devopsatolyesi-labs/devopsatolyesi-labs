@@ -33,5 +33,16 @@ sonunda siler ve yalnız Labs Helm chartını OCI registry'ye yollar.
 Labs erişimi Keycloak OIDC ile korunur. `admin` tüm sayfalara,
 `devops-practitioner-5-day` ve `docker-kubernetes-2-day` grupları yalnız kendi
 lab URL'lerine erişebilir; doğrudan URL denemeleri Nginx katmanında reddedilir.
+Lab sayfaları, menü görünürlüğü, bireysel ZIP'ler ve eğitim başına tek toplu ZIP
+aynı `training-content/catalog.json` üyeliğinden üretilir.
 OAuth oturum katmanı, ID token destekli tek tık Keycloak çıkışı için
 OAuth2 Proxy `v7.15.3` kullanır.
+
+İçerik, erişim politikası, paket ve Helm doğrulamalarını Docker daemon olmadan
+çalıştırmak için:
+
+```bash
+make validate-content
+```
+
+Tam portal image doğrulaması için Docker çalışırken `make validate` kullanılır.

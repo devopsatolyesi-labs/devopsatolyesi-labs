@@ -1,11 +1,11 @@
 # LAB-DOC-10 — Docker Runtime Güvenliği ve Hardening
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🔴 **ADVANCED** (İleri Seviye) | ⏱️ 45 dakika | `docker` | `8080` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| İleri | 45 dakika | `docker` | `8080` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-10.zip)](/downloads/LAB-DOC-10.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-DOC-10.zip](/downloads/LAB-DOC-10.zip)
+
 
 ---
 
@@ -152,40 +152,9 @@ docker top secure-nginx
 
 ---
 
-### Adım 5: Temizlik
-
-```bash
-docker rm -f secure-nginx
-```
-
----
-
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: `--read-only` bayrağı verilmiş bir konteynerde uygulamanın geçici dosya yazması gerekirse ne yapılmalıdır?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        `--tmpfs` bayrağı ile RAM üzerinde geçici ve kısıtlı bir dizin bağlanmalıdır (örneğin `--tmpfs /tmp:rw,noexec,nosuid,size=64m`). `noexec` parametresi buraya indirilebilecek bir zararlı yazılımın çalıştırılmasını engeller, `size` ise RAM tüketimini sınırlar.
-
-??? question "Soru 2: `--security-opt=no-new-privileges:true` bayrağının sağladığı koruma nedir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Konteyner içindeki bir sürecin `setuid` veya `setgid` bitlerine sahip ikili dosyaları (örneğin `sudo` veya `su`) çalıştırarak daha yüksek yetkilere (root) geçmesini engeller. Linux çekirdeği seviyesinde yetki yükseltmeyi (privilege escalation) kesin olarak bloke eder.
-
-??? question "Soru 3: `--cap-drop=ALL` kullanıldığında konteyner 80 portunu doğrudan dinleyebilir mi?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Hayır. Linux çekirdeğinde 1024 altındaki portları dinlemek `CAP_NET_BIND_SERVICE` yeteneğini gerektirir. Eğer tüm yetenekler düşürüldüyse konteyner ya 1024 üstü bir port dinlemeli (ör. 8080) ya da `--cap-add=NET_BIND_SERVICE` bayrağı ile sadece bu tekil yetenek geri verilmelidir.
-
----
-
-## Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 
 - `touch /etc/nginx/hack.txt` komutu `Read-only file system` hatası döner.
 - HTTP yanıtı `{"status":"secure","security":"hardened_runtime"}` döner.
 
 ---
-
-## Sorun Giderme
-
-- **Nginx acil durdurma (emerg):** Nginx başlatılamıyorsa `nginx.conf` içindeki pid ve temp path ayarlarının `--tmpfs` olarak bağlanan `/tmp` dizinine baktığından emin olun.

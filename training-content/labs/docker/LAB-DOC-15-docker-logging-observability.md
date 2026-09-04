@@ -1,11 +1,11 @@
 # LAB-DOC-15 — Docker Loglama ve Gözlemlenebilirlik
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 40 dakika | `docker` | `8080`, `8081` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Orta | 40 dakika | `docker` | `8080, 8081` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-15.zip)](/downloads/LAB-DOC-15.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-DOC-15.zip](/downloads/LAB-DOC-15.zip)
+
 
 ---
 
@@ -158,38 +158,7 @@ docker logs --tail 1 log-producer | grep -q "Heartbeat event" && echo "Log akı�
 
 ---
 
-### Adım 7: Temizlik
-
-```bash
-docker compose down
-```
-
----
-
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: Docker varsayılanında `max-size` ve `max-file` log rotasyon parametreleri ayarlanmazsa ne olur?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Varsayılan olarak Docker'ın `json-file` sürücüsünde hiçbir boyut sınırı yoktur. Çok log üreten bir konteyner haftalarca çalıştığında gigabaytlarca JSON log dosyası birikir ve sunucunun kök diskini (`/var/lib/docker`) tamamen doldurarak tüm işletim sisteminin kilitlenmesine yol açar.
-
-??? question "Soru 2: Sistem genelinde tüm konteynerler için geçerli olacak bir log rotasyonu nasıl yapılandırılır?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        `/etc/docker/daemon.json` dosyası içerisine varsayılan loglama sürücüsü ve ayarları eklenip Docker servisi yeniden başlatılır (`sudo systemctl restart docker`):
-        ```json
-        {
-          "log-driver": "json-file",
-          "log-opts": {
-            "max-size": "10m",
-            "max-file": "3"
-          }
-        }
-        ```
-
----
-
-## Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 
 - `docker logs --tail 5` komutunun geçerli JSON formatlı loglar listelemesi.
 - `docker events` komutunun konteyner durdurma/başlatma anında olay tetiklemesi.

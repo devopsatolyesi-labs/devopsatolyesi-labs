@@ -1,14 +1,11 @@
 # LAB-HLM-01 — Helm Fundamentals: Chart Structure, Custom Values & Release Management
 
-## Metadata
-- **Seviye:** PRACTITIONER
-- **Önerilen Gün:** Gün 4
-- **Tahmini Süre:** 45 dk
-- **Gerekli Profil:** `kubernetes`
-- **Host Portları:** - (Küme İçi Helm Release Dağıtımı)
-- **Çalışma Dizini:** `~/labs/LAB-HLM-01`
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Orta | 45 dakika | `kubernetes` | `Küme içi` |
 
----
+[LAB-HLM-01.zip](/downloads/LAB-HLM-01.zip)
+
 
 ## 1. Lab Senaryosu
 Mikroservis sayısı arttıkça onlarca ham Kubernetes YAML dosyasını farklı ortamlar (geliştirme, test, üretim) için elle kopyalamak ve parametreleri güncellemek ciddi yapılandırma hatalarına yol açar. Helm, Kubernetes için paket yöneticisi olarak görev yaparak manifestoları dinamik Go şablonları (`templates/`) haline getirir ve ortama özel değerleri (`values.yaml`) parametrik olarak enjekte eder. Bu çalışmada sıfırdan kurumsal standartlarda bir Helm Chart hazırlanır; `helm lint` denetimi yapılır; üretim parametreleriyle (`values-prod.yaml`) 4 replikalı bir sürüm dağıtılır; canlı sistem üzerinde sürüm yükseltme (`upgrade`) ve geri alma (`rollback`) yaşam döngüsü doğrulanır.
@@ -182,7 +179,7 @@ helm history prod-release -n production
 helm rollback prod-release 1 -n production
 ```
 
-## 6. Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 Adım 2'deki lint çıktısı:
 ```text
 1 chart(s) linted, 0 chart(s) failed
@@ -203,7 +200,7 @@ REVISION  UPDATED   STATUS      CHART             APP VERSION  DESCRIPTION
 3         ...       deployed    devops-app-1.0.0  1.0.0        Rollback to 1
 ```
 
-## 7. Doğrulama
+## Doğal Doğrulama ve Beklenen Sonuç
 Release durumunun deployed olduğunu, revizyon numarasının 3'e ulaştığını ve 4 podun ayakta olduğunu doğrulayın:
 ```bash
 REVISION=$(helm status prod-release -n production -o json | jq .version)
@@ -215,42 +212,3 @@ else
   echo "VALIDATION FAILED: Revision: $REVISION, Pods: $PODS" && exit 1
 fi
 ```
-
-## 8. Sorun Giderme
-
-### Belirti
-`helm lint` veya `helm install` komutu verilirken `error converting YAML to JSON: yaml: line X: did not find expected key` hatası alınır.
-
-### Kanıt
-Helm şablon render aşamasında YAML girinti (indentation) hatası oluştuğu bildirilir.
-
-### Kontrol Komutu
-```bash
-helm template test devops-app/
-```
-
-### Muhtemel Neden
-`{{- toYaml .Values.resources | nindent 12 }}` satırındaki `nindent` boşluk sayısı Kubernetes spec hiyerarşisine uymamaktadır.
-
-### Çözüm
-`templates/deployment.yaml` dosyasındaki `nindent` değerini hiyerarşiye uygun olarak 12 boşluğa ayarlayın.
-
-### Tekrar Doğrulama
-```bash
-helm lint devops-app/
-# "0 chart(s) failed" çıktısı alınmalıdır.
-```
-
-## 9. Temizlik / Sıfırlama
-Release'i kaldırın, ad alanını silin ve çalışma dizinini temizleyin:
-```bash
-helm uninstall prod-release -n production 2>/dev/null || true
-kubectl delete namespace production 2>/dev/null || true
-rm -rf devops-app ~/labs/LAB-HLM-01
-```
-
-## 10. Production Notu
-Üretim ortamlarında Chart sürümleri semantik versiyonlama kuralına (`version: 1.2.0`) göre her değişiklikte artırılmalıdır. Parametrelerin güvenliği ve veri doğrulaması için `values.schema.json` şeması tanımlanmalı, paketlenen Chart'lar Harbor veya OCI uyumlu bir Artifact Registry üzerinde (`helm push`) versiyonlanmalıdır.
-
-## 11. Challenge
-Chart şablonlarına `templates/tests/test-connection.yaml` entegrasyon test podu ekleyerek `helm test prod-release -n production` komutuyla çalışan servise otomatik ping testi atın.

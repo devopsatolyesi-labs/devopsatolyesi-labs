@@ -1,14 +1,11 @@
 # LAB-ARG-01 — GitOps with Argo CD: Setup, Declarative Sync & Self-Healing
 
-## Metadata
-- **Seviye:** PRACTITIONER
-- **Önerilen Gün:** Gün 4
-- **Tahmini Süre:** 45 dk
-- **Gerekli Profil:** `kubernetes`
-- **Host Portları:** `8085:443` (Argo CD API & Web UI)
-- **Çalışma Dizini:** `~/labs/LAB-ARG-01`
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Orta | 45 dakika | `kubernetes, argocd` | `8085` |
 
----
+[LAB-ARG-01.zip](/downloads/LAB-ARG-01.zip)
+
 
 ## 1. Lab Senaryosu
 Klasik CI/CD araçlarının dışarıdan Kubernetes kümesine doğrudan tam yönetici (admin) erişimiyle bağlanması (Push modeli), güvenlik açıklarında tüm kümenin ele geçirilme riskini doğurur. GitOps (Pull modeli), Git deposunu altyapı ve uygulamaların tek doğruluk kaynağı (Single Source of Truth) kabul eder. Küme içinde çalışan Argo CD kontrolcüsü, Git deposundaki deklaratif manifestoları düzenli olarak izler ve küme durumunda oluşan sapmaları (drift) tespit ederek sistemi otomatik olarak Git'teki haline eşitler (Self-Healing). Bu çalışmada kind kümesi üzerine Argo CD v3.4 kurulur; deklaratif Application nesnesi tanımlanır ve manuel müdahalelerin otomatik düzeltilmesi test edilir.
@@ -70,7 +67,6 @@ flowchart TD
 
 > [!NOTE]
 > **GitOps Mutabakat Döngüsü (Reconciliation Loop):** Argo CD, Git deposundaki deklaratif YAML dosyalarını **İstenen Durum (Desired State)**, Kubernetes kümesindeki canlı kaynakları ise **Mevcut Durum (Actual State)** olarak takip eder. Biri cluster üzerinde elle bir pod silse veya yamasa bile (Configuration Drift), `selfHeal: true` kuralı sayesinde Argo CD saniyeler içinde Git'teki tanımı zorlayarak sistemi eski sağlıklı haline döndürür.
-
 
 ## 4. Ön Koşullar
 - `LAB-K8S-01` tamamlanmış ve kind cluster çalışıyor olmalıdır
@@ -214,7 +210,7 @@ sleep 5
 kubectl get deployment gitops-demo-app -n gitops-prod
 ```
 
-## 6. Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 Adım 4'teki Deployment durumu:
 ```text
 NAME              READY   UP-TO-DATE   AVAILABLE   AGE
@@ -227,7 +223,7 @@ NAME              READY   UP-TO-DATE   AVAILABLE   AGE
 gitops-demo-app   2/2     2            2           ... (Drift detected; reconciles to 2!)
 ```
 
-## 7. Doğrulama
+## Doğal Doğrulama ve Beklenen Sonuç
 `gitops-demo-app` uygulamasının 2/2 sağlıklı replika ile çalıştığını doğrulayın:
 ```bash
 READY_REPLICAS=$(kubectl get deployment gitops-demo-app -n gitops-prod -o jsonpath='{.status.readyReplicas}')
@@ -238,45 +234,3 @@ else
   echo "VALIDATION FAILED: Expected 2 replicas, found $READY_REPLICAS." && exit 1
 fi
 ```
-
-## 8. Sorun Giderme
-
-### Belirti
-Argo CD Application `OutOfSync` veya `ComparisonError` hatası verir.
-
-### Kanıt
-`argocd app get gitops-demo-app` çıktısında depo bağlantı hatası veya dal bulunamadı uyarısı görülür.
-
-### Kontrol Komutu
-```bash
-kubectl logs -l app.kubernetes.io/name=argocd-repo-server -n argocd --tail 20
-```
-
-### Muhtemel Neden
-Git depo adresi hatalıdır veya `targetRevision: HEAD` yerine açıkça somut bir dal adı (`main`) tanımlanmamıştır.
-
-### Çözüm
-`application.yaml` dosyasında `targetRevision: main` parametresini doğrulayın ve uygulamayı tekrar senkronize edin:
-```bash
-kubectl apply -f application.yaml
-argocd app sync gitops-demo-app || true
-```
-
-### Tekrar Doğrulama
-```bash
-kubectl get deployment gitops-demo-app -n gitops-prod
-```
-
-## 9. Temizlik / Sıfırlama
-Argo CD uygulamasını ve oluşturulan ad alanlarını silin:
-```bash
-argocd app delete gitops-demo-app --cascade 2>/dev/null || true
-kubectl delete namespace gitops-prod argocd 2>/dev/null || true
-rm -rf ~/labs/LAB-ARG-01
-```
-
-## 10. Production Notu
-Üretim ortamlarında yüzlerce mikroservis tek tek `Application` nesnesi olarak tanımlanmaz; "App of Apps" veya "ApplicationSet" mimarisi kullanılarak tek bir ana manifestodan hiyerarşik olarak yönetilir. Ayrıca CI boru hattı üretim kümesine doğrudan bağlanmaz; yalnızca GitOps manifest reposundaki imaj etiketini commit eder.
-
-## 11. Challenge
-`application.yaml` içine `spec.syncWindows` bloğu ekleyerek belirli saatler arasında otomatik deploy yapılmasını engelleyen bir dağıtım penceresi kuralı tanımlayın.

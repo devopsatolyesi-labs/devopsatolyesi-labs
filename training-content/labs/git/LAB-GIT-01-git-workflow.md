@@ -1,14 +1,11 @@
 # LAB-GIT-01 — Git Workflow, Branching & Conflict Resolution
 
-## Metadata
-- **Seviye:** CORE
-- **Önerilen Gün:** Gün 1
-- **Tahmini Süre:** 45 dk
-- **Gerekli Profil:** `docker`
-- **Host Portları:** -
-- **Çalışma Dizini:** `~/labs/LAB-GIT-01`
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Temel | 45 dakika | `docker` | `Küme içi` |
 
----
+[LAB-GIT-01.zip](/downloads/LAB-GIT-01.zip)
+
 
 ## 1. Lab Senaryosu
 Çok paydaşlı bir yazılım geliştirme ortamında birden fazla mühendis aynı mikroservis yapılandırması üzerinde paralel geliştirmeler yapmaktadır. Bir geliştirici kimlik doğrulama altyapısını JWT standardına taşırken, operasyon ekibi ana dalda port ve log seviyesi güncellemesi uygulamıştır. Bu iki dal birleştirilmek istendiğinde dosya düzeyinde çakışma (merge conflict) meydana gelir. Bu çalışmada Trunk-Based ve Feature-Branch yaklaşımları uygulanır; çakışan JSON yapılandırması çözümlenerek temiz bir commit geçmişi elde edilir.
@@ -140,7 +137,7 @@ git add app-config.json
 git commit -m "merge: resolve conflict between main (port 9090) and jwt-auth"
 ```
 
-## 6. Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 Adım 5'te beklenen Git çakışma uyarısı:
 ```text
 Auto-merging app-config.json
@@ -158,7 +155,7 @@ Automatic merge failed; fix conflicts and then commit the result.
 * ... feat: initial app config for payment service
 ```
 
-## 7. Doğrulama
+## Doğal Doğrulama ve Beklenen Sonuç
 Yapılandırma dosyasının geçerli bir JSON olduğunu ve her iki değişikliğin birleştiğini doğrulayın:
 ```bash
 cd ~/labs/LAB-GIT-01/repo
@@ -171,43 +168,3 @@ else
     echo "VALIDATION FAILED: Unexpected values in app-config.json" && exit 1
 fi
 ```
-
-## 8. Sorun Giderme
-
-### Belirti
-Çalışma esnasında `fatal: You are in 'detached HEAD' state` uyarısı alınır.
-
-### Kanıt
-`git status` çıktısında `HEAD detached at ...` ifadesi görülür.
-
-### Kontrol Komutu
-```bash
-git branch
-```
-
-### Muhtemel Neden
-Branch adı yerine doğrudan bir commit hash'i kontrol edilmiştir (`git checkout <commit-hash>`).
-
-### Çözüm
-Değişiklikleri kaybetmeden ana dala geri dönün veya yeni bir branch açın:
-```bash
-git checkout main
-```
-
-### Tekrar Doğrulama
-```bash
-git branch --show-current
-# Çıktı "main" olmalıdır.
-```
-
-## 9. Temizlik / Sıfırlama
-Laboratuvar ortamını temizlemek ve sıfırlamak için:
-```bash
-rm -rf ~/labs/LAB-GIT-01
-```
-
-## 10. Production Notu
-Üretim ortamlarında `main` veya `release` dallarına doğrudan `git push` engellenmeli (Protected Branch), tüm değişiklikler zorunlu Code Review (Pull Request) ve otomatik CI testlerinin (Merge Request Pipeline) ardından merge edilmelidir.
-
-## 11. Challenge
-Son 2 commit'i tek bir temiz commit haline getiren `git rebase -i HEAD~2` (Interactive Rebase Squash) işlemini uygulayın ve commit geçmişini sadeleştirin.
