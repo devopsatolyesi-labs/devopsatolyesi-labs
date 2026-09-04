@@ -151,6 +151,122 @@ Filesystem      Size  Used Avail Use% Mounted on
 =========================================
 ```
 
+
+---
+
+## 🛠️ DevOps İçin En Çok Kullanılan Linux Komutları (Cheat Sheet)
+
+Sistem yöneticileri, DevOps ve SRE mühendislerinin üretim ortamlarında her gün kullandığı kritik komutlar:
+
+### 1. Süreç ve Kaynak Yönetimi
+```bash
+# Sistemdeki süreçleri CPU ve RAM tüketimine göre sıralama
+ps aux --sort=-%mem | head -n 10
+ps aux --sort=-%cpu | head -n 10
+
+# Belirli bir süreci ismine göre arama ve sonlandırma
+pgrep -fl nginx
+pkill -f "python3 app.py"
+
+# Bellek kullanımını insan tarafından okunabilir (MB/GB) olarak izleme
+free -h -w
+vmstat 1 5
+```
+
+### 2. Ağ, Soket ve Port Denetimi
+```bash
+# Dinleyen TCP/UDP portlarını ve ilgili süreci listeleme (netstat alternatifi)
+sudo ss -tulpn
+
+# Belirli bir portun (ör. 8080) hangi işlem tarafından kilitlendiğini bulma
+sudo lsof -i :8080
+
+# Uzak sunucunun belirli bir portunun açık olup olmadığını test etme
+nc -zv 192.168.1.50 6443
+curl -Iv https://labs.devopsatolyesi.com
+```
+
+### 3. Disk ve Depolama Analizi
+```bash
+# Disk doluluk oranlarını ve dosya sistemi türlerini listeleme
+df -hT /
+
+# Bulunulan dizindeki en büyük ilk 10 klasörü tespit etme
+du -ah . | sort -rh | head -n 10
+
+# Diskteki 100 MB'tan büyük dosyaları bulma (log temizliği için)
+find /var/log -type f -size +100M -exec ls -lh {} +
+```
+
+### 4. Systemd ve Log İnceleme (journalctl)
+```bash
+# Servis durumunu kontrol etme, başlatma, durdurma ve otomatik başlatmayı açma
+sudo systemctl status docker
+sudo systemctl restart docker
+sudo systemctl enable --now docker
+sudo systemctl daemon-reload
+
+# Belirli bir servisin loglarını canlı (tail -f) izleme
+sudo journalctl -u docker -f
+
+# Yalnızca son 1 saatteki hata loglarını filtreleme
+sudo journalctl -u docker --since "1 hour ago" -p err
+```
+
+---
+
+## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
+
+Aşağıdaki soruları yanıtlamaya çalışın; ardından çözümü görmek için kutucuklara tıklayın:
+
+??? question "Soru 1: Bir uygulamanız 8080 portunda başlamıyor ve 'Address already in use' hatası veriyor. Portu kilitleyen işlemi bulup zorla sonlandırmak için hangi iki komutu sırasıyla çalıştırırsınız?"
+    ??? tip "💡 Çözümü Göster"
+        **Cevap:**
+        1. Portu dinleyen PID'yi bulun:
+           ```bash
+           sudo lsof -i :8080 -t
+           # veya: sudo ss -tulpn | grep 8080
+           ```
+        2. Tespit edilen PID'yi (ör. 4521) sonlandırın:
+           ```bash
+           sudo kill -9 4521
+           ```
+
+??? question "Soru 2: `systemctl restart my-service` komutu çalıştırıldığında hata alıyorsunuz. Servisin neden ayağa kalkamadığını en hızlı şekilde nereden ve hangi komutla incelersiniz?"
+    ??? tip "💡 Çözümü Göster"
+        **Cevap:**
+        `journalctl` aracı ile servisin standart hata (stderr) çıktıları incelenir:
+        ```bash
+        sudo journalctl -u my-service -n 50 --no-pager
+        ```
+        `-n 50` son 50 satırı gösterir, `--no-pager` ise çıktıyı terminalde cat gibi doğrudan basar.
+
+??? question "Soru 3: Linux'ta bir dosyanın izinleri `chmod 755 script.sh` ve `chmod 600 id_rsa` yapıldığında bu sayıların ifade ettiği yetki dağılımı nedir?"
+    ??? tip "💡 Çözümü Göster"
+        **Cevap:**
+        Linux'ta `Read (4)`, `Write (2)`, `Execute (1)` değerlerini temsil eder:
+        - **`755`:** Sahip (4+2+1=7: rwx), Grup (4+0+1=5: r-x), Diğerleri (4+0+1=5: r-x). Scriptler ve çalıştırılabilir dosyalar için standarttır.
+        - **`600`:** Sahip (4+2+0=6: rw-), Grup (0: ---), Diğerleri (0: ---). SSH private key ve hassas konfigürasyonlar için zorunlu güvenlik standardıdır.
+
+??? question "Soru 4: Sunucuda disk dolduğu için servisler çöküyor (`No space left on device`). `/var/log` altında en çok yer kaplayan dosyaları tespit edip güvenle sıfırlamak (silmeden boyutunu 0 yapmak) için hangi komut kullanılır?"
+    ??? tip "💡 Çözümü Göster"
+        **Cevap:**
+        En büyük dosyaları listelemek için:
+        ```bash
+        du -ah /var/log | sort -rh | head -n 5
+        ```
+        Çalışan bir servisin log dosyasını `rm` ile silerseniz dosya tanıtıcısı (file descriptor) açık kalacağından disk boşalmaz. Dosyayı silmeden sıfırlamak için:
+        ```bash
+        sudo truncate -s 0 /var/log/app/huge.log
+        # veya: sudo : > /var/log/app/huge.log
+        ```
+
+??? question "Soru 5: Sunucuda anlık CPU yükünü (Load Average) ve çekirdek başına yük dağılımını terminalden en hızlı nasıl görürsünüz?"
+    ??? tip "💡 Çözümü Göster"
+        **Cevap:**
+        `uptime` veya `top` komutu çalıştırılır. `top` ekranında `1` tuşuna basıldığında CPU çekirdekleri tek tek (Cpu0, Cpu1, Cpu2...) ayrıntılanır. `Load Average` değerinin (1, 5 ve 15 dk) CPU çekirdek sayısından (`nproc`) düşük olması sistemin rahat çalıştığını gösterir.
+
+
 ## 7. Doğrulama
 Preflight scriptinin sıfır hata kodu ile sonlandığını teyit edin:
 ```bash

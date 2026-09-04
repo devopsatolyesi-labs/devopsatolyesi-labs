@@ -291,6 +291,118 @@ payment-api-deployment-xxxxxxxxxx-2       1/1     Running   0          ...
 payment-api-deployment-xxxxxxxxxx-3       1/1     Running   0          ...
 ```
 
+
+---
+
+## 🛠️ En Çok Kullanılan `kubectl` Komutları ve Pratik İpuçları (Cheat Sheet)
+
+Kubernetes küme yönetiminde, sertifikasyon sınavlarında (CKA/CKAD) ve canlı operasyonlarda hız kazandıran temel komut seti:
+
+### 1. Hızlı Kaynak Görüntüleme ve Filtreleme
+```bash
+# Tüm ad alanlarındaki Pod'ları IP ve Node bilgileriyle listeleme
+kubectl get pods -A -o wide
+
+# Belirli bir etiket (label) seçicisine uyan servisleri bulma
+kubectl get pods -l app=payment-api --show-labels
+
+# Pod veya Deployment'ın detaylı durumunu, event (olay) kayıtlarını inceleme
+kubectl describe pod <pod-name> -n <namespace>
+
+# Kaynağın YAML çıktısını alma (konfigürasyon kopyalamak için)
+kubectl get deployment payment-api -o yaml > deployment-backup.yaml
+```
+
+### 2. Hızlı Bildirimsel (Declarative) Şablon Üretimi (`--dry-run=client`)
+```bash
+# Sıfırdan YAML yazmak yerine şablon üretme (Zaman kazandırıcı CKA taktiği)
+kubectl run nginx-pod --image=nginx:alpine --dry-run=client -o yaml > pod.yaml
+
+# 3 replikalı Deployment manifestosu üretme
+kubectl create deployment web-api --image=nginx:alpine --replicas=3 --dry-run=client -o yaml > deployment.yaml
+
+# Deployment için NodePort servisi üretme
+kubectl expose deployment web-api --port=80 --target-port=8080 --type=NodePort --dry-run=client -o yaml > service.yaml
+```
+
+### 3. Canlı Sorun Giderme ve Debug
+```bash
+# Çalışan bir konteynerin içine interaktif kabuk açma
+kubectl exec -it <pod-name> -- sh
+
+# Çöken veya yeniden başlayan konteynerin önceki loglarını inceleme
+kubectl logs <pod-name> --previous -c <container-name>
+
+# Kümedeki bir servisi geçici olarak yerel bilgisayara yönlendirme
+kubectl port-forward svc/payment-service 8080:8000 &
+```
+
+### 4. Güncelleme, Rollout ve Ölçekleme
+```bash
+# Deployment imajını canlıda güncelleme
+kubectl set image deployment/web-api nginx=nginx:1.25-alpine
+
+# Dağıtım durumunu izleme ve geçmişi görme
+kubectl rollout status deployment/web-api
+kubectl rollout history deployment/web-api
+
+# Hatalı bir dağıtımı anında önceki sürüme geri alma (Rollback)
+kubectl rollout undo deployment/web-api
+
+# Pod'ları sırayla yeniden başlatma (Rolling Restart)
+kubectl rollout restart deployment/web-api
+
+# Replika sayısını anında artırma
+kubectl scale deployment/web-api --replicas=5
+```
+
+---
+
+## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
+
+??? question "Soru 1: Bir pod `CrashLoopBackOff` durumuna düştüğünde ve `kubectl logs <pod-name>` komutu boş döndüğünde, çökmeden hemen önceki hata mesajını görmek için hangi bayrak kullanılır?"
+    ??? tip "💡 Çözümü Göster"
+        **Cevap:**
+        `--previous` bayrağı kullanılır:
+        ```bash
+        kubectl logs <pod-name> --previous
+        ```
+        Pod çöktükten sonra Kubernetes yeni bir konteyner başlattığı için standart logs komutu henüz yeni başlayan boş konteyneri dinler. `--previous` parametresi ise az önce çöken ve sonlanan konteynerin stdout/stderr çıktısını getirir.
+
+??? question "Soru 2: `kubectl run` komutu ile `kubectl create deployment` komutu arasındaki mimari fark nedir?"
+    ??? tip "💡 Çözümü Göster"
+        **Cevap:**
+        - `kubectl run`, doğrudan bağımsız (bare/standalone) tek bir **Pod** nesnesi oluşturur. Pod silinirse veya düğüm çökerse Kubernetes onu yeniden başlatmaz (self-healing yoktur).
+        - `kubectl create deployment`, bir **Deployment** denetleyicisi ve onun altında bir **ReplicaSet** oluşturur. Pod çökerse veya silinirse ReplicaSet anında istenen durumu (desired state) korumak için yeni bir pod ayağa kaldırır.
+
+??? question "Soru 3: Kümedeki tüm pod'ların CPU ve RAM tüketimini anlık olarak görmek için hangi komut kullanılır ve bu komutun çalışması için kümede hangi bileşenin kurulu olması gerekir?"
+    ??? tip "💡 Çözümü Göster"
+        **Cevap:**
+        Komut:
+        ```bash
+        kubectl top pods -A
+        kubectl top nodes
+        ```
+        Bu komutun çalışabilmesi için kümede **Kubernetes Metrics Server** bileşeninin kurulu ve pod metriklerini topluyor olması zorunludur.
+
+??? question "Soru 4: Production ortamında çalışan bir pod'a zarar vermeden içerisindeki `/app/config.json` dosyasını yerel bilgisayarınıza nasıl kopyalarsınız?"
+    ??? tip "💡 Çözümü Göster"
+        **Cevap:**
+        `kubectl cp` komutu kullanılır:
+        ```bash
+        kubectl cp <pod-name>:/app/config.json ./config-local.json
+        ```
+
+??? question "Soru 5: Hızlıca test yapmak için pod çalıştırmak ve işimiz bitince otomatik silinmesini sağlamak için hangi parametreler verilir?"
+    ??? tip "💡 Çözümü Göster"
+        **Cevap:**
+        `--rm -it` parametreleri kullanılır:
+        ```bash
+        kubectl run curl-test --rm -it --image=curlimages/curl -- sh
+        ```
+        Bu komut kabuktan çıkıldığı (`exit`) anda pod nesnesini kümeden otomatik olarak temizler.
+
+
 ## 7. Doğrulama
 Kümedeki 3 düğümün Ready olduğunu ve Deployment'ın 3 sağlıklı podunun çalıştığını doğrulayın:
 ```bash
