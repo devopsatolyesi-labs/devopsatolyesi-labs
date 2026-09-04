@@ -1,0 +1,22 @@
+# ==============================================================================
+# Developer Local Override (compose.override.yaml)
+# Automatically merged by Docker Compose in local development environments
+# ==============================================================================
+
+services:
+  order-api:
+    environment:
+      - ENVIRONMENT=development
+      - DEBUG=true
+    volumes:
+      - ./app:/app:rw
+    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+
+  # Expose database ports ONLY during local development for tools like DBeaver/TablePlus
+  postgres-db:
+    ports:
+      - "127.0.0.1:5432:5432"
+
+  redis-broker:
+    ports:
+      - "127.0.0.1:6379:6379"

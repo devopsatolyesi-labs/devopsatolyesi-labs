@@ -1,34 +1,42 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "==> Validating LAB-DOC-09: User-Defined Docker Networks & DNS..."
+echo "==> [LAB-DOC-04] Doğrulama Başlatılıyor: Multi-Stage Build & Non-Root Güvenliği..."
 
-NET_NAME="custom-app-net"
-if ! docker network inspect "$NET_NAME" >/dev/null 2>&1; then
-    docker network create "$NET_NAME" >/dev/null
+if [[ ! -f Dockerfile ]]; then
+  echo "[HATA] Dockerfile bulunamadı! Lütfen ~/labs/LAB-DOC-04 dizininde çalıştırın." >&2
+  exit 1
 fi
 
-docker rm -f backend-service frontend-service 2>/dev/null || true
+stage_count=
+if [[ "" -lt 2 ]]; then
+  echo "[HATA] Dockerfile en az 2 aşama (Multi-Stage) içermelidir. Tespit edilen: " >&2
+  exit 1
+fi
 
-# Start backend container
-docker run -d --name backend-service --network "$NET_NAME" nginx:alpine >/dev/null
+echo "[1/3] İmaj derleniyor: lab-doc-04-hardened:latest..."
+docker build -t lab-doc-04-hardened:latest . >/dev/null
 
-# Build and run frontend container
-docker build -t lab-doc-09-frontend:v1 . >/dev/null
-docker run -d --name frontend-service --network "$NET_NAME" -p 8080:8080 \
-    -e BACKEND_HOST="backend-service" -e BACKEND_PORT="80" lab-doc-09-frontend:v1 >/dev/null
+echo "[2/3] Konteyner kullanıcı yetkileri (Non-Root) kontrol ediliyor..."
+configured_user=
+runtime_user=
 
+if [[ "" != *"10001"* || "" != "10001" ]]; then
+  echo "[HATA] Beklenen UID: 10001. Tespit edilen Config.User: '', Runtime UID: ''" >&2
+  exit 1
+fi
+
+echo "[3/3] Konteyner çalışma testi ve HTTP yanıtı kontrol ediliyor..."
+container_id=
 sleep 2
 
-HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080 || echo "000")
+response=
+docker stop test-doc-04 >/dev/null && docker rm test-doc-04 >/dev/null
 
-# Cleanup temporary containers created during validation test
-docker rm -f backend-service frontend-service >/dev/null 2>&1 || true
-
-if [ "$HTTP_CODE" = "200" ]; then
-    echo "[PASS] LAB-DOC-09 Inter-container DNS communication verified (HTTP 200)."
-    exit 0
+if [[ "" == *"Production Microservice"* ]]; then
+  echo "[BAŞARILI] Multi-stage build ve Non-Root UID 10001 doğrulaması eksiksiz geçti!"
+  exit 0
 else
-    echo "[FAIL] LAB-DOC-09 Expected HTTP 200, got $HTTP_CODE" >&2
-    exit 1
+  echo "[HATA] Beklenen 'Production Microservice' yanıtı alınamadı. Alınan: " >&2
+  exit 1
 fi

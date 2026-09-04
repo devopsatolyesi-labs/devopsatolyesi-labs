@@ -1,208 +1,159 @@
-# LAB-DOC-01 — İlk Docker Konteyneri ve Yaşam Döngüsü
+# LAB-DOC-01 — İlk Docker Konteyneri ve Temel Komutlar
+
+## Metadata
+
+- **Seviye:** CORE
+- **Süre:** 35 dakika
+- **Profil:** `docker`
+- **Port:** `8080`
 
 ## Amaç
 
-- Docker Engine ortamının çalıştığını doğrulamak.
-- Konteyner yaşam döngüsünü (`run`, `ps`, `logs`, `inspect`, `exec`, `stop`, `start`, `rm`) uygulamalı olarak öğrenmek.
-- Basit bir Python HTTP uygulamasını `Dockerfile` ile paketleyip port yönlendirmesi (`-p 8080:8080`) ile çalıştırmak.
-- İnteraktif Docker temel komut alıştırmalarını çözmek.
+- Docker Engine mimarisini (Client, Daemon, Registry) uygulamalı olarak anlamak.
+- Resmi bir Nginx web sunucu imajını Docker Hub üzerinden çekmek (`docker pull`).
+- İmajı izole bir konteyner olarak arka planda çalıştırmak (`docker run -d`).
+- Host portu ile konteyner portu arasındaki yönlendirmeyi (`-p 8080:80`) doğrulamak.
+- Konteynerleri listelemek, durdurmak ve temizlemek (`ps`, `stop`, `rm`).
 
 ---
 
 ## Ön Koşullar
 
-Çalışma ortamınızda Docker servisinin çalıştığından ve gerekli izinlere sahip olduğunuzdan emin olun:
-
-```bash
-docker version
-docker info >/dev/null
-```
-
-> Komutlar hata vermeden tamamlanmalıdır. `8080` portunun boş olduğundan emin olun.
+- Docker Engine servisinin çalışır durumda olması:
+  ```bash
+  docker version
+  docker info >/dev/null
+  ```
+- Host üzerinde `8080` portunun boş olması.
 
 ---
 
-## Adımlar
+## Mimari ve Port Yönlendirme Modeli
 
-### 1. Çalışma Dizinini Hazırlayın
+```text
++-----------------------------------------------------------------------+
+| ANA MAKİNE (HOST)                                                    |
+|                                                                       |
+|   İstemci (curl / Web Tarayıcı) ---> Host Port: 8080                  |
+|                                          |                            |
+|                                (Port Yönlendirme: -p 8080:80)         |
+|                                          v                            |
+|   +---------------------------------------------------------------+   |
+|   | DOCKER KONTEYNERİ (first-web-container)                       |   |
+|   |                                                               |   |
+|   |   Nginx Web Sunucusu Dinliyor ---> Konteyner Port: 80         |   |
+|   +---------------------------------------------------------------+   |
++-----------------------------------------------------------------------+
+```
 
-Standart laboratuvar çalışma dizininizi oluşturun ve içine geçin:
+---
+
+## Adım Adım Uygulama Rehberi
+
+### Adım 1: Çalışma Dizinine Geçiş
 
 ```bash
 mkdir -p ~/labs/LAB-DOC-01
 cd ~/labs/LAB-DOC-01
 ```
 
-Eğer laboratuvar paketini indirdiyseniz başlangıç dosyalarını kopyalayabilirsiniz:
+---
+
+### Adım 2: Resmi Nginx İmajını İndirin (Pull)
+
+Docker Hub genel kayıt defterinden (public registry) hafif `nginx:alpine` imajını indirin:
 
 ```bash
-cp -a starter/. . 2>/dev/null || true
+docker pull nginx:alpine
 ```
 
-Veya başlangıç dosyalarını doğrudan oluşturun:
+İndirilen imajı yerel imaj deposunda inceleyin:
 
 ```bash
-cat <<'EOF' > app.py
-# LAB-DOC-01 Starter App
-from http.server import HTTPServer, BaseHTTPRequestHandler
-
-class SimpleHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)
-        self.send_header('Content-type', 'text/plain; charset=utf-8')
-        self.end_headers()
-        self.wfile.write(b"Hello from DevOps Atolyesi LAB-DOC-01!\n")
-
-if __name__ == '__main__':
-    server = HTTPServer(('0.0.0.0', 8080), SimpleHandler)
-    print("Serving on port 8080...")
-    server.serve_forever()
-EOF
+docker images nginx:alpine
 ```
 
 ---
 
-### 2. Dockerfile Dosyasını Oluşturun
+### Adım 3: Konteyneri Arka Planda Başlatın (Run)
 
-Uygulamayı konteynerize etmek için `Dockerfile` dosyasını oluşturun:
+Konteyneri detached modda (`-d`), `first-web-container` adıyla ve `8080:80` port eşlemesiyle başlatın:
 
 ```bash
-cat <<'EOF' > Dockerfile
-FROM python:3.11-alpine
-WORKDIR /app
-COPY app.py .
-EXPOSE 8080
-CMD ["python", "app.py"]
-EOF
+docker run -d --name first-web-container -p 8080:80 nginx:alpine
 ```
 
 ---
 
-### 3. İmajı Derleyin ve Konteyneri Başlatın
-
-İmajı `devops-first-container:v1` etiketiyle derleyin:
-
-```bash
-docker build -t devops-first-container:v1 .
-```
-
-Konteyneri arka planda (`-d`), `lab-doc-01-test` ismiyle ve host'un `8080` portunu konteynerin `8080` portuna bağlayarak çalıştırın:
-
-```bash
-docker run -d --name lab-doc-01-test -p 8080:8080 devops-first-container:v1
-```
-
----
-
-### 4. Konteyner Durumunu ve Yanıtı Kontrol Edin
+### Adım 4: Konteyner Durumunu ve Yanıtı Kontrol Edin
 
 Çalışan konteyneri listeleyin:
 
 ```bash
-docker ps --filter name=lab-doc-01-test
+docker ps --filter name=first-web-container
 ```
 
-HTTP servisine istek atarak yanıtı doğrulayın:
+HTTP servisine istek atarak Nginx karşılama sayfasını doğrulayın:
 
 ```bash
-curl http://localhost:8080
+curl -I http://localhost:8080
 ```
 
-Konteynerin loglarını inceleyin:
+HTTP yanıtında `HTTP/1.1 200 OK` ve `Server: nginx/...` görmelisiniz.
+
+---
+
+### Adım 5: Konteyneri Durdurun ve Kaldırın
+
+Konteynerin çalışmasını güvenli bir şekilde sonlandırın:
 
 ```bash
-docker logs --tail 10 lab-doc-01-test
+docker stop first-web-container
 ```
 
----
-
-### 5. Konteyner İçinde Komut Çalıştırma ve İnceleme (Exec & Inspect)
-
-Konteynerin IP adresini ve durumunu JSON formatında inceleyin:
+Durdurulan konteynerleri listeleyin (`-a` bayrağı ile):
 
 ```bash
-docker inspect --format '{{ .NetworkSettings.IPAddress }}' lab-doc-01-test
+docker ps -a --filter name=first-web-container
 ```
 
-Konteyner içine bağlanarak süreçleri kontrol edin:
+Konteyneri sistemden kaldırın:
 
 ```bash
-docker exec -it lab-doc-01-test ps aux
+docker rm first-web-container
 ```
 
 ---
 
-## 💡 Temel Docker Komutları İnteraktif Pratik Alıştırmaları
+## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
 
-Aşağıdaki görevleri kendi terminalinizde deneyin. Yanıtınızı kontrol etmek için ipucu kutucuğuna tıklayın.
+??? question "Soru 1: `docker run` komutunda `-p 8080:80` yerine sadece `-p 80` yazılırsa ne olur?"
+    ??? tip "💡 Çözümü Göster"
+        **Cevap:**
+        Docker, host üzerinde rastgele boş bir yüksek port (genellikle 32768 - 60999 aralığında) seçer ve konteynerin 80 portuna bağlar. Hangi portun atandığını `docker port <container_name>` veya `docker ps` çıktısından öğrenebilirsiniz.
 
-#### Soru 1: Arka Planda Nginx Başlatma
-> **Görev:** `nginx:alpine` imajını kullanarak `web-test` adında, host `8085` portunu konteynerin `80` portuna yönlendiren bir konteyneri arka planda başlatın.
+??? question "Soru 2: Çalışan bir konteyneri durdurmadan doğrudan `docker rm first-web-container` komutu verirsek ne olur?"
+    ??? tip "💡 Çözümü Göster"
+        **Cevap:**
+        Docker hata verir: `You cannot remove a running container... Stop the container before attempting removal or force remove`. Çalışan konteyneri zorla silmek için `docker rm -f` kullanılabilir (önce SIGKILL sinyali gönderir, ardından siler).
 
-??? tip "💡 Çözümü Göster"
-    ```bash
-    docker run -d --name web-test -p 8085:80 nginx:alpine
-    curl http://localhost:8085
-    ```
-
----
-
-#### Soru 2: Konteyner İçine İnteraktif Kabuk (Shell) ile Bağlanma
-> **Görev:** Çalışan `web-test` konteynerinin içine `sh` kabuğu ile bağlanıp `/etc/nginx/nginx.conf` dosyasını görüntüleyin.
-
-??? tip "💡 Çözümü Göster"
-    ```bash
-    docker exec -it web-test sh
-    # Konteyner içinde:
-    cat /etc/nginx/nginx.conf
-    exit
-    ```
-
----
-
-#### Soru 3: Konteyner Loglarını Canlı Takip Etme
-> **Görev:** `lab-doc-01-test` konteynerinin loglarını canlı akış (follow) modunda izleyin ve son 5 satırı görüntüleyin.
-
-??? tip "💡 Çözümü Göster"
-    ```bash
-    docker logs -f --tail 5 lab-doc-01-test
-    # Çıkış için: Ctrl + C
-    ```
-
----
-
-#### Soru 4: Konteyneri Durdurma ve Yeniden Başlatma
-> **Görev:** `web-test` konteynerini durdurun, durdurulduğunu teyit edin ve ardından tekrar başlatın.
-
-??? tip "💡 Çözümü Göster"
-    ```bash
-    docker stop web-test
-    docker ps -a --filter name=web-test
-    docker start web-test
-    ```
-
----
-
-#### Soru 5: Kullanılmayan Kaynakları Temizleme
-> **Görev:** Durdurulmuş konteynerleri ve kullanılmayan ağları tek komutla temizleyin.
-
-??? tip "💡 Çözümü Göster"
-    ```bash
-    docker container prune -f
-    ```
+??? question "Soru 3: Konteyner silindiğinde indirdiğimiz `nginx:alpine` imajı da silinir mi?"
+    ??? tip "💡 Çözümü Göster"
+        **Cevap:**
+        Hayır. İmajlar ve konteynerler bağımsız nesnelerdir. Konteyner silinse bile imaj yerel diskte kalır (`docker images`). İmajı silmek için `docker rmi nginx:alpine` komutu çalıştırılmalıdır.
 
 ---
 
 ## Beklenen Sonuç
 
 ```text
-Hello from DevOps Atolyesi LAB-DOC-01!
+HTTP/1.1 200 OK
+Server: nginx/1.27.x-alpine
 ```
 
 ---
 
 ## Sorun Giderme
 
-- **Permission Denied Hatası:** Kullanıcınızın `docker` grubunda olduğunu `groups` komutuyla kontrol edin. Değilseniz `sudo usermod -aG docker $USER` komutunu çalıştırıp yeni oturum açın.
-- **Port Çakışması:** `8080` portu kullanımda ise `docker ps --filter publish=8080` komutu ile çakışan konteyneri bulun ve durdurun.
-- **İmaj Derleme Hatası:** `Dockerfile` dosyasında `COPY app.py .` satırının ve dosya isimlerinin doğruluğunu kontrol edin.
+- **Port 8080 Çakışması:** `bind: address already in use` hatası alırsanız, `sudo lsof -i :8080` veya `docker ps` ile portu kullanan servisi bulun ve durdurun.
+- **İzin Hatası:** `permission denied while trying to connect to the Docker daemon socket` hatasında kullanıcınızın docker grubunda olduğunu doğrulayın (`groups`).

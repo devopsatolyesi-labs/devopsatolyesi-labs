@@ -73,14 +73,23 @@
             "LAB-DOC-01",
             "LAB-DOC-02",
             "LAB-DOC-03",
-            "LAB-DOC-09",
             "LAB-DOC-04",
-            "LAB-DOC-06",
             "LAB-DOC-05",
-            "LAB-DOC-13",
-            "LAB-DOC-10",
+            "LAB-DOC-06",
             "LAB-DOC-07",
-            "LAB-DOC-08"
+            "LAB-DOC-08",
+            "LAB-DOC-09",
+            "LAB-DOC-10",
+            "LAB-DOC-11",
+            "LAB-DOC-12",
+            "LAB-DOC-13",
+            "LAB-DOC-14",
+            "LAB-DOC-15",
+            "LAB-DOC-16",
+            "LAB-DOC-17",
+            "LAB-DOC-18",
+            "LAB-DOC-19",
+            "LAB-DOC-20"
           ]
         },
         {
@@ -101,11 +110,16 @@
           ]
         },
         {
-          "id": "kubernetes-gitops",
+          "id": "kubernetes",
           "labs": [
             "LAB-K8S-01",
             "LAB-K8S-02",
-            "LAB-K8S-03",
+            "LAB-K8S-03"
+          ]
+        },
+        {
+          "id": "gitops",
+          "labs": [
             "LAB-HLM-01",
             "LAB-ARG-01"
           ]
@@ -142,10 +156,15 @@
             "LAB-DOC-01",
             "LAB-DOC-02",
             "LAB-DOC-03",
-            "LAB-DOC-09",
+            "LAB-DOC-04",
             "LAB-DOC-05",
+            "LAB-DOC-06",
+            "LAB-DOC-07",
+            "LAB-DOC-08",
+            "LAB-DOC-09",
             "LAB-DOC-10",
-            "LAB-DOC-08"
+            "LAB-DOC-13",
+            "LAB-DOC-20"
           ]
         },
         {
@@ -223,10 +242,10 @@
     },
     {
       "id": "LAB-DOC-01",
-      "title": "İlk Docker Konteyneri ve Port Mapping",
+      "title": "İlk Docker Konteyneri ve Temel Komutlar",
       "topic": "docker",
       "difficulty": 100,
-      "estimated_minutes": 30,
+      "estimated_minutes": 35,
       "profiles": [
         "docker"
       ],
@@ -247,7 +266,7 @@
     },
     {
       "id": "LAB-DOC-02",
-      "title": "Container Lifecycle, Env ve Volume Persistence",
+      "title": "Konteyner Yaşam Döngüsü ve Teşhis Komutları",
       "topic": "docker",
       "difficulty": 100,
       "estimated_minutes": 40,
@@ -255,7 +274,7 @@
         "docker"
       ],
       "ports": [
-        5432
+        8080
       ],
       "prerequisites": [
         "LAB-DOC-01"
@@ -264,91 +283,22 @@
         "devops-practitioner-5-day",
         "docker-kubernetes-2-day"
       ],
-      "guide": "training-content/labs/docker/LAB-DOC-02-docker-volumes-env.md",
+      "guide": "training-content/labs/docker/LAB-DOC-02-docker-lifecycle-diagnostics.md",
       "assets": "training-content/lab-assets/LAB-DOC-02",
       "status": "published",
       "package_contract": "standard"
     },
     {
       "id": "LAB-DOC-03",
-      "title": "Docker İmaj Optimizasyonu ve Registry Dağıtımı",
+      "title": "Docker İmaj, Etiketleme ve Registry Yönetimi",
       "topic": "docker",
-      "difficulty": 200,
-      "estimated_minutes": 60,
-      "profiles": [
-        "docker",
-        "harbor"
-      ],
-      "ports": [
-        8000,
-        8082
-      ],
-      "prerequisites": [],
-      "courses": [
-        "devops-practitioner-5-day",
-        "docker-kubernetes-2-day"
-      ],
-      "guide": "training-content/labs/docker/LAB-DOC-03-dockerfile-optimization.md",
-      "assets": "training-content/lab-assets/LAB-DOC-03",
-      "status": "published",
-      "package_contract": "standard"
-    },
-    {
-      "id": "LAB-DOC-09",
-      "title": "User-Defined Docker Network ve Container DNS",
-      "topic": "docker",
-      "difficulty": 200,
+      "difficulty": 100,
       "estimated_minutes": 45,
       "profiles": [
         "docker"
       ],
       "ports": [
-        8080
-      ],
-      "prerequisites": [
-        "LAB-DOC-01"
-      ],
-      "courses": [
-        "devops-practitioner-5-day",
-        "docker-kubernetes-2-day"
-      ],
-      "guide": "training-content/labs/docker/LAB-DOC-09-docker-networks-dns.md",
-      "assets": "training-content/lab-assets/LAB-DOC-09",
-      "status": "published",
-      "package_contract": "standard"
-    },
-    {
-      "id": "LAB-DOC-04",
-      "title": "Multi-Stage Build, Non-Root ve Image Hardening",
-      "topic": "docker",
-      "difficulty": 200,
-      "estimated_minutes": 45,
-      "profiles": [
-        "docker"
-      ],
-      "ports": [],
-      "prerequisites": [
-        "LAB-DOC-03"
-      ],
-      "courses": [
-        "devops-practitioner-5-day"
-      ],
-      "guide": "training-content/labs/docker/LAB-DOC-04-docker-multistage-hardening.md",
-      "assets": "training-content/lab-assets/LAB-DOC-04",
-      "status": "published",
-      "package_contract": "standard"
-    },
-    {
-      "id": "LAB-DOC-05",
-      "title": "Docker Compose Multi-Tier Orchestration",
-      "topic": "docker",
-      "difficulty": 200,
-      "estimated_minutes": 60,
-      "profiles": [
-        "docker"
-      ],
-      "ports": [
-        8080
+        5000
       ],
       "prerequisites": [
         "LAB-DOC-02"
@@ -357,38 +307,65 @@
         "devops-practitioner-5-day",
         "docker-kubernetes-2-day"
       ],
-      "guide": "training-content/labs/docker/LAB-DOC-05-docker-compose-multitier.md",
+      "guide": "training-content/labs/docker/LAB-DOC-03-docker-image-registry.md",
+      "assets": "training-content/lab-assets/LAB-DOC-03",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-DOC-04",
+      "title": "Docker Volumes ve Veri Kalıcılığı",
+      "topic": "docker",
+      "difficulty": 100,
+      "estimated_minutes": 45,
+      "profiles": [
+        "docker"
+      ],
+      "ports": [
+        5432
+      ],
+      "prerequisites": [
+        "LAB-DOC-03"
+      ],
+      "courses": [
+        "devops-practitioner-5-day",
+        "docker-kubernetes-2-day"
+      ],
+      "guide": "training-content/labs/docker/LAB-DOC-04-docker-volumes-persistence.md",
+      "assets": "training-content/lab-assets/LAB-DOC-04",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-DOC-05",
+      "title": "Ortam Değişkenleri, .env ve Konfigürasyon Yönetimi",
+      "topic": "docker",
+      "difficulty": 100,
+      "estimated_minutes": 35,
+      "profiles": [
+        "docker"
+      ],
+      "ports": [
+        3000
+      ],
+      "prerequisites": [
+        "LAB-DOC-04"
+      ],
+      "courses": [
+        "devops-practitioner-5-day",
+        "docker-kubernetes-2-day"
+      ],
+      "guide": "training-content/labs/docker/LAB-DOC-05-docker-env-secrets.md",
       "assets": "training-content/lab-assets/LAB-DOC-05",
       "status": "published",
       "package_contract": "standard"
     },
     {
       "id": "LAB-DOC-06",
-      "title": "Trivy Container Security Gate",
-      "topic": "container-security",
-      "difficulty": 200,
-      "estimated_minutes": 30,
-      "profiles": [
-        "docker"
-      ],
-      "ports": [],
-      "prerequisites": [
-        "LAB-DOC-03"
-      ],
-      "courses": [
-        "devops-practitioner-5-day"
-      ],
-      "guide": "training-content/labs/docker/LAB-DOC-06-trivy-harbor-integration.md",
-      "assets": "training-content/lab-assets/LAB-DOC-06",
-      "status": "published",
-      "package_contract": "standard"
-    },
-    {
-      "id": "LAB-DOC-13",
-      "title": "Production-Ready Docker Compose Patterns",
+      "title": "Docker Network, Port İzolasyonu ve DNS Çözümleme",
       "topic": "docker",
-      "difficulty": 300,
-      "estimated_minutes": 60,
+      "difficulty": 200,
+      "estimated_minutes": 45,
       "profiles": [
         "docker"
       ],
@@ -399,10 +376,353 @@
         "LAB-DOC-05"
       ],
       "courses": [
+        "devops-practitioner-5-day",
+        "docker-kubernetes-2-day"
+      ],
+      "guide": "training-content/labs/docker/LAB-DOC-06-docker-networks-dns.md",
+      "assets": "training-content/lab-assets/LAB-DOC-06",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-DOC-07",
+      "title": "İlk Dockerfile ile İmaj Oluşturma",
+      "topic": "docker",
+      "difficulty": 200,
+      "estimated_minutes": 40,
+      "profiles": [
+        "docker"
+      ],
+      "ports": [
+        5000
+      ],
+      "prerequisites": [
+        "LAB-DOC-06"
+      ],
+      "courses": [
+        "devops-practitioner-5-day",
+        "docker-kubernetes-2-day"
+      ],
+      "guide": "training-content/labs/docker/LAB-DOC-07-dockerfile-basics.md",
+      "assets": "training-content/lab-assets/LAB-DOC-07",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-DOC-08",
+      "title": "Dockerfile Katmanları ve BuildKit Cache",
+      "topic": "docker",
+      "difficulty": 200,
+      "estimated_minutes": 45,
+      "profiles": [
+        "docker"
+      ],
+      "ports": [
+        8080
+      ],
+      "prerequisites": [
+        "LAB-DOC-07"
+      ],
+      "courses": [
+        "devops-practitioner-5-day",
+        "docker-kubernetes-2-day"
+      ],
+      "guide": "training-content/labs/docker/LAB-DOC-08-dockerfile-optimization.md",
+      "assets": "training-content/lab-assets/LAB-DOC-08",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-DOC-09",
+      "title": "Multi-Stage Build ve Boyut Optimizasyonu",
+      "topic": "docker",
+      "difficulty": 200,
+      "estimated_minutes": 45,
+      "profiles": [
+        "docker"
+      ],
+      "ports": [
+        8080
+      ],
+      "prerequisites": [
+        "LAB-DOC-08"
+      ],
+      "courses": [
+        "devops-practitioner-5-day",
+        "docker-kubernetes-2-day"
+      ],
+      "guide": "training-content/labs/docker/LAB-DOC-09-docker-multistage-build.md",
+      "assets": "training-content/lab-assets/LAB-DOC-09",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-DOC-10",
+      "title": "Docker Runtime Güvenliği ve Hardening",
+      "topic": "docker",
+      "difficulty": 300,
+      "estimated_minutes": 45,
+      "profiles": [
+        "docker"
+      ],
+      "ports": [
+        8080
+      ],
+      "prerequisites": [
+        "LAB-DOC-09"
+      ],
+      "courses": [
+        "devops-practitioner-5-day",
+        "docker-kubernetes-2-day"
+      ],
+      "guide": "training-content/labs/docker/LAB-DOC-10-docker-runtime-security.md",
+      "assets": "training-content/lab-assets/LAB-DOC-10",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-DOC-11",
+      "title": "Java Spring Boot Konteynerleştirme ve JVM Optimizasyonu",
+      "topic": "docker",
+      "difficulty": 200,
+      "estimated_minutes": 50,
+      "profiles": [
+        "docker"
+      ],
+      "ports": [
+        8080
+      ],
+      "prerequisites": [
+        "LAB-DOC-09"
+      ],
+      "courses": [
         "devops-practitioner-5-day"
       ],
-      "guide": "training-content/labs/docker/LAB-DOC-13-docker-compose-production-patterns.md",
+      "guide": "training-content/labs/docker/LAB-DOC-11-docker-java-spring-boot.md",
+      "assets": "training-content/lab-assets/LAB-DOC-11",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-DOC-12",
+      "title": "React SPA ve Nginx Frontend Container",
+      "topic": "docker",
+      "difficulty": 200,
+      "estimated_minutes": 40,
+      "profiles": [
+        "docker"
+      ],
+      "ports": [
+        80
+      ],
+      "prerequisites": [
+        "LAB-DOC-09"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/docker/LAB-DOC-12-docker-react-nginx.md",
+      "assets": "training-content/lab-assets/LAB-DOC-12",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-DOC-13",
+      "title": "Docker Compose ile Çok Katmanlı Mimari",
+      "topic": "docker",
+      "difficulty": 200,
+      "estimated_minutes": 50,
+      "profiles": [
+        "docker"
+      ],
+      "ports": [
+        80,
+        3000,
+        5432
+      ],
+      "prerequisites": [
+        "LAB-DOC-06",
+        "LAB-DOC-07"
+      ],
+      "courses": [
+        "devops-practitioner-5-day",
+        "docker-kubernetes-2-day"
+      ],
+      "guide": "training-content/labs/docker/LAB-DOC-13-docker-compose-multitier.md",
       "assets": "training-content/lab-assets/LAB-DOC-13",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-DOC-14",
+      "title": "Healthcheck, Restart Policy ve Kaynak Limitleri",
+      "topic": "docker",
+      "difficulty": 300,
+      "estimated_minutes": 45,
+      "profiles": [
+        "docker"
+      ],
+      "ports": [
+        8080
+      ],
+      "prerequisites": [
+        "LAB-DOC-13"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/docker/LAB-DOC-14-docker-healthcheck-limits.md",
+      "assets": "training-content/lab-assets/LAB-DOC-14",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-DOC-15",
+      "title": "Docker Loglama ve Gözlemlenebilirlik",
+      "topic": "docker",
+      "difficulty": 200,
+      "estimated_minutes": 40,
+      "profiles": [
+        "docker"
+      ],
+      "ports": [
+        8080,
+        8081
+      ],
+      "prerequisites": [
+        "LAB-DOC-13"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/docker/LAB-DOC-15-docker-logging-observability.md",
+      "assets": "training-content/lab-assets/LAB-DOC-15",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-DOC-16",
+      "title": "Trivy Güvenlik Taraması, SBOM ve Harbor Entegrasyonu",
+      "topic": "docker",
+      "difficulty": 200,
+      "estimated_minutes": 50,
+      "profiles": [
+        "docker"
+      ],
+      "ports": [
+        80,
+        443
+      ],
+      "prerequisites": [
+        "LAB-DOC-10"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/docker/LAB-DOC-16-trivy-harbor-integration.md",
+      "assets": "training-content/lab-assets/LAB-DOC-16",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-DOC-17",
+      "title": "İmaj ve Volume Yedekleme / Geri Yükleme",
+      "topic": "docker",
+      "difficulty": 200,
+      "estimated_minutes": 45,
+      "profiles": [
+        "docker"
+      ],
+      "ports": [
+        5432
+      ],
+      "prerequisites": [
+        "LAB-DOC-04"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/docker/LAB-DOC-17-docker-backup-restore.md",
+      "assets": "training-content/lab-assets/LAB-DOC-17",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-DOC-18",
+      "title": "Docker Sorun Giderme ve Teşhis Senaryoları",
+      "topic": "docker",
+      "difficulty": 300,
+      "estimated_minutes": 55,
+      "profiles": [
+        "docker"
+      ],
+      "ports": [
+        8080,
+        5432
+      ],
+      "prerequisites": [
+        "LAB-DOC-06",
+        "LAB-DOC-14"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/docker/LAB-DOC-18-docker-troubleshooting.md",
+      "assets": "training-content/lab-assets/LAB-DOC-18",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-DOC-19",
+      "title": "Production Docker Compose Desenleri",
+      "topic": "docker",
+      "difficulty": 300,
+      "estimated_minutes": 50,
+      "profiles": [
+        "docker"
+      ],
+      "ports": [
+        80,
+        3000
+      ],
+      "prerequisites": [
+        "LAB-DOC-13",
+        "LAB-DOC-14"
+      ],
+      "courses": [
+        "devops-practitioner-5-day"
+      ],
+      "guide": "training-content/labs/docker/LAB-DOC-19-docker-compose-production-patterns.md",
+      "assets": "training-content/lab-assets/LAB-DOC-19",
+      "status": "published",
+      "package_contract": "standard"
+    },
+    {
+      "id": "LAB-DOC-20",
+      "title": "Docker Final Capstone Projesi: Üretim Seviyesi Mikroservis Platformu",
+      "topic": "docker",
+      "difficulty": 300,
+      "estimated_minutes": 90,
+      "profiles": [
+        "docker"
+      ],
+      "ports": [
+        80,
+        3000,
+        5432,
+        6379
+      ],
+      "prerequisites": [
+        "LAB-DOC-13",
+        "LAB-DOC-16",
+        "LAB-DOC-19"
+      ],
+      "courses": [
+        "devops-practitioner-5-day",
+        "docker-kubernetes-2-day"
+      ],
+      "guide": "training-content/labs/docker/LAB-DOC-20-docker-capstone.md",
+      "assets": "training-content/lab-assets/LAB-DOC-20",
       "status": "published",
       "package_contract": "standard"
     },
@@ -810,28 +1130,6 @@
       "package_contract": "standard"
     },
     {
-      "id": "LAB-DOC-10",
-      "title": "Docker İmaj, Konteyner ve Volume Yedekleme / Geri Yükleme",
-      "topic": "docker",
-      "difficulty": 200,
-      "estimated_minutes": 40,
-      "profiles": [
-        "docker"
-      ],
-      "ports": [],
-      "prerequisites": [
-        "LAB-DOC-02"
-      ],
-      "courses": [
-        "devops-practitioner-5-day",
-        "docker-kubernetes-2-day"
-      ],
-      "guide": "training-content/labs/docker/LAB-DOC-10-docker-backup-restore.md",
-      "assets": "training-content/lab-assets/LAB-DOC-10",
-      "status": "published",
-      "package_contract": "standard"
-    },
-    {
       "id": "LAB-LNX-02",
       "title": "Nginx Üzerinde Let's Encrypt SSL/TLS ve Certbot Otomasyonu",
       "topic": "linux",
@@ -873,53 +1171,6 @@
       ],
       "guide": "training-content/labs/linux/LAB-LNX-03-ssh-tunnel-mysql.md",
       "assets": "training-content/lab-assets/LAB-LNX-03",
-      "status": "published",
-      "package_contract": "standard"
-    },
-    {
-      "id": "LAB-DOC-07",
-      "title": "Java Spring Boot Multi-Stage Build ve JVM Optimizasyonu",
-      "topic": "docker",
-      "difficulty": 200,
-      "estimated_minutes": 45,
-      "profiles": [
-        "docker"
-      ],
-      "ports": [
-        8080
-      ],
-      "prerequisites": [
-        "LAB-DOC-03"
-      ],
-      "courses": [
-        "devops-practitioner-5-day"
-      ],
-      "guide": "training-content/labs/docker/LAB-DOC-07-docker-java-spring-boot.md",
-      "assets": "training-content/lab-assets/LAB-DOC-07",
-      "status": "published",
-      "package_contract": "standard"
-    },
-    {
-      "id": "LAB-DOC-08",
-      "title": "Modern React / Statik Frontend Build ve Nginx Container",
-      "topic": "docker",
-      "difficulty": 200,
-      "estimated_minutes": 40,
-      "profiles": [
-        "docker"
-      ],
-      "ports": [
-        80
-      ],
-      "prerequisites": [
-        "LAB-DOC-03"
-      ],
-      "courses": [
-        "devops-practitioner-5-day",
-        "docker-kubernetes-2-day"
-      ],
-      "guide": "training-content/labs/docker/LAB-DOC-08-docker-react-nginx.md",
-      "assets": "training-content/lab-assets/LAB-DOC-08",
       "status": "published",
       "package_contract": "standard"
     },

@@ -92,16 +92,25 @@ nav:
       - LAB-GIT-01 - Git Workflow: day1/LAB-GIT-01-git-workflow.md
   - Docker:
       - LAB-DOC-01 - İlk Docker Konteyneri: day1/LAB-DOC-01-docker-first-container.md
-      - LAB-DOC-02 - Volumes ve Ortam Değişkenleri: day1/LAB-DOC-02-docker-volumes-env.md
-      - LAB-DOC-03 - Dockerfile Optimizasyonu: day2/LAB-DOC-03-dockerfile-optimization.md
-      - LAB-DOC-09 - Docker Network ve DNS: day2/LAB-DOC-09-docker-networks-dns.md
-      - LAB-DOC-04 - Multi-Stage Build: day2/LAB-DOC-04-docker-multistage-hardening.md
-      - LAB-DOC-07 - Java Spring Boot: day2/LAB-DOC-07-docker-java-spring-boot.md
-      - LAB-DOC-08 - React ve Nginx Frontend: day2/LAB-DOC-08-docker-react-nginx.md
-      - LAB-DOC-05 - Docker Compose Çok Katmanlı Mimari: day2/LAB-DOC-05-docker-compose-multitier.md
-      - LAB-DOC-06 - Trivy ve Harbor Entegrasyonu: day2/LAB-DOC-06-trivy-harbor-integration.md
-      - LAB-DOC-10 - İmaj ve Volume Yedekleme: day2/LAB-DOC-10-docker-backup-restore.md
-      - LAB-DOC-13 - Production Docker Compose Desenleri: day2/LAB-DOC-13-docker-compose-production-patterns.md
+      - LAB-DOC-02 - Konteyner Yaşam Döngüsü ve Teşhis: day2/LAB-DOC-02-docker-lifecycle-diagnostics.md
+      - LAB-DOC-03 - Docker İmaj ve Registry Yönetimi: day2/LAB-DOC-03-docker-image-registry.md
+      - LAB-DOC-04 - Docker Volumes ve Veri Kalıcılığı: day2/LAB-DOC-04-docker-volumes-persistence.md
+      - LAB-DOC-05 - Ortam Değişkenleri ve Konfigürasyon: day2/LAB-DOC-05-docker-env-secrets.md
+      - LAB-DOC-06 - Docker Network ve DNS: day2/LAB-DOC-06-docker-networks-dns.md
+      - LAB-DOC-07 - İlk Dockerfile ile İmaj Oluşturma: day2/LAB-DOC-07-dockerfile-basics.md
+      - LAB-DOC-08 - Dockerfile Katmanları ve BuildKit: day2/LAB-DOC-08-dockerfile-optimization.md
+      - LAB-DOC-09 - Multi-Stage Build ve Optimizasyon: day2/LAB-DOC-09-docker-multistage-build.md
+      - LAB-DOC-10 - Docker Runtime Güvenliği ve Hardening: day2/LAB-DOC-10-docker-runtime-security.md
+      - LAB-DOC-11 - Java Spring Boot Konteynerleştirme: day2/LAB-DOC-11-docker-java-spring-boot.md
+      - LAB-DOC-12 - React SPA ve Nginx Frontend: day2/LAB-DOC-12-docker-react-nginx.md
+      - LAB-DOC-13 - Docker Compose Çok Katmanlı Mimari: day2/LAB-DOC-13-docker-compose-multitier.md
+      - LAB-DOC-14 - Healthcheck ve Kaynak Limitleri: day2/LAB-DOC-14-docker-healthcheck-limits.md
+      - LAB-DOC-15 - Docker Loglama ve Gözlemlenebilirlik: day2/LAB-DOC-15-docker-logging-observability.md
+      - LAB-DOC-16 - Trivy Güvenlik ve Harbor Entegrasyonu: day2/LAB-DOC-16-trivy-harbor-integration.md
+      - LAB-DOC-17 - İmaj ve Volume Yedekleme / Geri Yükleme: day2/LAB-DOC-17-docker-backup-restore.md
+      - LAB-DOC-18 - Docker Sorun Giderme (Troubleshooting): day2/LAB-DOC-18-docker-troubleshooting.md
+      - LAB-DOC-19 - Production Docker Compose Desenleri: day2/LAB-DOC-19-docker-compose-production-patterns.md
+      - LAB-DOC-20 - Docker Final Capstone Projesi: day2/LAB-DOC-20-docker-capstone.md
   - CI/CD:
       - LAB-JNK-01 - Jenkins Declarative Pipeline: day3/LAB-JNK-01-jenkins-declarative-pipeline.md
       - LAB-JNK-02 - Jenkins Güvenli Pipeline: day3/LAB-JNK-02-jenkins-secure-pipeline.md
@@ -111,10 +120,11 @@ nav:
       - LAB-TF-01 - Terraform Docker Provider: day3/LAB-TF-01-terraform-docker-provider.md
       - LAB-TF-04 - Terraform Helm Centralized Monitoring: day3/LAB-TF-04-terraform-helm-centralized-monitoring.md
       - LAB-TF-08 - Terraform AWS VPC Mimarisi: day3/LAB-TF-08-terraform-aws-vpc-architecture.md
-  - Kubernetes ve GitOps:
+  - Kubernetes:
       - LAB-K8S-01 - Kubernetes Pods ve Deployments: day4/LAB-K8S-01-kind-pods-deployments.md
       - LAB-K8S-02 - Services, ConfigMaps ve Secrets: day4/LAB-K8S-02-services-config-secrets.md
       - LAB-K8S-03 - Production Workloads: day4/LAB-K8S-03-production-workloads.md
+  - GitOps:
       - LAB-HLM-01 - Helm Chart Deployment: day4/LAB-HLM-01-helm-chart-deployment.md
       - LAB-ARG-01 - Argo CD GitOps Senkronizasyonu: day4/LAB-ARG-01-argocd-gitops-sync.md
   - Gözlemlenebilirlik ve Olay Yönetimi:
