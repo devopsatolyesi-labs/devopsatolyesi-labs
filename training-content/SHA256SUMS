@@ -103,6 +103,8 @@ b04fbe6049c6ad11092dc588c8c917ff75920370eaf85c7a8da17aa57ec04d72  ./lab-assets/L
 62d69b03287a22ae9db8c21656611ad37396c5dd338dd7a0f602435fb874fef7  ./lab-assets/LAB-DOC-07/solution/Dockerfile
 c976df9311181fc1a3a30e83ec8757c0a05eb3a6e46cab29604958d07efef571  ./lab-assets/LAB-DOC-07/solution/pom.xml
 c7234fef5e1fe919d44dbddefcde3bee887ae6fd54676dd5f30b859fc2608423  ./lab-assets/LAB-DOC-07/solution/src/main/java/com/devopsatolyesi/Application.java
+6986c83e070a66ef626f470a9c6c498cee8bea88b87a2f96d2c7c3a6aa727cc8  ./lab-assets/LAB-DOC-07/solution/target/classes/com/devopsatolyesi/Application$1.class
+7d5d5e1cb8e05ce7e2c171fb2f26b156ba4a148e88b508c3e34dbb6cedf0f7d8  ./lab-assets/LAB-DOC-07/solution/target/classes/com/devopsatolyesi/Application.class
 cfc966230629afa846f68eafe874924d3b7c930901c317eb35391c90a6037d40  ./lab-assets/LAB-DOC-07/starter/.dockerignore
 dcbae8959f7b172d861de2a70741339fe7bb41094907826569d8f1761c92e6ff  ./lab-assets/LAB-DOC-07/starter/Dockerfile
 be43fbc5b55e58711c993beee3745cb597fe46e304c695a121785b833cbe335a  ./lab-assets/LAB-DOC-07/starter/app.py
@@ -627,7 +629,7 @@ a229c524717836fb2f0c38a6761e03be224ca7dc675e93c02a59c68adf34c005  ./labs/docker/
 6b034cacbdeb66d391e705717af5b44b413fac5504c203375146751c7956a0b6  ./labs/gitlab/LAB-GHA-01-github-actions-ci.md
 9009a52fc37fa538a516de6770f3e3447ea66c794d421677b343d7c2875f662b  ./labs/gitlab/LAB-GLB-01-gitlab-ci-pipeline.md
 3441011f08bcb15f7662ffdb54352599f5737005fb35d425eb736e8ed36421b1  ./labs/gitops/LAB-ARG-01-argocd-gitops-sync.md
-be1e27c0c698b31edfc6a814cacc10b192230679ac58431254a438e5bd069703  ./labs/helm/LAB-HLM-01-helm-chart-deployment.md
+6515e06bab973f1531de4e5484b47a09e1984494a98984e91d709d6aefc328d9  ./labs/helm/LAB-HLM-01-helm-chart-deployment.md
 e6b23f36251ba2939a3862249cd46ee959f563399b0082b500fc760849e45a76  ./labs/incident/LAB-INC-01-k8s-crashloop-postmortem.md
 10d0bebc554cf86d738b8d49db846ec559badd2fe167ce17d7cb20145054aa05  ./labs/jenkins/LAB-JEN-01-docker-compose-setup.md
 b7353885bcc92e7b680b0241d08ea8f12c23aab0b5d54b2c7c521be717c65a30  ./labs/jenkins/LAB-JEN-02-initial-setup-plugins.md
