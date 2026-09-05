@@ -11,9 +11,9 @@ trap 'rm -f "$temporary_manifest"' EXIT
 (
   cd "$content_dir"
   if command -v sha256sum >/dev/null 2>&1; then
-    find . -type f ! -name SHA256SUMS ! -name '*.pyc' ! -path '*/__pycache__/*' -exec sha256sum {} + | LC_ALL=C sort -k 2
+    find . -type f ! -name SHA256SUMS ! -name '*.pyc' ! -path '*/__pycache__/*' ! -path '*/target/*' -exec sha256sum {} + | LC_ALL=C sort -k 2
   else
-    find . -type f ! -name SHA256SUMS ! -name '*.pyc' ! -path '*/__pycache__/*' -exec shasum -a 256 {} + | LC_ALL=C sort -k 2
+    find . -type f ! -name SHA256SUMS ! -name '*.pyc' ! -path '*/__pycache__/*' ! -path '*/target/*' -exec shasum -a 256 {} + | LC_ALL=C sort -k 2
   fi
 ) > "$temporary_manifest"
 

@@ -103,8 +103,6 @@ b04fbe6049c6ad11092dc588c8c917ff75920370eaf85c7a8da17aa57ec04d72  ./lab-assets/L
 62d69b03287a22ae9db8c21656611ad37396c5dd338dd7a0f602435fb874fef7  ./lab-assets/LAB-DOC-07/solution/Dockerfile
 c976df9311181fc1a3a30e83ec8757c0a05eb3a6e46cab29604958d07efef571  ./lab-assets/LAB-DOC-07/solution/pom.xml
 c7234fef5e1fe919d44dbddefcde3bee887ae6fd54676dd5f30b859fc2608423  ./lab-assets/LAB-DOC-07/solution/src/main/java/com/devopsatolyesi/Application.java
-6986c83e070a66ef626f470a9c6c498cee8bea88b87a2f96d2c7c3a6aa727cc8  ./lab-assets/LAB-DOC-07/solution/target/classes/com/devopsatolyesi/Application$1.class
-7d5d5e1cb8e05ce7e2c171fb2f26b156ba4a148e88b508c3e34dbb6cedf0f7d8  ./lab-assets/LAB-DOC-07/solution/target/classes/com/devopsatolyesi/Application.class
 cfc966230629afa846f68eafe874924d3b7c930901c317eb35391c90a6037d40  ./lab-assets/LAB-DOC-07/starter/.dockerignore
 dcbae8959f7b172d861de2a70741339fe7bb41094907826569d8f1761c92e6ff  ./lab-assets/LAB-DOC-07/starter/Dockerfile
 be43fbc5b55e58711c993beee3745cb597fe46e304c695a121785b833cbe335a  ./lab-assets/LAB-DOC-07/starter/app.py
