@@ -26,28 +26,7 @@ Bu laboratuvar, **Jenkins CI/CD** eğitim serisinin büyük finalidir. Önceki 1
 
 ## Mimari ve Uçtan Uca DevSecOps Mimarisi
 
-```mermaid
-flowchart TD
-    subgraph CI["Sürekli Entegrasyon (CI)"]
-        Git[1. Git SCM Checkout] --> Test[2. Unit Test & JUnit XML]
-        Test --> Sonar[3. SonarQube Quality Gate]
-        Sonar --> Build[4. Docker Build & Multi-Stage]
-    end
-
-    subgraph Sec["Güvenlik Kapısı (DevSecOps)"]
-        Build --> Trivy[5. Trivy CRITICAL CVE Gate]
-    end
-
-    subgraph CD["Sürekli Dağıtım (CD)"]
-        Trivy --> Push[6. Harbor Registry Push]
-        Push --> Deploy[7. Kubernetes kind Deploy]
-        Deploy --> Health[8. Canlı Health Check]
-    end
-
-    Health -->|Başarılı| SuccessNotify[9. Başarı Bildirimi]
-    Health -->|Hata| AutoRollback[Otomatik Rollback & Alarm]
-```
-
+![LAB-JEN-15 mimari diyagramı](../../lab-assets/LAB-JEN-15/images/diagram-01.png)
 ---
 
 ## Adım Adım Uygulama Rehberi

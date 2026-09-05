@@ -26,29 +26,7 @@
 
 ## Probe ve Kaynak Sınırları Mimarisi
 
-```mermaid
-flowchart TB
-    APP[Uygulama Podu]
-
-    subgraph HEALTH[Sağlık Kontrolleri]
-        LIVE[Liveness başarısız]
-        READY[Readiness başarısız]
-    end
-
-    APP --> LIVE
-    LIVE -->|"Pod yeniden başlatılır"| RESTART[Restart]
-    APP --> READY
-    READY -->|"Pod Service endpointlerinden çıkarılır"| TRAFFIC[Trafik kesilir]
-
-    subgraph RESOURCES[Kaynak Sınırları]
-        REQUEST[Request: 32Mi bellek]
-        LIMIT[Limit: 64Mi bellek]
-    end
-
-    APP --> REQUEST
-    APP --> LIMIT
-    LIMIT -->|"Limit aşılır"| OOM[OOMKilled - Exit 137]
-```
+![Liveness, readiness ve kaynak sınırları akışı](../../lab-assets/LAB-K8S-07/images/probes-resources.png)
 
 ---
 

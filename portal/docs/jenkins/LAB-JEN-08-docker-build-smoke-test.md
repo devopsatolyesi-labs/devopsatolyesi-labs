@@ -29,23 +29,7 @@ Bu laboratuvarın amacı, CI sürecine konteynerizasyon aşamasını ekleyerek u
 
 ## Mimari ve Smoke Test Modeli
 
-```mermaid
-sequenceDiagram
-    participant J as Jenkins Pipeline
-    participant D as Docker Engine
-    participant App as Test Container (:5001)
-
-    J->>D: docker build -t app:v1 .
-    J->>D: docker run -d -p 5001:5000 app:v1
-    D->>App: Konteyner Başlat
-    loop Smoke Test (Health Gate)
-        J->>App: curl -f http://localhost:5001/
-        App-->>J: HTTP 200 OK
-    end
-    J->>D: docker rm -f test-container
-    Note over J: Smoke Test Başarılı -> İmaj Dağıtıma Hazır
-```
-
+![LAB-JEN-08 mimari diyagramı](../lab-assets/LAB-JEN-08/images/diagram-01.png)
 ---
 
 ## Adım Adım Uygulama Rehberi

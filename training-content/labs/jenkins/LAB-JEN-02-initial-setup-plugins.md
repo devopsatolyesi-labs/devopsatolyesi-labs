@@ -29,16 +29,7 @@ Bu laboratuvarın amacı, Jenkins Controller üzerinde temel güvenlik, kullanı
 
 ## Mimari ve Eklenti Ekosistemi
 
-```mermaid
-graph TD
-    Core[Jenkins LTS Core] --> SCM[Git Plugin]
-    Core --> Pipe[Pipeline / Declarative Plugin]
-    Core --> Dock[Docker Pipeline Plugin]
-    Core --> Sonar[SonarQube Scanner Plugin]
-    Core --> K8s[Kubernetes CLI Plugin]
-    CLI[Jenkins CLI / REST API] -->|API Token + Crumb| Core
-```
-
+![LAB-JEN-02 mimari diyagramı](../../lab-assets/LAB-JEN-02/images/diagram-01.png)
 ---
 
 ## Adım Adım Uygulama Rehberi

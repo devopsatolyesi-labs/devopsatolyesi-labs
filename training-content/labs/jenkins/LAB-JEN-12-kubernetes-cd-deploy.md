@@ -29,24 +29,7 @@ Bu laboratuvarın amacı, CI hattını **Sürekli Dağıtım (Continuous Deliver
 
 ## Mimari ve Kubernetes CD Modeli
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant J as Jenkins Pipeline
-    participant Kube as Kubernetes Control Plane (kind)
-    participant Pods as Podlar (ReplicaSet)
-
-    J->>J: İmaj Derleme & Tagleme (app:v1.0.12)
-    J->>Kube: kubectl apply -f deployment.yaml
-    Kube->>Pods: Rolling Update Başlat
-    loop Rollout İzleme
-        J->>Kube: kubectl rollout status deployment/order-api
-        Kube-->>J: Waiting for 2 replicas to be updated...
-    end
-    Kube-->>J: deployment "order-api" successfully rolled out
-    Note over J: Dağıtım Başarılı (SUCCESS)
-```
-
+![LAB-JEN-12 mimari diyagramı](../../lab-assets/LAB-JEN-12/images/diagram-01.png)
 ---
 
 ## Adım Adım Uygulama Rehberi

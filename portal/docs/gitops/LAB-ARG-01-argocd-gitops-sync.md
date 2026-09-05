@@ -31,40 +31,7 @@ Kubernetes v1.31 üzerinde Argo CD v3.4 kurulumunu gerçekleştirmek, CLI ve Web
   +-----------------------------------------------------------+
 ```
 
-```mermaid
-flowchart TD
-    subgraph SCM [Git Repository - Tek Doğruluk Kaynağı]
-        GIT["manifests/ (Branch: main)\n[DESIRED STATE]"]
-    end
-
-    subgraph ARGO [Argo CD v3.4.2 - Namespace: argocd]
-        CTRL[Argo CD Application Controller]
-        REPO_SRV[Repo Server]
-        API_SRV[Argo CD Server & UI :8085]
-        CTRL <--> REPO_SRV
-    end
-
-    subgraph K8S [Kubernetes Hedef Küme - Namespace: gitops-prod]
-        DEP[Deployment: gitops-demo-app]
-        SVC[Service: gitops-demo-svc]
-        ACTUAL["Çalışan Podlar & Servisler\n[ACTUAL STATE]"]
-        DEP --> ACTUAL
-        SVC --> ACTUAL
-    end
-
-    GIT -->|"1. Polling / Webhook"| REPO_SRV
-    CTRL -->|"2. Drift Tespiti (Desired vs Actual)"| ACTUAL
-    CTRL ==>|"3. Automated Sync & Self-Heal"| DEP
-
-    classDef git fill:#1e1b4b,stroke:#818cf8,color:#fff;
-    classDef argo fill:#431407,stroke:#f97316,color:#fff;
-    classDef k8s fill:#0f172a,stroke:#38bdf8,color:#fff;
-
-    class SCM git;
-    class ARGO argo;
-    class K8S k8s;
-```
-
+![LAB-ARG-01 mimari diyagramı](../lab-assets/LAB-ARG-01/images/diagram-01.png)
 **Not:** **GitOps Mutabakat Döngüsü (Reconciliation Loop):** Argo CD, Git deposundaki deklaratif YAML dosyalarını **İstenen Durum (Desired State)**, Kubernetes kümesindeki canlı kaynakları ise **Mevcut Durum (Actual State)** olarak takip eder. Biri cluster üzerinde elle bir pod silse veya yamasa bile (Configuration Drift), `selfHeal: true` kuralı sayesinde Argo CD saniyeler içinde Git'teki tanımı zorlayarak sistemi eski sağlıklı haline döndürür.
 
 ## 4. Ön Koşullar

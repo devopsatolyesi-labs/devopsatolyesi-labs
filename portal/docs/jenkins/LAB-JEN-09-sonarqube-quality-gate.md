@@ -29,24 +29,7 @@ Bu laboratuvarın amacı, CI hattına **Statik Uygulama Güvenlik Testi (SAST)**
 
 ## Mimari ve Quality Gate Akışı
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant J as Jenkins Pipeline
-    participant SQ as SonarQube Sunucusu (:9000)
-
-    J->>J: Kod Derleme & Test
-    J->>SQ: withSonarQubeEnv: sonar-scanner çalıştır
-    SQ->>SQ: Statik Analiz & Kural Denetimi
-    J->>SQ: waitForQualityGate(): Sonucu bekle
-    SQ-->>J: Webhook Bildirimi: Quality Gate = PASSED / FAILED
-    alt Quality Gate == PASSED
-        J->>J: Sonraki Aşamaya Geç (Deploy)
-    else Quality Gate == FAILED
-        J->>J: Pipeline'ı İptal Et (ABORTED/FAILURE)
-    end
-```
-
+![LAB-JEN-09 mimari diyagramı](../lab-assets/LAB-JEN-09/images/diagram-01.png)
 ---
 
 ## Adım Adım Uygulama Rehberi

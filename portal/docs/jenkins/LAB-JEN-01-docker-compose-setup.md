@@ -37,14 +37,7 @@ docker compose version
 
 ## Mimari ve Çalışma Modeli
 
-```mermaid
-graph LR
-    User([Kullanıcı / Tarayıcı]) -->|HTTPS :8443| Nginx[Nginx Reverse Proxy]
-    Nginx -->|HTTP :8080| Jenkins[Jenkins LTS Controller]
-    Jenkins -->|Volume Mount| Volume[(jenkins_data Volume)]
-    Jenkins -->|Docker Socket| DockerDaemon[Host Docker Engine]
-```
-
+![LAB-JEN-01 mimari diyagramı](../lab-assets/LAB-JEN-01/images/diagram-01.png)
 ---
 
 ## Adım Adım Uygulama Rehberi

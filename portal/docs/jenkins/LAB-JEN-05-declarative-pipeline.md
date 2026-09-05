@@ -29,22 +29,7 @@ Bu laboratuvar ile Jenkins dünyasının altın standardı olan **Pipeline as Co
 
 ## Declarative Pipeline Mimarisi
 
-```mermaid
-graph TD
-    Pipeline[pipeline] --> Agent[agent any]
-    Pipeline --> Stages[stages]
-    Stages --> S1[stage: Build]
-    Stages --> S2[stage: Test]
-    Stages --> S3[stage: Package]
-    S1 --> Step1[steps: sh 'echo Derleniyor...']
-    S2 --> Step2[steps: sh 'echo Testler kosuluyor...']
-    S3 --> Step3[steps: sh 'echo Paket olusturuluyor...']
-    Pipeline --> Post[post handlers]
-    Post --> PSuccess[success: sh 'echo Basarili!']
-    Post --> PFail[failure: sh 'echo Hata Bildirimi!']
-    Post --> PAlways[always: sh 'echo Temizlik Yapildi']
-```
-
+![LAB-JEN-05 mimari diyagramı](../lab-assets/LAB-JEN-05/images/diagram-01.png)
 ---
 
 ## Adım Adım Uygulama Rehberi

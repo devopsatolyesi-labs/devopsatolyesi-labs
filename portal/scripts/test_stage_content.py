@@ -79,6 +79,12 @@ class StageContentTest(unittest.TestCase):
                 self.assertIn(f"{lab['id']}/README.md", names)
                 self.assertFalse(any("/solution/" in name for name in names))
                 self.assertFalse(any("__pycache__" in name or name.endswith(".pyc") for name in names))
+                packaged_readmes = [name for name in names if name.endswith("/README.md")]
+                for name in packaged_readmes:
+                    readme = archive.read(name).decode("utf-8", "ignore")
+                    self.assertNotIn("../../lab-assets/", readme)
+                    for image in re.findall(r"\]\(images/([^)]*)\)", readme):
+                        self.assertIn(f"{name.rsplit('/', 1)[0]}/images/{image}", names)
 
     def test_course_archives_are_exact_reproducible_and_unbranded(self) -> None:
         second_root = Path(tempfile.mkdtemp(dir=self.temporary.name))
@@ -132,9 +138,11 @@ class StageContentTest(unittest.TestCase):
         javascript = (REPOSITORY / "portal/docs/javascripts/open_in_new_tab.js").read_text()
         self.assertIn("window.PORTAL_ACCESS_POLICY", javascript)
         self.assertNotIn("All 20 Docker labs", javascript)
-        mermaid = (REPOSITORY / "portal/docs/javascripts/mermaid-init.js").read_text()
-        self.assertIn("window.mermaid.run", mermaid)
+        self.assertNotIn("mermaid-init.js", config)
         self.assertNotIn("navigation.top", config)
+
+        for guide in (REPOSITORY / "training-content/labs").rglob("*.md"):
+            self.assertNotIn("```mermaid", guide.read_text(), guide)
 
     def test_rendered_guides_have_no_unsupported_alert_syntax(self) -> None:
         for page in self.docs.rglob("*.md"):

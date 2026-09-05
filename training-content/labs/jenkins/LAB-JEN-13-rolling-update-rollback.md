@@ -29,15 +29,7 @@ Bu laboratuvarın amacı, üretim seviyesinde **Sıfır Kesinti (Zero-Downtime) 
 
 ## Mimari ve Otomatik Rollback Akışı
 
-```mermaid
-graph TD
-    Deploy[Yeni Sürüm Dağıtıldı: v2] --> HealthCheck{HTTP Health Check OK?}
-    HealthCheck -->|200 OK| DeploySuccess[SUCCESS: v2 Canlıda Kaldı]
-    HealthCheck -->|500 Hata / Timeout| RollbackTrigger[Hata Yakalandı: post failure]
-    RollbackTrigger --> Undo[kubectl rollout undo deployment/order-api]
-    Undo --> RollbackSuccess[Önceki Kararlı Sürüm v1'e Dönüldü]
-```
-
+![LAB-JEN-13 mimari diyagramı](../../lab-assets/LAB-JEN-13/images/diagram-01.png)
 ---
 
 ## Adım Adım Uygulama Rehberi

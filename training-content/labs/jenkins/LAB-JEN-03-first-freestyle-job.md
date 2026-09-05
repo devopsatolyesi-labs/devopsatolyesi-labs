@@ -29,16 +29,7 @@ Bu laboratuvarın pedagojik amacı, Jenkins'in çekirdek çalışma mekanizması
 
 ## Mimari ve Workspace Yaşam Döngüsü
 
-```mermaid
-graph TD
-    Trigger([Job Tetiklendi]) --> CreateWS[Workspace Dizinini Hazırla]
-    CreateWS --> ExecShell[Execute Shell: Komutları Çalıştır]
-    ExecShell --> CheckExit{Exit Code == 0 ?}
-    CheckExit -->|Evet| Success[Build SUCCESS: Mavi / Yeşil]
-    CheckExit -->|Hayır| Fail[Build FAILURE: Kırmızı]
-    Success --> Archive[Artifacts Arşivle]
-```
-
+![LAB-JEN-03 mimari diyagramı](../../lab-assets/LAB-JEN-03/images/diagram-01.png)
 ---
 
 ## Adım Adım Uygulama Rehberi

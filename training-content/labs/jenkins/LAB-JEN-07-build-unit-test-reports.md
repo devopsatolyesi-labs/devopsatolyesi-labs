@@ -29,16 +29,7 @@ Bu laboratuvarın amacı, gerçek bir Python Flask mikroservisinin test otomasyo
 
 ## Mimari ve Test Raporlama Akışı
 
-```mermaid
-graph LR
-    Source[Kaynak Kod & Testler] --> Pytest[pytest --junitxml=reports/test.xml]
-    Pytest --> Report[(XML Test Raporu)]
-    Report --> JUnitStep[Jenkins junit step]
-    JUnitStep --> Trend[Test Trend Grafiği & Detay Raporu]
-    Pytest --> Dist[Wheel / Tar Dağıtım Paketi]
-    Dist --> Archive[archiveArtifacts: dist/*]
-```
-
+![LAB-JEN-07 mimari diyagramı](../../lab-assets/LAB-JEN-07/images/diagram-01.png)
 ---
 
 ## Adım Adım Uygulama Rehberi

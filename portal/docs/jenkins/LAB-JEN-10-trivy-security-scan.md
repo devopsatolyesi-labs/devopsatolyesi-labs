@@ -30,15 +30,7 @@ Bu laboratuvarın amacı, CI/CD pipeline'ına tam anlamıyla bir **DevSecOps Gü
 
 ## DevSecOps Güvenlik Kapısı Mimarisi
 
-```mermaid
-graph TD
-    Build[Docker Build Tamamlandı] --> TrivyScan[Trivy Vulnerability Scan]
-    TrivyScan --> CheckSev{CRITICAL Açık Var mı?}
-    CheckSev -->|Evet: exit-code 1| SecGateFail[Build FAILURE: Dağıtım Engellendi]
-    CheckSev -->|Hayır: exit-code 0| SecGatePass[Build SUCCESS: Registry'ye Gönder]
-    TrivyScan --> ExportRep[JSON/Table Raporu Arşivle]
-```
-
+![LAB-JEN-10 mimari diyagramı](../lab-assets/LAB-JEN-10/images/diagram-01.png)
 ---
 
 ## Adım Adım Uygulama Rehberi

@@ -24,42 +24,7 @@ Prometheus 3.x LTS çekme (pull) mimarisini kurmak, `prometheus.yml` ile uygulam
   [ Grafana 13.1.5 Paneli (Port: 3000) ] <--- (PromQL Sorgulaması)
 ```
 
-```mermaid
-flowchart LR
-    subgraph TARGETS["Metrik Kaynakları (Targets)"]
-        APP["order-api (:8000/metrics)\nHTTP İstek & Gecikme"]
-        NODE["Node Exporter (:9100/metrics)\nCPU, RAM, Disk, Ağ"]
-        PROM_SELF["Prometheus (:9090/metrics)\nTSDB Durumu"]
-    end
-
-    subgraph PROM [Prometheus 3.13.2 LTS Engine]
-        SCRAPER[Periyodik Kazıma / Pull Engine]
-        TSDB[(Zaman Serisi Veritabanı - TSDB)]
-        PROMQL[PromQL Sorgu Motoru]
-        SCRAPER --> TSDB
-        TSDB --> PROMQL
-    end
-
-    subgraph VIZ [Görselleştirme]
-        GRAF[Grafana 13.1.5 Paneli :3000]
-        USER((Operatör / SRE))
-        PROMQL -->|PromQL HTTP API| GRAF
-        GRAF --> USER
-    end
-
-    APP -->|Pull 5s| SCRAPER
-    NODE -->|Pull 5s| SCRAPER
-    PROM_SELF -->|Pull 5s| SCRAPER
-
-    classDef target fill:#1e1b4b,stroke:#818cf8,color:#fff;
-    classDef prom fill:#431407,stroke:#f97316,color:#fff;
-    classDef viz fill:#422006,stroke:#f59e0b,color:#fff;
-
-    class TARGETS target;
-    class PROM prom;
-    class VIZ viz;
-```
-
+![LAB-MON-01 mimari diyagramı](../lab-assets/LAB-MON-01/images/diagram-01.png)
 **Not:** **Çekme (Pull) vs İtme (Push) Modeli:** Prometheus, metrikleri uygulamaların kendisine göndermesini (push) beklemez; konfigürasyonundaki hedeflerin `/metrics` uç noktalarını periyodik olarak (burada her 5 saniyede bir) yoklayarak (pull) zaman serisi veritabanına kaydeder.
 
 ## 4. Ön Koşullar

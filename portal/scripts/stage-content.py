@@ -30,7 +30,7 @@ def visible_files(assets: Path | None) -> list[tuple[Path, Path]]:
     if assets is None:
         return []
     files: list[tuple[Path, Path]] = []
-    for directory_name in ("starter", "scripts"):
+    for directory_name in ("starter", "scripts", "images"):
         directory = assets / directory_name
         if not directory.is_dir():
             continue
@@ -222,6 +222,7 @@ def main() -> None:
         target.parent.mkdir(parents=True, exist_ok=True)
         package_guide = studentize_guide(source.read_text(encoding="utf-8"))
         portal_guide = package_guide.replace("../../lab-assets/", "../lab-assets/")
+        package_guide = re.sub(r"\.\./\.\./lab-assets/[^/]+/images/", "images/", package_guide)
         guide_lines = portal_guide.splitlines()
         guide_lines.insert(1, plain_lab_header(lab))
         target.write_text("\n".join(guide_lines) + "\n", encoding="utf-8")

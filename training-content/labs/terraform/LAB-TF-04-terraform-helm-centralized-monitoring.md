@@ -33,38 +33,7 @@ Bu labı tamamladığınızda aşağıdaki yetkinlikleri kazanacaksınız:
 ### Sistem Mimarisi Şeması
 ![Centralized Monitoring Architecture](../../lab-assets/LAB-TF-04/images/architecture.svg)
 
-```mermaid
-flowchart LR
-    subgraph IaC [Terraform Otomasyonu]
-        TF[Terraform CLI 1.16]
-        VAL[values-monitoring.yaml]
-        PROV[helm & kubernetes providers]
-        TF --> PROV
-        VAL --> PROV
-    end
-
-    subgraph K8s [Kubernetes devops-cluster]
-        subgraph NS [Namespace: monitoring]
-            PROM[Prometheus Server :9090]
-            GRAF[Grafana Dashboard :3000]
-            NODE[Node Exporter DaemonSet]
-            KSM[kube-state-metrics]
-            PROM --> GRAF
-            NODE --> PROM
-            KSM --> PROM
-        end
-
-        subgraph APP [Namespace: default]
-            SVC[order-service :8080]
-            SM[ServiceMonitor CRD]
-            SM -.->|Oto-Keşif| PROM
-            SVC -.->|Scrape /metrics| PROM
-        end
-    end
-
-    PROV ==>|helm_release apply| NS
-```
-
+![LAB-TF-04 mimari diyagramı](../../lab-assets/LAB-TF-04/images/diagram-01.png)
 ---
 
 ## 4. Ön Koşullar

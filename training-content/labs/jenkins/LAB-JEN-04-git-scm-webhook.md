@@ -29,22 +29,7 @@ Bu laboratuvarın amacı, Jenkins Controller'ı bir Git versiyon kontrol sistemi
 
 ## Mimari ve Tetikleme Modelleri
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor Dev as Geliştirici
-    participant Git as Git Repo (Yerel / GitHub)
-    participant Hook as Webhook / API
-    participant Jenkins as Jenkins Controller
-
-    Dev->>Git: git push origin main
-    Note over Git,Jenkins: Model A: Webhook (Push Event) - Anlık & Etkin
-    Git->>Hook: POST /job/my-job/build
-    Hook->>Jenkins: Build Tetikle
-    Jenkins->>Git: git clone / fetch
-    Jenkins->>Jenkins: Test & Build Çalıştır
-```
-
+![LAB-JEN-04 mimari diyagramı](../../lab-assets/LAB-JEN-04/images/diagram-01.png)
 ---
 
 ## Adım Adım Uygulama Rehberi

@@ -29,14 +29,7 @@ Bu laboratuvarın amacı, üretim seviyesindeki CI/CD süreçlerinde hassas veri
 
 ## Mimari ve Kimlik Bilgisi Maskeleme
 
-```mermaid
-graph LR
-    User([Kullanıcı / Tetikleyici]) -->|Parametreler: ENV, DEPLOY_FLAG| Pipeline[Declarative Pipeline]
-    CredStore[(Jenkins Credential Store)] -->|withCredentials| Pipeline
-    Pipeline -->|Maskeleme Filtresi: ****| Console[Konsol Çıktısı]
-    Pipeline -->|Çözümlenmiş Değişken| SafeExecution[Uygulama / Build Komutu]
-```
-
+![LAB-JEN-06 mimari diyagramı](../lab-assets/LAB-JEN-06/images/diagram-01.png)
 ---
 
 ## Adım Adım Uygulama Rehberi

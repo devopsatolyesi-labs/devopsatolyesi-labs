@@ -27,40 +27,7 @@ GitLab CI/CD sözdizimi (`.gitlab-ci.yml`) ile çok aşamalı (`stages`, `jobs`,
           └── job: docker-build (Docker 27.5 dind ile derleme ve Trivy kapısı)
 ```
 
-```mermaid
-flowchart LR
-    subgraph GL [GitLab Server :8081]
-        REPO[.gitlab-ci.yml]
-    end
-
-    subgraph RUNNER [GitLab Runner v17.9.1 Executor: Docker]
-        subgraph STAGE_TEST [Stage: test]
-            J1[unit-tests: node:20-alpine]
-            ART[artifacts: test-results.xml]
-            J1 --> ART
-        end
-
-        subgraph STAGE_SEC [Stage: security]
-            J2[dependency-scan: aquasec/trivy:0.74.0]
-        end
-
-        subgraph STAGE_BUILD [Stage: build]
-            DIND[service: docker:27.5.1-dind]
-            J3[docker-build: docker:27.5.1-cli]
-            DIND <-->|TCP: 2375| J3
-        end
-    end
-
-    REPO ==> STAGE_TEST
-    STAGE_TEST ==> STAGE_SEC
-    STAGE_SEC ==> STAGE_BUILD
-
-    classDef srv fill:#431407,stroke:#ea580c,color:#fff;
-    classDef runner fill:#0f172a,stroke:#3b82f6,color:#fff;
-    class GL srv;
-    class RUNNER runner;
-```
-
+![LAB-GLB-01 mimari diyagramı](../../lab-assets/LAB-GLB-01/images/diagram-01.png)
 > [!NOTE]
 > **Docker-in-Docker (DinD) Mimarisi:** GitLab Runner'ın konteyner içinde yeni bir Docker imajı derleyebilmesi için `docker:27.5.1-dind` yardımcı servisi (`services:`) başlatılır. `docker:27.5.1-cli` işi, TLS üzerinden DinD daemon'ına bağlanarak izole ortamda imaj derler ve tarama yapar.
 

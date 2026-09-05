@@ -29,24 +29,7 @@ Bu laboratuvarın amacı, CI hattında başarıyla test edilen ve güvenlik tara
 
 ## Mimari ve İmaj Dağıtım Akışı
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant J as Jenkins Pipeline
-    participant CS as Jenkins Credential Store
-    participant D as Local Docker Engine
-    participant H as Harbor Private Registry (:8082)
-
-    J->>CS: Robot Account Kimlik Bilgilerini Al
-    CS-->>J: HARBOR_USER / HARBOR_PASS
-    J->>D: docker login harbor.local:8082
-    J->>D: docker tag app:build-1 harbor.local:8082/production-apps/app:v1.0.1
-    J->>H: docker push harbor.local:8082/production-apps/app:v1.0.1
-    H-->>J: İmaj Katmanları ve Digest Kaydedildi (201 Created)
-    J->>H: curl GET /api/v2.0/projects/.../artifacts
-    H-->>J: İmaj Doğrulandı
-```
-
+![LAB-JEN-11 mimari diyagramı](../lab-assets/LAB-JEN-11/images/diagram-01.png)
 ---
 
 ## Adım Adım Uygulama Rehberi

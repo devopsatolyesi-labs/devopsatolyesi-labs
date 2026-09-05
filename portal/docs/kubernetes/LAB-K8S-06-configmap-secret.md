@@ -20,25 +20,13 @@
 
 ## Ön Koşullar
 
-- Kind kümesi aktif olmalıdır.
+- Kind kümesi aktif olmalıdır. Kurulum için [kind Kubernetes kümesi rehberine](/setup/kind-cluster/) bakın.
 
 ---
 
 ## Konfigürasyon ve Secret Enjeksiyon Modeli
 
-```text
-[ ConfigMap: app-config ]                [ Secret: app-secret ]
-  - APP_NAME: "Payment Gateway"            - DB_USER: "postgres"
-  - LOG_LEVEL: "debug"                     - DB_PASSWORD: "SuperSecret2026"
-             │                                        │
-             ├───────────────────┬────────────────────┤
-             ▼                                        ▼
-+--------------------------------------------------------------------+
-| POD (payment-service)                                              |
-|  - Ortam Değişkeni: APP_NAME, DB_USER, DB_PASSWORD                 |
-|  - Dosya Mount: /etc/config/app.json (Canlı güncellenebilir)       |
-+--------------------------------------------------------------------+
-```
+![ConfigMap ve Secret değerlerinin Pod'a enjeksiyonu](../lab-assets/LAB-K8S-06/images/configmap-secret.png)
 
 ---
 

@@ -35,47 +35,7 @@ Eğitim boyunca öğrenilen tüm pratikleri tek bir uçtan uca teslimat hattınd
     └── 5. Prometheus /metrics Kazıma & Canlı HTTP Yanıt Doğrulaması
 ```
 
-```mermaid
-flowchart TD
-    subgraph STAGE1 [1. TEST]
-        SRC[FastAPI Kaynak Kodu] --> PYTEST[pytest unit tests]
-        PYTEST -->|3/3 PASS| S1_OK[JUnit XML Raporu]
-    end
-
-    subgraph STAGE2 [2. BUILD]
-        S1_OK --> DOCKER_BUILD[Multi-Stage Dockerfile]
-        DOCKER_BUILD --> NONROOT[Non-Root UID 10001 İmaj]
-    end
-
-    subgraph STAGE3 [3. SECURITY GATE]
-        NONROOT --> TRIVY[Trivy Vulnerability Scan]
-        TRIVY -->|0 CRITICAL CVE| GATE_PASS[Shift-Left Gate: Onaylandı]
-    end
-
-    subgraph STAGE4 [4. K8S DEPLOYMENT]
-        GATE_PASS --> K8S[kubectl apply -n capstone-prod]
-        K8S --> ROLLOUT[Zero-Downtime RollingUpdate\nmaxSurge: 1, maxUnavailable: 0]
-        ROLLOUT --> PROBES[Liveness & Readiness Probları OK]
-    end
-
-    subgraph STAGE5 [5. OBSERVABILITY]
-        PROBES --> METRICS[Prometheus /metrics Endpoint]
-        METRICS --> TELEMETRY[Canlı HTTP 200 & İstek Sayacı]
-    end
-
-    classDef s1 fill:#1e1b4b,stroke:#818cf8,color:#fff;
-    classDef s2 fill:#0f172a,stroke:#38bdf8,color:#fff;
-    classDef s3 fill:#7f1d1d,stroke:#f87171,color:#fff;
-    classDef s4 fill:#064e3b,stroke:#34d399,color:#fff;
-    classDef s5 fill:#431407,stroke:#f97316,color:#fff;
-
-    class STAGE1 s1;
-    class STAGE2 s2;
-    class STAGE3 s3;
-    class STAGE4 s4;
-    class STAGE5 s5;
-```
-
+![LAB-CAP-01 mimari diyagramı](../../lab-assets/LAB-CAP-01/images/diagram-01.png)
 > [!NOTE]
 > **Uçtan Uca Bütünlük:** Capstone çalışmasında her bir aşama bir sonrakinin önkoşuludur. Testler başarısız olursa derleme yapılmaz; Trivy kritik bir zafiyet yakalarsa Kubernetes kümesine rollout başlatılmaz. Bu mekanizma modern GitOps ve DevSecOps boru hatlarının omurgasıdır.
 
