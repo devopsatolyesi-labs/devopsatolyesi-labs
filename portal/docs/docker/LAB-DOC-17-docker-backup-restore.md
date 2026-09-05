@@ -1,19 +1,11 @@
 # LAB-DOC-17 — İmaj ve Volume Yedekleme / Geri Yükleme
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `docker` | `5432` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Orta | 45 dakika | `docker` | `5432` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-17.zip)](/downloads/LAB-DOC-17.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-DOC-17.zip](/downloads/LAB-DOC-17.zip)
 
-
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `docker` | `5432` |
-
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-17.zip)](/downloads/LAB-DOC-17.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
 
 ---
 
@@ -184,31 +176,7 @@ docker exec -i restored-db psql -U postgres -d companydb -c "SELECT * FROM custo
 
 ---
 
-### Adım 7: Temizlik
-
-```bash
-docker rm -f restored-db
-docker volume rm restored-pgdata
-rm -rf backups
-```
-
----
-
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: Canlı çalışan bir veritabanı konteynerini durdurmadan doğrudan disk dosyalarını `tar` ile yedeklemek neden sakıncalıdır?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Veritabanları verileri disk belleğinde (buffer cache) ve Write-Ahead Log (WAL) mekanizmasında tutar. Konteyner aktifken dosya kopyalandığında tablolar arası tutarsızlık (inconsistent state / partial write) oluşur ve geri yüklenen veritabanı bozuk (corrupted) olarak açılamaz. Canlı yedekleme gerekiyorsa ya `pg_dump` gibi mantıksal yedekleyiciler kullanılmalı ya da konteyner geçici olarak durdurulmalıdır.
-
-??? question "Soru 2: `docker export` ile `docker save` komutları arasındaki fark nedir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        `docker save`, bir **İMAJI** tüm katman geçmişi (layers), metadata ve etiketleri ile birlikte dışa aktarır. `docker export` ise çalışan bir **KONTEYNERİN** o anki dosya sistemini tek bir katmana düzleştirerek (flattened) dışa aktarır; geçmiş katmanları ve build metadata'sını kaybeder.
-
----
-
-## Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 
 ```text
  id |    name    |  balance  

@@ -1,19 +1,11 @@
 # LAB-DOC-12 — React SPA ve Nginx Frontend Container
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 40 dakika | `docker` | `80` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Orta | 40 dakika | `docker` | `80` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-12.zip)](/downloads/LAB-DOC-12.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-DOC-12.zip](/downloads/LAB-DOC-12.zip)
 
-
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 40 dakika | `docker` | `80` |
-
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-12.zip)](/downloads/LAB-DOC-12.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
 
 ---
 
@@ -216,35 +208,9 @@ docker images react-frontend:1.0
 
 ---
 
-### Adım 6: Temizlik
-
-```bash
-docker rm -f my-frontend
-```
-
----
-
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: React SPA uygulamalarında Nginx'te `try_files $uri $uri/ /index.html;` satırı yazılmazsa kullanıcı sayfayı F5 ile yenilediğinde ne olur?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Kullanıcı `http://domain.com/dashboard` adresindeyken sayfayı yenilerse, Nginx diskte `/usr/share/nginx/html/dashboard` adında fiziksel bir dosya arar. Bulamadığı için kullanıcıya **404 Not Found** hatası döner. `try_files ... /index.html` direktifi ise fiziksel dosya yoksa isteği React Router'ın yönetmesi için `index.html`'e iletir.
-
-??? question "Soru 2: Neden statik React uygulamasını doğrudan `node server.js` ile sunmak yerine Nginx tercih edilir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Nginx C dili ile yazılmış, statik dosya sunumu için optimize edilmiş bir event-driven motordur. Node.js'e göre %300 daha az bellek tüketir, çok daha yüksek eşzamanlı bağlantıyı (concurrency) karşılar ve Docker imaj boyutu 400MB yerine 25MB olur.
-
----
-
-## Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 
 - `curl -I http://localhost:8080/` komutu `HTTP/1.1 200 OK` ve `Server: nginx/...` döner.
 - `/dashboard/orders` gibi rotalara atılan istekler 404 hatası vermeden `index.html` içeriğini döndürür.
 
 ---
-
-## Sorun Giderme
-
-- **403 Forbidden Hatası:** Nginx kök dizinindeki (`/usr/share/nginx/html`) dosyaların okunabilirlik izinlerini kontrol edin.

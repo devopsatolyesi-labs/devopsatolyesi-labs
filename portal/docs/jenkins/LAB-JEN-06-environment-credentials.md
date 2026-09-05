@@ -1,19 +1,11 @@
 # LAB-JEN-06 — Environment Değişkenleri, Parametreler ve Güvenli Credentials Yönetimi
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `jenkins` | `8080` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Orta | 45 dakika | `jenkins` | `8080` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-JEN-06.zip)](/downloads/LAB-JEN-06.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-JEN-06.zip](/downloads/LAB-JEN-06.zip)
 
-
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `jenkins`, `groovy`, `bash` | `8080` |
-
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-JEN-06.zip)](/downloads/LAB-JEN-06.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
 
 ---
 
@@ -169,26 +161,7 @@ curl -s -u admin:${JENKINS_TOKEN}   http://localhost:8080/job/04-credentials-and
 
 ---
 
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: Bir shell script içerisinde `echo $SECURE_TOKEN | base64` yazılırsa Jenkins log maskeleme çalışır mı?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        **HAYIR!** Jenkins maskeleme motoru yalnızca Credential Store'daki orijinal metin karakterlerini arar ve maskeler. Eğer parola `base64` veya `md5` ile dönüştürülürse, dönüştürülmüş string orijinal parola ile eşleşmediği için konsola açık metin (cleartext) olarak basılır. Bu durum ciddi bir güvenlik açığıdır.
-
-??? question "Soru 2: Groovy string interpolasyonunda çift tırnak (`"..."`) ile tek tırnak (`'...'`) arasındaki güvenlik farkı nedir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Çift tırnak kullanıldığında (`sh "echo $DB_PASS"`), değişken Groovy tarafından Jenkins Controller belleğinde çözümlenir ve komut satırına parametre olarak basılır. Tek tırnak kullanıldığında (`sh 'echo $DB_PASS'`), değişken işletim sistemi ortamına doğrudan aktarılır ve bash süreci tarafından okunur. Jenkinsfile'da güvenlik açısından `sh` komutlarında her zaman tek tırnak (`'...'`) kullanılması tavsiye edilir.
-
-??? question "Soru 3: Bir credential'ın sadece belirli bir Pipeline tarafından kullanılmasını nasıl sağlarız?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Credentials oluşturulurken `Global` scope yerine, ilgili Pipeline'ın veya Folder'ın altındaki yerel scope seçilmelidir. Bu sayede diğer projeler bu kimlik bilgisine erişemez (Folder-scoped credentials).
-
----
-
-## Beklenen Sonuç & Sorun Giderme
+## Doğal Doğrulama ve Beklenen Sonuç
 
 | Hata / Durum | Çözüm |
 | :--- | :--- |

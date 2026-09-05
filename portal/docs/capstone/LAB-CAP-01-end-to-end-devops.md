@@ -1,11 +1,10 @@
 # LAB-CAP-01 — Final Integrated DevOps Delivery Pipeline: Code to Observability
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🔴 **ADVANCED** (İleri Seviye) | ⏱️ 90 dakika | `secure-ci, harbor, kubernetes, argocd, monitoring` | `3000, 8000, 8082, 8085, 9090` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| İleri | 90 dakika | `secure-ci, harbor, kubernetes, argocd, monitoring` | `3000, 8000, 8082, 8085, 9090` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-CAP-01.zip)](/downloads/LAB-CAP-01.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-CAP-01.zip](/downloads/LAB-CAP-01.zip)
 
 
 ## 1. Lab Senaryosu
@@ -77,9 +76,7 @@ flowchart TD
     class STAGE5 s5;
 ```
 
-> [!NOTE]
-> **Uçtan Uca Bütünlük:** Capstone çalışmasında her bir aşama bir sonrakinin önkoşuludur. Testler başarısız olursa derleme yapılmaz; Trivy kritik bir zafiyet yakalarsa Kubernetes kümesine rollout başlatılmaz. Bu mekanizma modern GitOps ve DevSecOps boru hatlarının omurgasıdır.
-
+**Not:** **Uçtan Uca Bütünlük:** Capstone çalışmasında her bir aşama bir sonrakinin önkoşuludur. Testler başarısız olursa derleme yapılmaz; Trivy kritik bir zafiyet yakalarsa Kubernetes kümesine rollout başlatılmaz. Bu mekanizma modern GitOps ve DevSecOps boru hatlarının omurgasıdır.
 
 ## 4. Ön Koşullar
 - Docker Engine, kind, kubectl, helm ve trivy araçları kurulu olmalıdır
@@ -355,7 +352,7 @@ Tüm aşamaları tek seferde tetikleyin:
 ./scripts/ci_pipeline_runner.sh
 ```
 
-## 6. Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 Adım 4'teki boru hattı çıktısı:
 ```text
 ==========================================================
@@ -385,36 +382,14 @@ Canli Kume Yaniti: {"message":"Capstone Order Service v2.0.0 is Live & Resilient
 ==========================================================
 ```
 
-## 8. Sorun Giderme
-
-### Belirti
-Boru hattı Aşama 4'te `ImagePullBackOff` hatası vererek zaman aşımına uğrar.
-
-### Kanıt
-`kubectl get pods -n capstone-prod` çıktısında imajın çekilemediği görülür.
-
-### Kontrol Komutu
+## Doğal Doğrulama ve Beklenen Sonuç
+`capstone-prod` ad alanında 2/2 podun Ready çalıştığını ve birim test raporunun üretildiğini doğrulayın:
 ```bash
-kubectl describe pod -l app=capstone-order-api -n capstone-prod | grep -A 3 "Events:"
+READY_CNT=$(kubectl get deployment capstone-order-api -n capstone-prod -o jsonpath='{.status.readyReplicas}')
+
+if [ "$READY_CNT" -eq 2 ] && [ -f reports/junit-report.xml ]; then
+  echo "VALIDATION SUCCESS: Capstone pipeline verified. 2/2 pods running and test report exists."
+else
+  echo "VALIDATION FAILED: Pod count is $READY_CNT" && exit 1
+fi
 ```
-
-### Muhtemel Neden
-Derlenen yerel konteyner imajı kind kümesinin node ortamına aktarılmamıştır (`kind load docker-image`).
-
-### Çözüm
-İmajı kind kümesine yükleyin ve rollout işlemini yeniden tetikleyin:
-```bash
-kind load docker-image localhost:8082/devops/capstone-order-api:v2.0.0 --name devops-cluster
-kubectl rollout restart deployment/capstone-order-api -n capstone-prod
-```
-
-### Tekrar Doğrulama
-```bash
-kubectl rollout status deployment/capstone-order-api -n capstone-prod
-```
-
-## 10. Production Notu
-Kurumsal DevOps mimarilerinde imajlar doğrudan küme düğümlerine elle yüklenmez; CI boru hattı tarafından Harbor veya bulut OCI deposuna push edilir; Kubernetes ise `imagePullSecrets` ile güvenli kimlik doğrulayarak imajı çeker. Üretim dağıtımlarında `maxUnavailable: 0` ve `maxSurge: 1` kuralı korunarak sıfır kesintili dağıtım garantilenmelidir.
-
-## 11. Challenge
-`gitops-manifests/deployment.yaml` dosyasındaki replika sayısını 2'den 5'e çıkarın ve `kubectl rollout status` komutuyla podların kademeli ve kesintisiz ölçeklenmesini canlı olarak gözlemleyin.

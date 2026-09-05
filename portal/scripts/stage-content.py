@@ -65,7 +65,26 @@ def strip_existing_header(content: str) -> str:
     return content
 
 
+def normalize_admonitions(content: str) -> str:
+    """Convert GitHub alert quotes to plain Markdown supported by MkDocs."""
+    alert = re.compile(
+        r"^>\s*\[!(?:NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\s*\n"
+        r"((?:^>.*(?:\n|$))*)",
+        re.MULTILINE,
+    )
+
+    def replace(match: re.Match[str]) -> str:
+        body = "\n".join(
+            line[1:].lstrip() if line.startswith(">") else line
+            for line in match.group(1).splitlines()
+        ).strip()
+        return f"**Not:** {body}\n\n"
+
+    return alert.sub(replace, content)
+
+
 def studentize_guide(content: str) -> str:
+    content = normalize_admonitions(content)
     content = strip_existing_header(content)
     content = re.sub(r"^.*(?:lab-assets/.*/solution/|/solution/).*$\n?", "", content, flags=re.M)
     lines = content.splitlines()

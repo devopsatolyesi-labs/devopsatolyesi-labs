@@ -1,11 +1,10 @@
 # LAB-DOC-04 — Docker Volumes, Bind Mounts ve Veri Kalıcılığı
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟢 **CORE** (Temel Seviye) | ⏱️ 45 dakika | `docker` | `5432` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Temel | 45 dakika | `docker` | `5432` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-04.zip)](/downloads/LAB-DOC-04.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-DOC-04.zip](/downloads/LAB-DOC-04.zip)
 
 
 ## Amaç
@@ -205,47 +204,9 @@ Konteyneri yeniden başlatmadan değişikliğin anında yansıdığını gözlem
 
 ---
 
-### Adım 8: Temizlik
-
-```bash
-docker rm -f db-recovered web-bind-mount
-docker volume rm pg-data
-rm -rf html
-```
-
----
-
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: Docker'da Named Volume ile Bind Mount arasındaki en temel fark nedir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        - **Named Volume:** Depolama yeri tamamen Docker daemon tarafından yönetilir (`/var/lib/docker/volumes/...`). Host dosya sistemi yapısına bağımlı değildir; yüksek I/O performansı, yedekleme ve Kubernetes persistent volume geçişleri için idealdir.
-        - **Bind Mount:** Host makinedeki belirli bir mutlak veya göreceli yola (`/path/to/folder`) doğrudan bağlanır. Geliştiricinin kodunu canlı olarak konteyner içine aktarması veya host konfigürasyon dosyalarını (`nginx.conf`) enjekte etmek için tercih edilir.
-
-??? question "Soru 2: `docker run -v /my/folder:/data:ro` komutundaki `:ro` bayrağı ne anlama gelir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        **Read-Only (Salt Okunur).** Konteyner içindeki süreçlerin bu klasöre yazmasını veya içindeki dosyaları silmesini engeller. Konteyner dosya yazmaya çalışırsa `Read-only file system` hatası alır. Güvenlik ve veri bütünlüğü açısından kritik öneme sahiptir.
-
-??? question "Soru 3: Kullanılmayan tüm anonim ve sahipsiz volumeleri tek komutla nasıl temizleriz?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        ```bash
-        docker volume prune -f
-        ```
-        Bu komut hiçbir çalışan veya durmuş konteyner tarafından kullanılmayan tüm hacimleri silerek diskte yer açar.
-
----
-
-## Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 
 - Adım 6'da çalıştırılan `SELECT * FROM employees;` sorgusu konteyner silinmesine rağmen 3 satırı eksiksiz döner.
 - Adım 7'de `curl http://localhost:8085` komutu hostta değiştirilen HTML içeriğini anında sunar.
 
 ---
-
-## Sorun Giderme
-
-- **Port 5432 Çakışması:** Sisteminizde yerel PostgreSQL kuruluysa port çakışabilir. `sudo systemctl stop postgresql` yapabilir veya docker portunu `-p 5433:5432` olarak değiştirebilirsiniz.
-- **Volume Silinemiyor:** `volume is in use` hatası alırsanız, o volume'ü kullanan durdurulmuş konteynerleri `docker rm -f` ile silin.

@@ -1,19 +1,11 @@
 # LAB-JEN-04 — Git Repository ile Otomatik Build ve Webhook Yapılandırması
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟢 **CORE** (Temel Seviye) | ⏱️ 40 dakika | `jenkins, git` | `8080` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Temel | 40 dakika | `jenkins, git` | `8080` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-JEN-04.zip)](/downloads/LAB-JEN-04.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-JEN-04.zip](/downloads/LAB-JEN-04.zip)
 
-
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟢 **CORE** (Temel Seviye) | ⏱️ 40 dakika | `jenkins`, `git`, `curl` | `8080` |
-
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-JEN-04.zip)](/downloads/LAB-JEN-04.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
 
 ---
 
@@ -144,26 +136,7 @@ curl -X POST   -H "${CRUMB}"   -u admin:${JENKINS_TOKEN}   "http://localhost:808
 
 ---
 
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: SCM Polling (Poll SCM) yerine Webhook kullanmanın avantajı nedir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        SCM Polling, Jenkins'in periyodik olarak (örneğin 2 dakikada bir) Git sunucusuna "yeni commit var mı?" diye sormasıdır. Bu durum sunucuda gereksiz CPU ve ağ yükü yaratır ve commit atıldıktan sonra build başlaması için bekleme süresi doğurur. Webhook ise commit atıldığı anda Git sunucusunun Jenkins'i tetiklemesidir (Push Event); sıfır gecikmeyle çalışır ve gereksiz sorguları ortadan kaldırır.
-
-??? question "Soru 2: Webhook çağrısı yaparken `403 Forbidden: No valid crumb was included in the request` hatası neden alınır?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Jenkins CSRF (Cross-Site Request Forgery) koruması aktiftir. POST isteği gönderirken sunucunun `/crumbIssuer/api/xml` uç noktasından alınan tek kullanımlık güvenlik belirtecinin (`Jenkins-Crumb`) HTTP başlığı olarak isteğe eklenmesi gerekir.
-
-??? question "Soru 3: Büyük depolarda her build'de tüm geçmişi indirmemek için Git eklentisinde hangi ayar yapılmalıdır?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        **Shallow Clone** (örneğin `--depth 1`) ayarı etkinleştirilmelidir. Bu sayede yalnızca son commit çekilir ve gigabaytlarca geçmiş git verisinin indirilmesi engellenerek build süresi dakikalardan saniyelere indirilir.
-
----
-
-## Beklenen Sonuç & Sorun Giderme
+## Doğal Doğrulama ve Beklenen Sonuç
 
 | Belirti / Hata | Çözüm |
 | :--- | :--- |

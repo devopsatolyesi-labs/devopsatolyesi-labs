@@ -1,19 +1,11 @@
 # LAB-JEN-12 — Kubernetes (kind) Kümesine Otomatik Deployment (CD)
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🔴 **ADVANCED** (İleri Seviye) | ⏱️ 45 dakika | `jenkins, kubernetes` | `8080` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| İleri | 45 dakika | `jenkins, kubernetes` | `8080` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-JEN-12.zip)](/downloads/LAB-JEN-12.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-JEN-12.zip](/downloads/LAB-JEN-12.zip)
 
-
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🔴 **ADVANCED** (İleri Seviye) | ⏱️ 45 dakika | `jenkins`, `kubernetes`, `kubectl`, `kind` | `8080`, `80` |
-
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-JEN-12.zip)](/downloads/LAB-JEN-12.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
 
 ---
 
@@ -198,21 +190,7 @@ Podların `Running` durumunda ve 2/2 replica ile ayakta olduğunu teyit edin.
 
 ---
 
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: Pipeline'da `kubectl rollout status` adımının eklenmesi neden zorunludur?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        `kubectl apply` komutu asenkron çalışır; sadece istenen durumu (desired state) etcd'ye kaydeder ve hemen döner (exit 0). Yeni imajda bir hata (CrashLoopBackOff, ImagePullBackOff) olsa dahi `kubectl apply` başarılı sayılır. `kubectl rollout status` ise podların gerçekten ayağa kalkmasını bekler; podlar başlamazsa zaman aşımına uğrayarak exit code 1 döner ve Jenkins build'ini kırar.
-
-??? question "Soru 2: Jenkinsfile içerisinde `sed -i` ile YAML dosyasındaki imajı değiştirmek yerine hangi modern yöntemler tercih edilir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Helm (`helm upgrade --set image.tag=...`), Kustomize (`kustomize edit set image ...`) veya Argo CD GitOps yöntemi tercih edilmelidir. `sed` ile metin değiştirmek hata yapmaya açıktır ve YAML formatını bozabilir.
-
----
-
-## Beklenen Sonuç & Sorun Giderme
+## Doğal Doğrulama ve Beklenen Sonuç
 
 | Hata | Çözüm |
 | :--- | :--- |

@@ -5,9 +5,9 @@ Bu kontrol yalnız **Docker ve Kubernetes** eğitimine aittir.
 ## Sunucuda Bulunması Gereken Araçlar
 
 - Git, curl, jq ve unzip
-- Docker Engine ve Docker Compose v2
-- kind
-- kubectl
+- [Docker Engine ve Docker Compose v2](./docker-engine.md)
+- [kind](./kind-cluster.md)
+- [kubectl](./kind-cluster.md)
 - En az 4 CPU, 8 GB RAM ve 30 GB boş disk
 
 ## Ön Kontrol

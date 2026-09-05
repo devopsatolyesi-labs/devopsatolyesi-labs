@@ -1,19 +1,11 @@
 # LAB-DOC-18 — Docker Sorun Giderme ve Teşhis Senaryoları
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🔴 **ADVANCED** (İleri Seviye) | ⏱️ 55 dakika | `docker` | `8080, 5432` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| İleri | 55 dakika | `docker` | `8080, 5432` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-18.zip)](/downloads/LAB-DOC-18.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-DOC-18.zip](/downloads/LAB-DOC-18.zip)
 
-
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🔴 **ADVANCED** (İleri Seviye) | ⏱️ 55 dakika | `docker` | `8080`, `5432` |
-
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-18.zip)](/downloads/LAB-DOC-18.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
 
 ---
 
@@ -30,21 +22,6 @@
 ## Ön Koşullar
 
 - Docker Engine çalışır durumda olmalıdır.
-
----
-
-## Sorun Giderme Matrisi
-
-```text
-+-----------------------+-----------------------------+-------------------------------+
-| BELİRTİ               | KÖK NEDEN                   | ÇÖZÜM ARAÇLARI                |
-+-----------------------+-----------------------------+-------------------------------+
-| Port Bind Hatası      | Host portu başka serviste   | lsof -i, ss -tulpn, docker ps |
-| DNS / Network Hatası  | Konteynerler farklı ağlarda | docker network inspect/connect|
-| EACCES Yetki Hatası   | Host dizini UID uyuşmazlığı | ls -nd, chown, chmod, --user  |
-| Çıkış Kodu 137        | Kernel OOM Killer           | docker inspect .State.OOMKilled|
-+-----------------------+-----------------------------+-------------------------------+
-```
 
 ---
 
@@ -186,30 +163,8 @@ docker inspect mem-crasher --format='ExitCode: {{.State.ExitCode}} | OOMKilled: 
 
 ---
 
-### Adım 6: Temizlik
-
-```bash
-docker rm -f mem-crasher
-rm -rf data
-```
-
----
-
 ## Doğal Doğrulama
 
 Her 4 senaryonun da neden-sonuç ilişkisini ve ilgili teşhis komutlarını başarıyla uyguladığınızı doğrulayın.
 
 ---
-
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: `docker run` komutu verdiğinizde konteyner anında kapanıyor ve `docker ps` listesinde görünmüyorsa ilk bakılması gereken yer neresidir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        1. `docker ps -a` ile çıkış koduna (Exit Code) bakılmalıdır.
-        2. `docker logs <container_name>` ile uygulamanın çökmeden önce stdout/stderr'e yazdığı hata mesajı (örneğin eksik konfigürasyon, veritabanı bağlantı hatası veya syntax hatası) okunmalıdır.
-
-??? question "Soru 2: `docker top <container_id>` komutu ne işe yarar?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Konteynerin içine girmeye gerek kalmadan, host işletim sistemi perspektifinden konteyner içinde çalışan tüm süreçlerin PID, PPID, kullanıcı (UID) ve CPU kullanımını anlık olarak gösterir.

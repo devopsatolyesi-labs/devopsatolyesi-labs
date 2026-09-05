@@ -1,19 +1,11 @@
 # LAB-K8S-11 — Kubernetes Troubleshooting Challenge
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🔴 **ADVANCED** (İleri Seviye) | ⏱️ 50 dakika | `kubernetes` | `Dahili / Küme İçi` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| İleri | 50 dakika | `kubernetes` | `Küme içi` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-K8S-11.zip)](/downloads/LAB-K8S-11.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-K8S-11.zip](/downloads/LAB-K8S-11.zip)
 
-
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🔴 **ADVANCED** (İleri Seviye) | ⏱️ 60 dakika | `kubernetes`, `kubectl` | `8080`, `5432` |
-
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-K8S-11.zip)](/downloads/LAB-K8S-11.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
 
 ---
 
@@ -191,19 +183,3 @@ NON_RUNNING=$(kubectl get pods --no-headers | grep -v "Running" | wc -l | tr -d 
 ```
 
 ---
-
-### Adım 4: Temizlik
-
-```bash
-kubectl delete pod broken-image-pod crashloop-pod missing-secret-pod pending-pod
-kubectl delete secret non-existent-secret
-```
-
----
-
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: Çöken ve yeniden başlayan bir konteynerin önceki çökme anındaki loglarına nasıl ulaşırız?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        `kubectl logs <pod_name> --previous` komutu ile bir önceki konteyner örneğinin (instance) çökmeden hemen önce stdout/stderr'e yazdığı loglar okunabilir.

@@ -47,8 +47,7 @@ sudo usermod -aG docker "$USER"
 sudo systemctl enable --now docker
 ```
 
-> [!NOTE]
-> Grup üyeliğinin terminalde aktif olması için oturumu kapatıp açabilir veya `newgrp docker` komutunu çalıştırabilirsiniz.
+**Not:** Grup üyeliğinin terminalde aktif olması için oturumu kapatıp açabilir veya `newgrp docker` komutunu çalıştırabilirsiniz.
 
 ---
 

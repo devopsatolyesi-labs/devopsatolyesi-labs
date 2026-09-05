@@ -1,11 +1,10 @@
 # LAB-DOC-06 — User-Defined Docker Network, Port İzolasyonu ve DNS
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `docker` | `8080` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Orta | 45 dakika | `docker` | `8080` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-06.zip)](/downloads/LAB-DOC-06.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-DOC-06.zip](/downloads/LAB-DOC-06.zip)
 
 
 ## Amaç
@@ -150,42 +149,9 @@ Artık istek başarıyla tamamlanır!
 
 ---
 
-### Adım 7: Temizlik
-
-```bash
-docker rm -f frontend-app backend-api isolated-client
-docker network rm custom-app-net isolated-net
-```
-
----
-
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: Varsayılan (default) `bridge` ağı ile kullanıcı tanımlı (`custom`) bridge ağı arasındaki en kritik fark nedir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        **Otomatik DNS Çözümlemesidir.** Varsayılan `bridge` ağında çalışan iki konteyner birbirine isimle (`http://backend-api`) ping atamaz veya bağlanamaz; sadece IP adresi ile konuşabilir (veya eski `--link` bayrağı gerekir). Kullanıcı tanımlı (`docker network create`) bridge ağlarında ise Docker'ın gömülü DNS sunucusu (`127.0.0.11`) konteyner isimlerini otomatik olarak IP'ye çözer.
-
-??? question "Soru 2: Veritabanı konteynerini dış dünyaya kapatıp sadece API konteynerinin erişmesini nasıl sağlarız?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Veritabanı konteynerini başlatırken `-p 5432:5432` port yönlendirme bayrağını **KULLANMAYIZ**. Sadece ortak bir user-defined ağa bağlarız (`--network backend-net`). API konteyneri de aynı ağa bağlanır ve `postgres:5432` adresi üzerinden haberleşir. Böylece host dışından veritabanı portuna doğrudan ulaşılamaz; tam izolasyon sağlanır.
-
-??? question "Soru 3: `docker run --network host` bayrağı ne işe yarar ve ne zaman kullanılır?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Konteynerin ağ izolasyonunu tamamen kaldırır ve doğrudan ana makinenin ağ yığınını (network stack) kullanmasını sağlar. Port yönlendirmesine (`-p`) gerek kalmaz. Ağ gecikmesini (overhead) sıfıra indirdiği için yüksek performans gerektiren veri akışlarında veya Prometheus Node Exporter gibi host metriklerini toplayan servislerde tercih edilir.
-
----
-
-## Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 
 - Adım 4'te `docker exec frontend-app wget -qO- http://backend-api` komutu Nginx HTML sayfasını döner.
 - Adım 5'te izole ağdaki istek başarısız olurken, Adım 6'da ağa bağlandıktan sonra başarılı olur.
 
 ---
-
-## Sorun Giderme
-
-- **DNS Çözülemiyor:** Konteynerlerin aynı ağda olduğunu `docker network inspect custom-app-net` ile kontrol edin.
-- **Port 8080 Meşgulse:** `docker ps` ile portu kullanan konteyneri kapatın.

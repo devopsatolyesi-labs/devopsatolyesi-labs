@@ -52,9 +52,9 @@ flowchart TD
         SVC --> ACTUAL
     end
 
-    GIT -->|1. Polling / Webhook| REPO_SRV
-    CTRL -->|2. Drift Tespiti (Desired vs Actual)| ACTUAL
-    CTRL ==>|3. Automated Sync & Self-Heal| DEP
+    GIT -->|"1. Polling / Webhook"| REPO_SRV
+    CTRL -->|"2. Drift Tespiti (Desired vs Actual)"| ACTUAL
+    CTRL ==>|"3. Automated Sync & Self-Heal"| DEP
 
     classDef git fill:#1e1b4b,stroke:#818cf8,color:#fff;
     classDef argo fill:#431407,stroke:#f97316,color:#fff;

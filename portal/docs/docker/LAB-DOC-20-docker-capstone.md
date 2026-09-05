@@ -1,19 +1,11 @@
 # LAB-DOC-20 — Docker Final Capstone Projesi: Üretim Seviyesi Mikroservis Platformu
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🔴 **ADVANCED** (İleri Seviye) | ⏱️ 90 dakika | `docker` | `80, 3000, 5432, 6379` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| İleri | 90 dakika | `docker` | `80, 3000, 5432, 6379` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-20.zip)](/downloads/LAB-DOC-20.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-DOC-20.zip](/downloads/LAB-DOC-20.zip)
 
-
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🏆 **CAPSTONE** (Bitiş Projesi) | ⏱️ 90 dakika | `docker` | `80`, `3000`, `5432`, `6379` |
-
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-20.zip)](/downloads/LAB-DOC-20.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
 
 ---
 
@@ -361,25 +353,7 @@ docker compose exec frontend ping -c 2 postgres || echo "BEKLENEN: Ağ güvenli�
 
 ---
 
-### Adım 7: Temizlik
-
-```bash
-docker compose down -v
-rm -rf secrets
-```
-
----
-
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: `depends_on` bloğunda neden sadece servis ismi yazmak yerine `condition: service_healthy` koşulu eklenmelidir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Standart `depends_on` sadece bağımlı konteynerin process'inin başlatılmasını bekler. Ancak PostgreSQL veya Spring Boot gibi ağır servislerin port dinlemeye başlaması ve veritabanı bağlantılarını kabul etmesi 10-30 saniye sürebilir. `condition: service_healthy` olmadan backend başlarsa hemen veritabanına bağlanmaya çalışır, hata alır ve çökerek `CrashLoop` durumuna düşer.
-
----
-
-## Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 
 ```json
 {

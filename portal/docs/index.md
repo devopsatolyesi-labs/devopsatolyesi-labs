@@ -1,3 +1,8 @@
+---
+hide:
+  - navigation
+---
+
 # DevOps Atölyesi Lab Portalı
 
 Bu portalda yalnız kayıtlı olduğunuz eğitimin konu başlıkları, labları, projeleri ve indirme paketleri gösterilir.

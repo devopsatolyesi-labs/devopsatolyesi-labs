@@ -132,7 +132,15 @@ class StageContentTest(unittest.TestCase):
         javascript = (REPOSITORY / "portal/docs/javascripts/open_in_new_tab.js").read_text()
         self.assertIn("window.PORTAL_ACCESS_POLICY", javascript)
         self.assertNotIn("All 20 Docker labs", javascript)
-        self.assertIn("window.mermaid.run", javascript)
+        mermaid = (REPOSITORY / "portal/docs/javascripts/mermaid-init.js").read_text()
+        self.assertIn("window.mermaid.run", mermaid)
+        self.assertNotIn("navigation.top", config)
+
+    def test_rendered_guides_have_no_unsupported_alert_syntax(self) -> None:
+        for page in self.docs.rglob("*.md"):
+            content = page.read_text()
+            self.assertNotIn("[!NOTE]", content, page)
+            self.assertNotIn("[!TIP]", content, page)
 
 
 if __name__ == "__main__":

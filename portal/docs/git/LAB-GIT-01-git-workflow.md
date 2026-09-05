@@ -1,11 +1,10 @@
 # LAB-GIT-01 — Git Workflow, Branching & Conflict Resolution
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟢 **CORE** (Temel Seviye) | ⏱️ 45 dakika | `docker` | `Dahili / Küme İçi` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Temel | 45 dakika | `docker` | `Küme içi` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-GIT-01.zip)](/downloads/LAB-GIT-01.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-GIT-01.zip](/downloads/LAB-GIT-01.zip)
 
 
 ## 1. Lab Senaryosu
@@ -138,7 +137,7 @@ git add app-config.json
 git commit -m "merge: resolve conflict between main (port 9090) and jwt-auth"
 ```
 
-## 6. Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 Adım 5'te beklenen Git çakışma uyarısı:
 ```text
 Auto-merging app-config.json
@@ -156,36 +155,16 @@ Automatic merge failed; fix conflicts and then commit the result.
 * ... feat: initial app config for payment service
 ```
 
-## 8. Sorun Giderme
-
-### Belirti
-Çalışma esnasında `fatal: You are in 'detached HEAD' state` uyarısı alınır.
-
-### Kanıt
-`git status` çıktısında `HEAD detached at ...` ifadesi görülür.
-
-### Kontrol Komutu
+## Doğal Doğrulama ve Beklenen Sonuç
+Yapılandırma dosyasının geçerli bir JSON olduğunu ve her iki değişikliğin birleştiğini doğrulayın:
 ```bash
-git branch
+cd ~/labs/LAB-GIT-01/repo
+PORT=$(jq -r .port app-config.json)
+AUTH=$(jq -r .features.auth app-config.json)
+
+if [ "$PORT" = "9090" ] && [ "$AUTH" = "JWT_OAUTH2" ]; then
+    echo "VALIDATION SUCCESS: Merge conflict resolved. Port=9090, Auth=JWT_OAUTH2."
+else
+    echo "VALIDATION FAILED: Unexpected values in app-config.json" && exit 1
+fi
 ```
-
-### Muhtemel Neden
-Branch adı yerine doğrudan bir commit hash'i kontrol edilmiştir (`git checkout <commit-hash>`).
-
-### Çözüm
-Değişiklikleri kaybetmeden ana dala geri dönün veya yeni bir branch açın:
-```bash
-git checkout main
-```
-
-### Tekrar Doğrulama
-```bash
-git branch --show-current
-# Çıktı "main" olmalıdır.
-```
-
-## 10. Production Notu
-Üretim ortamlarında `main` veya `release` dallarına doğrudan `git push` engellenmeli (Protected Branch), tüm değişiklikler zorunlu Code Review (Pull Request) ve otomatik CI testlerinin (Merge Request Pipeline) ardından merge edilmelidir.
-
-## 11. Challenge
-Son 2 commit'i tek bir temiz commit haline getiren `git rebase -i HEAD~2` (Interactive Rebase Squash) işlemini uygulayın ve commit geçmişini sadeleştirin.

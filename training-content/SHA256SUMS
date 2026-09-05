@@ -603,10 +603,10 @@ a229c524717836fb2f0c38a6761e03be224ca7dc675e93c02a59c68adf34c005  ./labs/docker/
 55cce0c322771a5bc17cae3421fa998eb4f1c44cad357ab60b87c806f6789a77  ./labs/git/LAB-GIT-01-git-workflow.md
 6b034cacbdeb66d391e705717af5b44b413fac5504c203375146751c7956a0b6  ./labs/gitlab/LAB-GHA-01-github-actions-ci.md
 c7e8e06d2694462397c88b0a8ac95bfc353560bb58419778be0e2eb2d34529b7  ./labs/gitlab/LAB-GLB-01-gitlab-ci-pipeline.md
-607839c4338e229cd439e27ee1b9716076d90498d5d79713c4bf77101ba35f43  ./labs/gitops/LAB-ARG-01-argocd-gitops-sync.md
+df86881ef16a1fb043eef220312956789ee74dc9f96ebeed0f640521de2c2f99  ./labs/gitops/LAB-ARG-01-argocd-gitops-sync.md
 be1e27c0c698b31edfc6a814cacc10b192230679ac58431254a438e5bd069703  ./labs/helm/LAB-HLM-01-helm-chart-deployment.md
 e6b23f36251ba2939a3862249cd46ee959f563399b0082b500fc760849e45a76  ./labs/incident/LAB-INC-01-k8s-crashloop-postmortem.md
-368bf14d20bd90d6990e1c66ceec37e5a438f520f2f0e76f4054587cae61e3b8  ./labs/jenkins/LAB-JEN-01-docker-compose-setup.md
+a6b159eaa0c256e1f7b447eb5d5e1b80058a79ad06af45f83e31b4949e474cb6  ./labs/jenkins/LAB-JEN-01-docker-compose-setup.md
 bac85a2c96576ec03dca1516a2ae23880ef1ad06ec370f208c98e69d7b3fa5d5  ./labs/jenkins/LAB-JEN-02-initial-setup-plugins.md
 7aaf4ddb9a704f76ea6855f53b4e925190099369b0d1f6a9e29be3cea72a1f5e  ./labs/jenkins/LAB-JEN-03-first-freestyle-job.md
 f2fb21b7e4611c0afd79149b26485c1d027813182994462dfac881d68438fefe  ./labs/jenkins/LAB-JEN-04-git-scm-webhook.md
@@ -627,7 +627,7 @@ b862bce088374288cf5ba26b484b8a6f2aa62757396f6d08175da63d30c93d5b  ./labs/kuberne
 a07cb8011a495013eb121b4b6c36e1f95530607144dd87cb64192d0274c8d3dc  ./labs/kubernetes/LAB-K8S-04-scaling-rollout-rollback.md
 5a88463e6ab921f743cff442f3804d7e09500ecf04b3493a500a54865c05cb3a  ./labs/kubernetes/LAB-K8S-05-service-dns.md
 6a0bc6f1a38d2a430463c90da49765457bf2048073087a9852079098917c0f98  ./labs/kubernetes/LAB-K8S-06-configmap-secret.md
-8e8100610557cb9e269dbf9d68b82b5877fe4f386dae3cfd207ec67e49a1fabd  ./labs/kubernetes/LAB-K8S-07-probes-resources.md
+7d1301a7d6f5ad4d164c7043bb2a59135f31d1124a6a6aa5a4e60269a6feb103  ./labs/kubernetes/LAB-K8S-07-probes-resources.md
 53af3f1fb516bcadf8d39c711adb851d881ba44b18b18a4573a0e563d4d0e8c3  ./labs/kubernetes/LAB-K8S-08-pv-pvc.md
 078bc8db7ee2e1d70149f78ec18b7bef2a47d41457a0c92ba3e24f5ad1100bda  ./labs/kubernetes/LAB-K8S-09-ingress-nginx.md
 cb335b50c16366cff4aa15147326fa27e8b502a841e925fabaedd3f61d5f7152  ./labs/kubernetes/LAB-K8S-10-helm.md
@@ -641,7 +641,7 @@ a93695a64fa3dc0c2c1c6116238fdcacfa3f668396143fd1ef90ce2a70ecb31a  ./labs/linux/L
 0d92d1f0b6033385538455744b7454427d09f96a4845d1e9cfa58dd2d4b8ffa1  ./labs/linux/LAB-LNX-03-ssh-tunnel-mysql.md
 6acc077e020ffb4541bb5a20a72e01e7497ac0a49b945cda3b294a24d9f2a72f  ./labs/logging/LAB-LOG-01-centralized-logging.md
 8872c2d96159943206717be668a074c6ffea9e9739ddeddc3531b96dd529b2ee  ./labs/logging/LAB-LOG-02-elk-centralized-logging.md
-13fcf542aae999195941cc1f069556a7bdd62786d5f87d989984184dbc0cc23a  ./labs/monitoring/LAB-MON-01-prometheus-grafana-metrics.md
+903608990d93959a26af89fe29ce185bc7a77acba35449eb50c6c115a09cc8d1  ./labs/monitoring/LAB-MON-01-prometheus-grafana-metrics.md
 73d2ef02f1116e45bc530ed236512a4f38cc64f3c6a5d89b82e9ecde69450a37  ./labs/monitoring/LAB-MON-02-alertmanager-rules.md
 421b1cf476510eaf94663559c548b3d557a2b1d039a4c5c93e9a782683a3a8cf  ./labs/terraform/LAB-TF-01-terraform-docker-provider.md
 7c4f42f93f9756116599098edd3ce589c1ad084ba1dbb8d47dc2a178f9221215  ./labs/terraform/LAB-TF-04-terraform-helm-centralized-monitoring.md

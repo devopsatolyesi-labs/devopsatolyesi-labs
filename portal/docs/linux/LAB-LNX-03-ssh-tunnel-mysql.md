@@ -1,11 +1,10 @@
 # LAB-LNX-03 — SSH Tunneling ile Güvenli Uzak Veritabanı Erişimi
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 35 dakika | `docker` | `Dahili / Küme İçi` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Orta | 35 dakika | `docker` | `Küme içi` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-LNX-03.zip)](/downloads/LAB-LNX-03.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-LNX-03.zip](/downloads/LAB-LNX-03.zip)
 
 
 ## Amaç
@@ -63,7 +62,9 @@ BASTION_USER="ubuntu"
 BASTION_HOST="bastion.devopsatolyesi.local"
 
 echo "==> SSH Tüneli Oluşturuluyor: localhost:$LOCAL_PORT -> $REMOTE_DB:$REMOTE_PORT"
-echo "ssh -N -f -L $LOCAL_PORT:$REMOTE_DB:$REMOTE_PORT $BASTION_USER@$BASTION_HOST"
+ssh -N -f -o ExitOnForwardFailure=yes \
+  -L "$LOCAL_PORT:$REMOTE_DB:$REMOTE_PORT" \
+  "$BASTION_USER@$BASTION_HOST"
 EOF
 
 chmod +x tunnel-setup.sh
@@ -83,16 +84,12 @@ mysql -h 127.0.0.1 -P 33306 -u dbuser -p
 
 ---
 
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
+## Doğal Doğrulama ve Beklenen Sonuç
 
-??? question "Soru 1: SSH tünelleme sırasında `-L`, `-R` ve `-D` bayrakları arasındaki fark nedir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        - **`-L` (Local Port Forwarding):** İstemcinin yerel portuna gelen trafiği uzak sunucu üzerinden hedef adrese yönlendirir (en yaygın kullanım: şirket içi veritabanına erişim).
-        - **`-R` (Remote Port Forwarding):** Uzak sunucudaki bir portu yerel makinenizdeki bir servise yönlendirir (örneğin ngrok benzeri yerel API'yi dışarı açma).
-        - **`-D` (Dynamic Port Forwarding):** Yerel makinenizi bir SOCKS proxy'ye dönüştürerek tüm tarayıcı trafiğini uzak sunucu üzerinden geçirir.
+```bash
+ss -ltn | grep ':33306'
+nc -zv 127.0.0.1 33306
+mysql -h 127.0.0.1 -P 33306 -u dbuser -p -e 'SELECT 1;'
+```
 
-??? question "Soru 2: SSH tüneli kurarken neden `-N` ve `-f` bayrakları birlikte kullanılır?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        `-N` uzakta bir kabuk (shell) açılmasını ve komut çalıştırılmasını engeller, yalnızca port tüneli kurulacağını belirtir. `-f` ise SSH sürecini arka plana (background) atar; böylece terminaliniz kilitlenmez ve script veya otomasyon devam edebilir.
+Yerel port dinlemede olmalı, TCP bağlantısı kurulmalı ve sorgu `1` sonucunu döndürmelidir.

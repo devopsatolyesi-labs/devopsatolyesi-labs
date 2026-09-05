@@ -1,11 +1,10 @@
 # LAB-DOC-03 — Docker İmaj, Etiketleme ve Registry Yönetimi
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟢 **CORE** (Temel Seviye) | ⏱️ 45 dakika | `docker` | `5000` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Temel | 45 dakika | `docker` | `5000` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-03.zip)](/downloads/LAB-DOC-03.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-DOC-03.zip](/downloads/LAB-DOC-03.zip)
 
 
 ## Amaç
@@ -171,49 +170,10 @@ docker run --rm $DIGEST cat /etc/alpine-release
 
 ---
 
-### Adım 8: Temizlik
-
-```bash
-docker rm -f local-registry
-docker rmi localhost:5000/my-microservice:1.0.0 my-microservice:1.0.0 my-microservice:latest 2>/dev/null || true
-```
-
----
-
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: Üretim ortamlarında neden `image: my-app:latest` kullanımı kesinlikle tavsiye edilmez (Anti-pattern)?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        `latest` etiketi deterministik değildir. Bir düğüm imajı pazartesi çektiğinde v1 çalışırken, çarşamba günü yeni pod ayağa kaldıran başka bir düğüm güncellenmiş v2 kodunu çekebilir. Bu durum kümede farklı podların farklı kodlar çalıştırmasına ve sürümlerin takip edilememesine yol açar. Üretimde daima sabit sürüm (`v1.4.2`) veya `digest (sha256:...)` kullanılmalıdır.
-
-??? question "Soru 2: `docker tag` komutu diski ikiye katlar mı?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Hayır. `docker tag` dosya kopyalamaz; yalnızca var olan aynı imaj ID'sine yeni bir takma ad (alias/pointer) ekler. `docker images` çıktısında iki satır görünse de `IMAGE ID` birebir aynıdır ve fiziksel katmanlar tektir.
-
-??? question "Soru 3: Kullanılmayan (dangling) sahipsiz imajları tek komutla nasıl temizleriz?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        ```bash
-        docker image prune -f
-        ```
-        Hiçbir konteyner tarafından referans verilmeyen tüm kullanılmayan imajları silmek için ise:
-        ```bash
-        docker image prune -a -f
-        ```
-
----
-
-## Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 
 - `curl http://localhost:5000/v2/_catalog` çıktısında `my-microservice` deposu listelenir.
 - Registry'den çekilen imaj `docker images` çıktısında `localhost:5000/my-microservice` adıyla yer alır.
 - Digest ile çağrılan imaj alpine sürümünü sorunsuz ekrana basar.
 
 ---
-
-## Sorun Giderme
-
-- **HTTP vs HTTPS Registry Hatası:** Docker varsayılan olarak HTTP registry'lere izin vermez. Ancak `localhost` ve `127.0.0.1` adresleri güvenli (insecure registry istisnası) sayıldığı için ek ayar gerektirmeden çalışır.
-- **Port 5000 Meşgulse:** `docker ps --filter publish=5000` ile registry konteynerini kontrol edin.

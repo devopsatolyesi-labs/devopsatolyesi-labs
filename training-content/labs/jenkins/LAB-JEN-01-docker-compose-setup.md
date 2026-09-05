@@ -22,7 +22,8 @@ Bu laboratuvarın amacı, üretim standartlarında kurumsal bir **Jenkins Contro
 
 ## Ön Koşullar
 
-- Docker Engine ve Docker Compose v2 kurulu olmalıdır.
+- [Docker Engine ve Docker Compose v2 kurulu olmalıdır.](/setup/docker-engine/)
+- [Jenkins kurulum rehberini](/setup/jenkins-installation/) önceden tamamlayın.
 - Host üzerinde 8080 ve 8443 portları boş olmalıdır.
 
 Hızlı sistem ön kontrolü:

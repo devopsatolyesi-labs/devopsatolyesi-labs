@@ -73,8 +73,7 @@ Konteynerleri başlatın:
 docker compose up -d
 ```
 
-> [!NOTE]
-> GitLab ilk başlatmada veritabanı tablolarını ve servisleri ayağa kaldırırken 2-3 dakika sürebilir. Durumu `docker compose logs -f gitlab` ile izleyebilirsiniz.
+**Not:** GitLab ilk başlatmada veritabanı tablolarını ve servisleri ayağa kaldırırken 2-3 dakika sürebilir. Durumu `docker compose logs -f gitlab` ile izleyebilirsiniz.
 
 ---
 

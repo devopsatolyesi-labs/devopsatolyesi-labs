@@ -1,11 +1,10 @@
 # LAB-HLM-01 — Helm Fundamentals: Chart Structure, Custom Values & Release Management
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `kubernetes` | `Dahili / Küme İçi` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Orta | 45 dakika | `kubernetes` | `Küme içi` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-HLM-01.zip)](/downloads/LAB-HLM-01.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-HLM-01.zip](/downloads/LAB-HLM-01.zip)
 
 
 ## 1. Lab Senaryosu
@@ -180,7 +179,7 @@ helm history prod-release -n production
 helm rollback prod-release 1 -n production
 ```
 
-## 6. Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 Adım 2'deki lint çıktısı:
 ```text
 1 chart(s) linted, 0 chart(s) failed
@@ -201,33 +200,15 @@ REVISION  UPDATED   STATUS      CHART             APP VERSION  DESCRIPTION
 3         ...       deployed    devops-app-1.0.0  1.0.0        Rollback to 1
 ```
 
-## 8. Sorun Giderme
-
-### Belirti
-`helm lint` veya `helm install` komutu verilirken `error converting YAML to JSON: yaml: line X: did not find expected key` hatası alınır.
-
-### Kanıt
-Helm şablon render aşamasında YAML girinti (indentation) hatası oluştuğu bildirilir.
-
-### Kontrol Komutu
+## Doğal Doğrulama ve Beklenen Sonuç
+Release durumunun deployed olduğunu, revizyon numarasının 3'e ulaştığını ve 4 podun ayakta olduğunu doğrulayın:
 ```bash
-helm template test devops-app/
+REVISION=$(helm status prod-release -n production -o json | jq .version)
+PODS=$(kubectl get pods -n production --no-headers | wc -l)
+
+if [ "$REVISION" -eq 3 ] && [ "$PODS" -eq 4 ]; then
+  echo "VALIDATION SUCCESS: Helm chart deployed, upgraded and rolled back (Rev 3) with 4 replicas."
+else
+  echo "VALIDATION FAILED: Revision: $REVISION, Pods: $PODS" && exit 1
+fi
 ```
-
-### Muhtemel Neden
-`{{- toYaml .Values.resources | nindent 12 }}` satırındaki `nindent` boşluk sayısı Kubernetes spec hiyerarşisine uymamaktadır.
-
-### Çözüm
-`templates/deployment.yaml` dosyasındaki `nindent` değerini hiyerarşiye uygun olarak 12 boşluğa ayarlayın.
-
-### Tekrar Doğrulama
-```bash
-helm lint devops-app/
-# "0 chart(s) failed" çıktısı alınmalıdır.
-```
-
-## 10. Production Notu
-Üretim ortamlarında Chart sürümleri semantik versiyonlama kuralına (`version: 1.2.0`) göre her değişiklikte artırılmalıdır. Parametrelerin güvenliği ve veri doğrulaması için `values.schema.json` şeması tanımlanmalı, paketlenen Chart'lar Harbor veya OCI uyumlu bir Artifact Registry üzerinde (`helm push`) versiyonlanmalıdır.
-
-## 11. Challenge
-Chart şablonlarına `templates/tests/test-connection.yaml` entegrasyon test podu ekleyerek `helm test prod-release -n production` komutuyla çalışan servise otomatik ping testi atın.

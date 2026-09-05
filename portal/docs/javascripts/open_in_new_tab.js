@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
   var accessRole = null;
-  var mermaidInitialized = false;
 
   function normalizePath(pathname) {
     if (!pathname) return "";
@@ -178,32 +177,13 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 
-  function renderMermaidDiagrams() {
-    if (!window.mermaid) {
-      setTimeout(renderMermaidDiagrams, 100);
-      return;
-    }
-    if (!mermaidInitialized) {
-      window.mermaid.initialize({startOnLoad: false, securityLevel: "strict"});
-      mermaidInitialized = true;
-    }
-    var diagrams = document.querySelectorAll(".mermaid:not([data-processed])");
-    if (diagrams.length > 0) {
-      window.mermaid.run({nodes: diagrams}).catch(function(error) {
-        console.error("Mermaid render failed", error);
-      });
-    }
-  }
-
   makeExternalLinksOpenInNewTab();
-  renderMermaidDiagrams();
   loadIdentity();
 
   if (typeof document$ !== "undefined") {
     document$.subscribe(function() {
       setTimeout(makeExternalLinksOpenInNewTab, 100);
       setTimeout(applyCourseNavigation, 100);
-      setTimeout(renderMermaidDiagrams, 100);
     });
   }
 });

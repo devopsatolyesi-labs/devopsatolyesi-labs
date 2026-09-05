@@ -1,11 +1,10 @@
 # LAB-DOC-05 — Ortam Değişkenleri, .env ve Konfigürasyon Yönetimi
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟢 **CORE** (Temel Seviye) | ⏱️ 35 dakika | `docker` | `3000` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Temel | 35 dakika | `docker` | `3000` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-05.zip)](/downloads/LAB-DOC-05.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-DOC-05.zip](/downloads/LAB-DOC-05.zip)
 
 
 ## Amaç
@@ -163,45 +162,8 @@ JSON yanıtında `application: "OrderService"` ve `database_host: "postgres.inte
 
 ---
 
-### Adım 6: Temizlik
-
-```bash
-docker rm -f env-api
-docker rmi lab-doc-05-env-demo:v1
-rm -f server.js Dockerfile .env.app
-```
-
----
-
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: Dockerfile içine `ENV DB_PASSWORD=Secret123!` yazmak neden çok büyük bir güvenlik açığıdır?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Dockerfile içinde tanımlanan `ENV` ve `ARG` değerleri derlenen imajın katmanlarında (layer metadata) sonsuza kadar saklanır. İmajı çeken (`docker pull`) herhangi biri `docker history` veya `docker inspect` çalıştırarak bu şifreyi açık metin olarak görebilir. Şifreler ve API anahtarları asla imaja gömülmemeli; konteyner çalıştırılırken (`docker run -e`, Docker Secrets veya Kubernetes Secret) enjekte edilmelidir.
-
-??? question "Soru 2: Terminaldeki mevcut bir ortam değişkenini değerini tekrar yazmadan konteynere nasıl aktarırız?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        `-e DEGISKEN_ADI` şeklinde değer belirtmeden bayrak geçilirse, Docker o değişkenin değerini ana makinenin (host terminalinin) ortamından otomatik olarak okur:
-        ```bash
-        export AWS_REGION="eu-central-1"
-        docker run --rm -e AWS_REGION alpine env | grep AWS_REGION
-        ```
-
-??? question "Soru 3: `.env` dosyası Git deposuna (GitHub/GitLab) commit edilmeli midir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Kesinlikle **HAYIR**. `.env` dosyaları `.gitignore` içine eklenmelidir. Bunun yerine repoda şifre ve hassas veri içermeyen şablon bir `.env.example` dosyası tutulmalı, geliştiriciler kendi yerel makinelerinde bu dosyayı kopyalayarak `.env` oluşturmalıdır.
-
----
-
-## Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 
 - `curl http://localhost:3000` komutu `.env.app` dosyasından okunan `OrderService` yapılandırmasını JSON olarak döner.
 
 ---
-
-## Sorun Giderme
-
-- **Port 3000 Meşgulse:** `docker ps --filter publish=3000` ile çalışan süreci kapatın.

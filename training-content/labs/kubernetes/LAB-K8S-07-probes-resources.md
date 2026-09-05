@@ -20,22 +20,34 @@
 
 ## Ön Koşullar
 
-- Kind kümesi aktif olmalıdır.
+- Docker Engine ve kind kümesi aktif olmalıdır. Kurulum için [kind Kubernetes kümesi rehberine](/setup/kind-cluster/) bakın.
 
 ---
 
 ## Probe ve Kaynak Sınırları Mimarisi
 
-```text
-[ LIVENESS PROBE ] ──(Başarısız)──► Pod Yeniden Başlatılır (Restart)
-- "Uygulama kilitlendi mi, canlı mı?"
+```mermaid
+flowchart TB
+    APP[Uygulama Podu]
 
-[ READINESS PROBE ] ──(Başarısız)──► Service Endpoints'ten Çıkarılır
-- "Uygulama trafik almaya hazır mı?" (Pod öldürülmez, trafik kesilir)
+    subgraph HEALTH[Sağlık Kontrolleri]
+        LIVE[Liveness başarısız]
+        READY[Readiness başarısız]
+    end
 
-[ RESOURCE LIMITS ]
-- Requests: 64Mi (Düğümde yer ayırtma)
-- Limits: 128Mi   ──(128Mi Aşılırsa)──► Linux Kernel OOMKilled (Exit 137)
+    APP --> LIVE
+    LIVE -->|"Pod yeniden başlatılır"| RESTART[Restart]
+    APP --> READY
+    READY -->|"Pod Service endpointlerinden çıkarılır"| TRAFFIC[Trafik kesilir]
+
+    subgraph RESOURCES[Kaynak Sınırları]
+        REQUEST[Request: 32Mi bellek]
+        LIMIT[Limit: 64Mi bellek]
+    end
+
+    APP --> REQUEST
+    APP --> LIMIT
+    LIMIT -->|"Limit aşılır"| OOM[OOMKilled - Exit 137]
 ```
 
 ---

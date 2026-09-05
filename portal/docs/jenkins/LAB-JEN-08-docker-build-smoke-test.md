@@ -1,19 +1,11 @@
 # LAB-JEN-08 — Pipeline İçinde Docker İmaj Derleme, Tagging ve Smoke Test
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `jenkins, docker` | `8080, 5001` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Orta | 45 dakika | `jenkins, docker` | `8080, 5001` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-JEN-08.zip)](/downloads/LAB-JEN-08.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-JEN-08.zip](/downloads/LAB-JEN-08.zip)
 
-
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `jenkins`, `docker`, `curl` | `8080`, `5001` |
-
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-JEN-08.zip)](/downloads/LAB-JEN-08.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
 
 ---
 
@@ -215,26 +207,7 @@ docker ps -a | grep smoke-test
 
 ---
 
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: Üretim ortamlarında imaj etiketlerken neden sadece `:latest` kullanmak tehlikelidir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        `:latest` etiketi değişkendir (mutable). Hangi kod commit'inden derlendiğini belirtmez, rollback yapılmasını imkansız kılar ve Kubernetes cluster'larında `imagePullPolicy: IfNotPresent` ayarı varsa düğümler yeni sürümü çekmeyip eski cache'deki imajı çalıştırmaya devam edebilir. Üretimde mutlaka sabit bir Git commit hash veya semantik sürüm (`v1.2.3`) kullanılmalıdır.
-
-??? question "Soru 2: Smoke test sırasında `curl -f` parametresinin önemi nedir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        `-f` (`--fail`) bayrağı, sunucu HTTP 404 veya 500 gibi hata kodları döndüğünde `curl` komutunun sıfırdan farklı bir çıkış kodu (exit code != 0) üretmesini sağlar. Bu bayrak olmazsa `curl` 500 hatası alsa dahi başarılı (exit 0) sayılır ve Jenkins testi geçirdiğini zanneder.
-
-??? question "Soru 3: Birden fazla Jenkins build'i aynı anda çalıştığında port çakışması (`bind: address already in use`) nasıl engellenir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Sabit port (`5001:5000`) yerine dinamik port eşlemesi (`docker run -P` veya `docker run -p 0:5000`) kullanılmalı, ardından `docker port` komutu ile rastgele atanan host portu okunarak curl isteği o porta yönlendirilmelidir.
-
----
-
-## Beklenen Sonuç & Sorun Giderme
+## Doğal Doğrulama ve Beklenen Sonuç
 
 | Hata | Çözüm |
 | :--- | :--- |

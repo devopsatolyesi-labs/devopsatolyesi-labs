@@ -1,19 +1,11 @@
 # LAB-K8S-05 — Service, Port Mapping ve Kubernetes DNS
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `kubernetes` | `8080` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Orta | 45 dakika | `kubernetes` | `8080` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-K8S-05.zip)](/downloads/LAB-K8S-05.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-K8S-05.zip](/downloads/LAB-K8S-05.zip)
 
-
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `kubernetes`, `kubectl` | `8080`, `80` |
-
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-K8S-05.zip)](/downloads/LAB-K8S-05.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
 
 ---
 
@@ -199,29 +191,7 @@ EP_COUNT=$(kubectl get endpoints backend-service -o jsonpath='{.subsets[0].addre
 
 ---
 
-### Adım 7: Temizlik
-
-```bash
-kubectl delete -f backend-service.yaml -f backend-deployment.yaml
-```
-
----
-
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: Bir servise istek atıldığında `Connection refused` veya zaman aşımı alınıyorsa ilk kontrol edilmesi gereken nesne nedir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        `kubectl get endpoints <service_name>` komutudur. Eğer endpoints `<none>` görünüyorsa, Service manifestindeki `spec.selector` ile Pod'lardaki `metadata.labels` değerleri uyuşmuyor demektir.
-
-??? question "Soru 2: `port` ile `targetPort` arasındaki fark nedir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        `port`, diğer pod'ların Service ClusterIP'sine bağlanırken kullanacağı porttur (örneğin 80). `targetPort` ise isteğin iletileceği hedef Pod container'ının dinlediği gerçek porttur (örneğin 8080).
-
----
-
-## Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 
 - `kubectl get endpoints backend-service` çıktısında 3 adet IP adresinin bulunması.
 - `nslookup backend-service` çıktısında ClusterIP adresinin çözülmesi.

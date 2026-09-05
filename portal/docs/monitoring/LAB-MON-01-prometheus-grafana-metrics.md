@@ -1,11 +1,10 @@
 # LAB-MON-01 — Prometheus Architecture, Scrape Targets & PromQL Basics
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `monitoring` | `3000, 8000, 9090, 9100` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Orta | 45 dakika | `monitoring` | `3000, 8000, 9090, 9100` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-MON-01.zip)](/downloads/LAB-MON-01.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-MON-01.zip](/downloads/LAB-MON-01.zip)
 
 
 ## 1. Lab Senaryosu
@@ -27,7 +26,7 @@ Prometheus 3.x LTS çekme (pull) mimarisini kurmak, `prometheus.yml` ile uygulam
 
 ```mermaid
 flowchart LR
-    subgraph TARGETS [Metrik Kaynakları (Targets)]
+    subgraph TARGETS["Metrik Kaynakları (Targets)"]
         APP["order-api (:8000/metrics)\nHTTP İstek & Gecikme"]
         NODE["Node Exporter (:9100/metrics)\nCPU, RAM, Disk, Ağ"]
         PROM_SELF["Prometheus (:9090/metrics)\nTSDB Durumu"]
@@ -61,9 +60,7 @@ flowchart LR
     class VIZ viz;
 ```
 
-> [!NOTE]
-> **Çekme (Pull) vs İtme (Push) Modeli:** Prometheus, metrikleri uygulamaların kendisine göndermesini (push) beklemez; konfigürasyonundaki hedeflerin `/metrics` uç noktalarını periyodik olarak (burada her 5 saniyede bir) yoklayarak (pull) zaman serisi veritabanına kaydeder.
-
+**Not:** **Çekme (Pull) vs İtme (Push) Modeli:** Prometheus, metrikleri uygulamaların kendisine göndermesini (push) beklemez; konfigürasyonundaki hedeflerin `/metrics` uç noktalarını periyodik olarak (burada her 5 saniyede bir) yoklayarak (pull) zaman serisi veritabanına kaydeder.
 
 ## 4. Ön Koşullar
 - Docker Engine ve Docker Compose v2 çalışır durumda olmalıdır
@@ -228,7 +225,7 @@ done
 curl -s "http://localhost:9090/api/v1/query?query=rate(http_requests_total%5B1m%5D)" | jq .
 ```
 
-## 6. Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 Adım 5'teki PromQL JSON sorgu çıktısı:
 ```json
 {
@@ -249,36 +246,14 @@ Adım 5'teki PromQL JSON sorgu çıktısı:
 }
 ```
 
-## 8. Sorun Giderme
-
-### Belirti
-Prometheus arayüzünde (`http://localhost:9090/targets`) `order-api` hedefi `DOWN` görünür ve `connection refused` hatası verir.
-
-### Kanıt
-Target endpoint adresinde Docker iç ağı yerine `localhost` yazıldığı görülür.
-
-### Kontrol Komutu
+## Doğal Doğrulama ve Beklenen Sonuç
+Prometheus üzerinde 3 hedefin (`prometheus`, `node-exporter`, `order-api`) `UP` durumunda olduğunu doğrulayın:
 ```bash
-curl -s http://localhost:9090/api/v1/targets | jq '.data.activeTargets[] | select(.job=="order-api")'
+TARGETS_UP=$(curl -s http://localhost:9090/api/v1/targets | jq '[.data.activeTargets[] | select(.health=="up")] | length')
+
+if [ "$TARGETS_UP" -ge 3 ]; then
+  echo "VALIDATION SUCCESS: Prometheus 3.13 LTS is scraping 3/3 targets in UP state."
+else
+  echo "VALIDATION FAILED: Active UP targets: $TARGETS_UP" && exit 1
+fi
 ```
-
-### Muhtemel Neden
-`prometheus.yml` dosyasında hedef `localhost:8000` olarak girilmiştir; Docker köprü ağında konteynerler kendi servis isimleriyle (`order-api:8000`) erişilmelidir.
-
-### Çözüm
-`prometheus/prometheus.yml` dosyasında hedefi `order-api:8000` olarak güncelleyin ve Prometheus servisini yeniden başlatın:
-```bash
-docker restart prometheus
-```
-
-### Tekrar Doğrulama
-```bash
-curl -s http://localhost:9090/api/v1/targets | jq '.data.activeTargets[] | select(.job=="order-api") | .health'
-# "up" yanıtı dönmelidir.
-```
-
-## 10. Production Notu
-Üretim ortamlarında TSDB (Time Series Database) disk doluluğunu engellemek için veri saklama süresi (`--storage.tsdb.retention.time=15d` veya boyut sınırı `--storage.tsdb.retention.size=50GB`) kesinlikle belirlenmelidir. Ayrıca karmaşık PromQL sorgularının her dashboard yenilemesinde veritabanını yormaması için Recording Rules tanımlanarak önceden hesaplanmış zaman serileri oluşturulmalıdır.
-
-## 11. Challenge
-Grafana arayüzünde (`http://localhost:3000`) 95. yüzdelik yanıt süresini hesaplayan şu PromQL sorgusuyla yeni bir panel oluşturun: `histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))`

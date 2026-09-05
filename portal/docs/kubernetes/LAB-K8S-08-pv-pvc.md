@@ -1,19 +1,11 @@
 # LAB-K8S-08 — PersistentVolume ve PersistentVolumeClaim
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `kubernetes` | `Dahili / Küme İçi` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Orta | 45 dakika | `kubernetes` | `Küme içi` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-K8S-08.zip)](/downloads/LAB-K8S-08.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-K8S-08.zip](/downloads/LAB-K8S-08.zip)
 
-
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `kubernetes`, `kubectl` | `5432` |
-
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-K8S-08.zip)](/downloads/LAB-K8S-08.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
 
 ---
 
@@ -192,30 +184,7 @@ STUDENT_COUNT=$(kubectl exec -i postgres-db -- psql -U postgres -d school -t -c 
 
 ---
 
-### Adım 7: Temizlik
-
-```bash
-kubectl delete pod postgres-db
-kubectl delete pvc postgres-pvc
-```
-
----
-
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: `emptyDir` ile `PersistentVolumeClaim` arasındaki en temel fark nedir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        `emptyDir`, Pod oluşturulduğunda açılan ve Pod silindiği anda tamamen yok olan geçici bir disk alanıdır (cache veya scratch dosyaları için kullanılır). `PersistentVolumeClaim` ise Pod'un yaşam döngüsünden bağımsızdır; Pod silinse veya yeniden başlatılsa bile veri kalıcı olarak korunur.
-
-??? question "Soru 2: `accessModes: ReadWriteOnce` ne anlama gelir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Diskin aynı anda yalnızca **tek bir Kubernetes düğümü (node)** tarafından yazılabilir ve okunabilir olarak bağlanabileceğini belirtir. Çoğu blok depolama birimi (AWS EBS, GCP Persistent Disk) `ReadWriteOnce` modunu destekler.
-
----
-
-## Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 
 ```text
  id |     name     | grade 

@@ -1,11 +1,10 @@
 # LAB-ARG-01 — GitOps with Argo CD: Setup, Declarative Sync & Self-Healing
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🟡 **PRACTITIONER** (Orta Seviye) | ⏱️ 45 dakika | `kubernetes, argocd` | `8085` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| Orta | 45 dakika | `kubernetes, argocd` | `8085` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-ARG-01.zip)](/downloads/LAB-ARG-01.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-ARG-01.zip](/downloads/LAB-ARG-01.zip)
 
 
 ## 1. Lab Senaryosu
@@ -53,9 +52,9 @@ flowchart TD
         SVC --> ACTUAL
     end
 
-    GIT -->|1. Polling / Webhook| REPO_SRV
-    CTRL -->|2. Drift Tespiti (Desired vs Actual)| ACTUAL
-    CTRL ==>|3. Automated Sync & Self-Heal| DEP
+    GIT -->|"1. Polling / Webhook"| REPO_SRV
+    CTRL -->|"2. Drift Tespiti (Desired vs Actual)"| ACTUAL
+    CTRL ==>|"3. Automated Sync & Self-Heal"| DEP
 
     classDef git fill:#1e1b4b,stroke:#818cf8,color:#fff;
     classDef argo fill:#431407,stroke:#f97316,color:#fff;
@@ -66,9 +65,7 @@ flowchart TD
     class K8S k8s;
 ```
 
-> [!NOTE]
-> **GitOps Mutabakat Döngüsü (Reconciliation Loop):** Argo CD, Git deposundaki deklaratif YAML dosyalarını **İstenen Durum (Desired State)**, Kubernetes kümesindeki canlı kaynakları ise **Mevcut Durum (Actual State)** olarak takip eder. Biri cluster üzerinde elle bir pod silse veya yamasa bile (Configuration Drift), `selfHeal: true` kuralı sayesinde Argo CD saniyeler içinde Git'teki tanımı zorlayarak sistemi eski sağlıklı haline döndürür.
-
+**Not:** **GitOps Mutabakat Döngüsü (Reconciliation Loop):** Argo CD, Git deposundaki deklaratif YAML dosyalarını **İstenen Durum (Desired State)**, Kubernetes kümesindeki canlı kaynakları ise **Mevcut Durum (Actual State)** olarak takip eder. Biri cluster üzerinde elle bir pod silse veya yamasa bile (Configuration Drift), `selfHeal: true` kuralı sayesinde Argo CD saniyeler içinde Git'teki tanımı zorlayarak sistemi eski sağlıklı haline döndürür.
 
 ## 4. Ön Koşullar
 - `LAB-K8S-01` tamamlanmış ve kind cluster çalışıyor olmalıdır
@@ -212,7 +209,7 @@ sleep 5
 kubectl get deployment gitops-demo-app -n gitops-prod
 ```
 
-## 6. Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 Adım 4'teki Deployment durumu:
 ```text
 NAME              READY   UP-TO-DATE   AVAILABLE   AGE
@@ -225,36 +222,14 @@ NAME              READY   UP-TO-DATE   AVAILABLE   AGE
 gitops-demo-app   2/2     2            2           ... (Drift detected; reconciles to 2!)
 ```
 
-## 8. Sorun Giderme
-
-### Belirti
-Argo CD Application `OutOfSync` veya `ComparisonError` hatası verir.
-
-### Kanıt
-`argocd app get gitops-demo-app` çıktısında depo bağlantı hatası veya dal bulunamadı uyarısı görülür.
-
-### Kontrol Komutu
+## Doğal Doğrulama ve Beklenen Sonuç
+`gitops-demo-app` uygulamasının 2/2 sağlıklı replika ile çalıştığını doğrulayın:
 ```bash
-kubectl logs -l app.kubernetes.io/name=argocd-repo-server -n argocd --tail 20
+READY_REPLICAS=$(kubectl get deployment gitops-demo-app -n gitops-prod -o jsonpath='{.status.readyReplicas}')
+
+if [ "$READY_REPLICAS" -eq 2 ]; then
+  echo "VALIDATION SUCCESS: Argo CD v3.4.2 Application is running with 2/2 healthy replicas and GitOps self-healing verified."
+else
+  echo "VALIDATION FAILED: Expected 2 replicas, found $READY_REPLICAS." && exit 1
+fi
 ```
-
-### Muhtemel Neden
-Git depo adresi hatalıdır veya `targetRevision: HEAD` yerine açıkça somut bir dal adı (`main`) tanımlanmamıştır.
-
-### Çözüm
-`application.yaml` dosyasında `targetRevision: main` parametresini doğrulayın ve uygulamayı tekrar senkronize edin:
-```bash
-kubectl apply -f application.yaml
-argocd app sync gitops-demo-app || true
-```
-
-### Tekrar Doğrulama
-```bash
-kubectl get deployment gitops-demo-app -n gitops-prod
-```
-
-## 10. Production Notu
-Üretim ortamlarında yüzlerce mikroservis tek tek `Application` nesnesi olarak tanımlanmaz; "App of Apps" veya "ApplicationSet" mimarisi kullanılarak tek bir ana manifestodan hiyerarşik olarak yönetilir. Ayrıca CI boru hattı üretim kümesine doğrudan bağlanmaz; yalnızca GitOps manifest reposundaki imaj etiketini commit eder.
-
-## 11. Challenge
-`application.yaml` içine `spec.syncWindows` bloğu ekleyerek belirli saatler arasında otomatik deploy yapılmasını engelleyen bir dağıtım penceresi kuralı tanımlayın.

@@ -1,11 +1,10 @@
 # LAB-TF-04 — Terraform ve Helm ile Merkezi Kubernetes İzleme (Centralized Monitoring)
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🔴 **ADVANCED** (İleri Seviye) | ⏱️ 60 dakika | `kubernetes, monitoring` | `Dahili / Küme İçi` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| İleri | 60 dakika | `kubernetes, monitoring` | `Küme içi` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-TF-04.zip)](/downloads/LAB-TF-04.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-TF-04.zip](/downloads/LAB-TF-04.zip)
 
 
 ## 1. Lab Senaryosu
@@ -175,11 +174,10 @@ EOF
 
 ### Adım 3: Bellek Optimize Edilmiş Helm Değerlerinin (`values-monitoring.yaml`) Hazırlanması
 
-> [!IMPORTANT]
-> Standart `kube-prometheus-stack` kurulumu sınırlandırılmazsa 4–6 GB RAM tüketerek tek düğümlü geliştirme ortamlarında Linux OOM (Out of Memory) çökmesine neden olur. Aşağıdaki optimize konfigürasyon ile:
-> - Prometheus bellek limiti `512Mi`, Grafana ise `256Mi` ile sınırlandırılır.
-> - Metrik saklama süresi `12h` yapılarak disk şişmesi engellenir.
-> - Yerel `kind` kümesinde erişilemeyen etcd, kubeControllerManager ve kubeScheduler hedefleri kapatılarak gereksiz hata logları önlenir.
+**Not:** Standart `kube-prometheus-stack` kurulumu sınırlandırılmazsa 4–6 GB RAM tüketerek tek düğümlü geliştirme ortamlarında Linux OOM (Out of Memory) çökmesine neden olur. Aşağıdaki optimize konfigürasyon ile:
+- Prometheus bellek limiti `512Mi`, Grafana ise `256Mi` ile sınırlandırılır.
+- Metrik saklama süresi `12h` yapılarak disk şişmesi engellenir.
+- Yerel `kind` kümesinde erişilemeyen etcd, kubeControllerManager ve kubeScheduler hedefleri kapatılarak gereksiz hata logları önlenir.
 
 Yapılandırma dosyasını oluşturun:
 ```bash
@@ -421,7 +419,7 @@ Tarayıcınızda açın:
 
 ---
 
-## 6. Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 
 `terraform apply` tamamlandığında:
 ```text
@@ -445,29 +443,3 @@ prometheus-kube-prometheus-stack-prometheus-0            2/2     Running   0    
 ```
 
 ---
-
-## 8. Sorun Giderme
-
-| Sorun / Hata Mesajı | Olası Kök Neden | Çözüm Adımı |
-|---|---|---|
-| `context deadline exceeded` or `timeout waiting for the condition` | Host bellek yetersizliği nedeniyle imaj çekimleri uzun sürdü. | `timeout = 900` değerini artırın veya `docker pull quay.io/prometheus/prometheus:v2.54.1` gibi imajları önceden çekin. |
-| Podlar `Pending` durumunda bekliyor | `kind` worker düğümlerinde bellek yetersizliği. | `kubectl describe nodes` ile MemoryPressure durumunu inceleyin; diğer Docker konteynerlerini durdurun. |
-| `failed to get client config: invalid context` | Kubeconfig context adı `kind-devops-cluster` ile eşleşmiyor. | `kubectl config current-context` çıktısını kontrol edip `variables.tf` içindeki `kube_context` değişkenine verin. |
-| Grafana girişinde `Invalid username or password` | `adminPassword` değişkeni set edilmemiş. | `values-monitoring.yaml` dosyasındaki şifreyi veya `set_sensitive` bloğunu kontrol edin. |
-
----
-
-## 10. Production Notu
-
-- **Helm Release State Kilitlemesi:** Üretim ortamlarında Terraform state dosyası uzak bir nesne depolama alanında (S3, GCS) ve DynamoDB / Cloud Storage kilit mekanizması ile saklanmalıdır.
-- **CRD Yaşam Döngüsü:** `kube-prometheus-stack` chartı CRD'leri güncellerken Helm'in `crd-install` kancaları kısıtlı olabilir. Büyük versiyon geçişlerinde CRD'lerin ayrı bir Terraform manifestosu veya kubectl ile yönetilmesi önerilir.
-- **Kalıcı Depolama (PV/PVC):** Gerçek üretim kümelerinde Prometheus ve Grafana için EBS, Ceph veya Persistent Disk tabanlı `StorageClass` bağlanarak pod yeniden başlama durumlarında metrik kaybı önlenmelidir.
-
----
-
-## 11. Challenge
-
-1. **Prometheus Alertmanager Slack / Webhook Entegrasyonu:**
-   `values-monitoring.yaml` içerisindeki `alertmanager.config` bloğunu düzenleyerek, Kubernetes pod çökmesi durumunda bir Discord/Slack webhook'una bildirim gönderecek kuralı ekleyin ve `terraform apply` ile güncelleyin.
-2. **Kişiselleştirilmiş Dashboard Provisioning:**
-   Grafana için bir ConfigMap oluşturarak NGINX veya Redis metriklerini gösteren hazır bir JSON dashboard'unu Terraform ile otomatik olarak Grafana paneline aktarın.

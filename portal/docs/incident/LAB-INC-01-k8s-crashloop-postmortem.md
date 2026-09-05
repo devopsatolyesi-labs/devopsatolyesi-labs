@@ -1,11 +1,10 @@
 # LAB-INC-01 — War Room: Kubernetes CrashLoopBackOff, ImagePullBackOff & Postmortem
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🔴 **ADVANCED** (İleri Seviye) | ⏱️ 45 dakika | `kubernetes` | `Dahili / Küme İçi` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| İleri | 45 dakika | `kubernetes` | `Küme içi` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-INC-01.zip)](/downloads/LAB-INC-01.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-INC-01.zip](/downloads/LAB-INC-01.zip)
 
 
 ## 1. Lab Senaryosu
@@ -197,7 +196,7 @@ cat <<'EOF' > reports/postmortem-incident-101.md
 EOF
 ```
 
-## 6. Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 Adım 1'deki arıza tablosu:
 ```text
 NAME                               READY   STATUS             RESTARTS
@@ -214,33 +213,14 @@ catalog-service-xxxxxxxx-xxxxx     1/1     Running   0
 payment-service-xxxxxxxx-xxxxx     1/1     Running   0
 ```
 
-## 8. Sorun Giderme
-
-### Belirti
-`kubectl logs` komutu çalıştırıldığında çıktı boş döner ve podun neden çöktüğü anlaşılamaz.
-
-### Kanıt
-Pod sürekli yeniden başladığı için mevcut konteyner henüz çıktı üretmeden sonlanmaktadır.
-
-### Kontrol Komutu
+## Doğal Doğrulama ve Beklenen Sonuç
+`production-incident` ad alanındaki 3 podun da 1/1 Running durumuna ulaştığını ve Postmortem raporunun hazır olduğunu doğrulayın:
 ```bash
-kubectl logs <pod-name> -n production-incident --previous
+READY_PODS=$(kubectl get pods -n production-incident --no-headers | grep -c "1/1")
+
+if [ "$READY_PODS" -eq 3 ] && [ -f reports/postmortem-incident-101.md ]; then
+  echo "VALIDATION SUCCESS: War Room incident resolved. 3/3 pods are 1/1 Running and Postmortem is archived."
+else
+  echo "VALIDATION FAILED: Not all pods ready or report missing." && exit 1
+fi
 ```
-
-### Muhtemel Neden
-Pod restart olduktan sonra varsayılan `kubectl logs` yalnızca aktif konteynerin loglarını okur; çöken konteynerin logu okunamaz.
-
-### Çözüm
-Bir önceki çöküşün loglarını almak için mutlaka `--previous` parametresini kullanın.
-
-### Tekrar Doğrulama
-```bash
-kubectl logs -l app=payment-service -n production-incident --previous
-# Hata mesajı ekranda görüntülenmelidir.
-```
-
-## 10. Production Notu
-Kurumsal SRE kültüründe arızalar bireysel suçlama (Blameless Culture) ile değil; süreç, araç ve mimari eksiklikleri giderecek şekilde analiz edilir. CI boru hatlarına `kubeconform` veya `conftest` eklenerek hatalı port ve eksik değişken içeren manifestoların cluster'a uygulanması otomatik olarak engellenmelidir.
-
-## 11. Challenge
-`kubectl get events -n production-incident --sort-by='.metadata.creationTimestamp'` komutunu kullanarak kümedeki olay akışını kronolojik sırada listeleyen bir olay zaman çizelgesi (timeline) çıkarın.

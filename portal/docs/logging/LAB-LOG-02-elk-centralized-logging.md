@@ -1,11 +1,10 @@
 # LAB-LOG-02 — İleri ELK Gözlemlenebilirliği: Linux, Docker, Kubernetes, GeoMap ve Canvas
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🔴 **ADVANCED** (İleri Seviye) | ⏱️ 90 dakika | `logging, kubernetes` | `Dahili / Küme İçi` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| İleri | 90 dakika | `logging, kubernetes` | `Küme içi` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-LOG-02.zip)](/downloads/LAB-LOG-02.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-LOG-02.zip](/downloads/LAB-LOG-02.zip)
 
 
 ## 1. LAB-LOG-01 ile farkı
@@ -556,56 +555,12 @@ Harita boşsa önce `source.geo.location` sorgusunun sıfırdan büyük olduğun
 
 Canvas, dashboard'un yerine geçmez. Dashboard etkileşimli analiz içindir; Canvas NOC ekranı, TV görünümü veya yönetsel sunum için kullanılır.
 
-## 13. Canlı ELK2 kabul kanıtı
-
-GCP `training-runtime-01` üzerinde doğrulanan gerçek sonuçlar:
-
-- Nginx GeoIP belgeleri: **601+**
-- Kubernetes logları: **204.000+**
-- Linux logları: **29.000+**
-- Docker logları: **7.900+**
-- `devops-metrics-system-*`, `devops-metrics-docker-*` ve `devops-nginx-*` data stream'leri aktif
-- `ELK2 İleri Gözlemlenebilirlik Merkezi`, `Nginx İstemci GeoMap` ve `DevOps Operasyon Merkezi` Canvas nesneleri Kibana 8.17.8 tarafından başarıyla kabul edildi
-
-Sayılar zamanla artar; kabul kriteri alanların ve veri akışlarının bulunmasıdır.
-
-## 14. Sorun giderme
+## Doğal Doğrulama ve Beklenen Sonuç
 
 ```bash
-docker compose logs --tail=100 vector
-docker compose logs --tail=100 metricbeat
-docker compose logs --tail=100 filebeat
-curl -s http://localhost:9200/_cluster/health | jq .
+docker compose ps
+curl -fsS http://127.0.0.1:9200/_cluster/health?pretty
+curl -fsS 'http://127.0.0.1:9200/_cat/indices/devops-*?v'
 ```
 
-- `permission denied /var/log/syslog`: Vector konteynerinin root olarak çalıştığını ve bind mount'u kontrol edin.
-- Docker metriği yok: `/var/run/docker.sock` mount'unu kontrol edin.
-- Kubernetes logu yok: Kind/Kubernetes node'unun gerçek pod log dizinini bulun; dağıtıma göre yol değişebilir.
-- GeoMap boş: Nginx ingest pipeline'ının yüklendiğini ve `source.geo.location` mapping tipinin `geo_point` olduğunu doğrulayın.
-- CPU/RAM paneli boş: Data View zaman alanının `@timestamp`, zaman aralığının Last 15 minutes olduğunu kontrol edin.
-
-## 15. Manuel temizlik
-
-Yalnız bu labın Compose kaynaklarını kaldırın:
-
-```bash
-cd ~/labs/LAB-LOG-02
-docker compose down
-```
-
-Lab verilerini de silmek istiyorsanız ve doğru dizinde olduğunuzu doğruladıysanız:
-
-```bash
-pwd
-docker compose down -v
-```
-
-## 16. Production notları
-
-- Eğitimde kapalı olan Elastic security üretimde TLS, RBAC ve secret yönetimiyle açılır.
-- Docker socket root yetkisine eşdeğer kabul edilir; salt okunur mount tek başına tam güvenlik sınırı değildir.
-- Kubernetes üretiminde node dosya yolu yerine Elastic Agent/Filebeat DaemonSet ve sınırlı ServiceAccount kullanılır.
-- Log ve metrikler için ayrı ILM/data tier politikaları uygulanır.
-- `authorization`, token, parola, kişisel veri ve kart bilgisi ingest öncesinde maskelenir.
-- GeoIP yaklaşık konumdur; kesin kullanıcı konumu olarak değerlendirilmez.
-- Dashboard sorguları yüksek cardinality alanlarında sınırlandırılır.
+Compose servisleri sağlıklı, Elasticsearch kümesi erişilebilir ve oluşturduğunuz `devops-*` veri akışları listelenebilir olmalıdır. Kibana’da kaydettiğiniz dashboard ve Canvas nesnelerini yeniden açarak görselleştirmelerin veri ürettiğini doğrulayın.

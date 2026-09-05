@@ -26,7 +26,7 @@ Prometheus 3.x LTS çekme (pull) mimarisini kurmak, `prometheus.yml` ile uygulam
 
 ```mermaid
 flowchart LR
-    subgraph TARGETS [Metrik Kaynakları (Targets)]
+    subgraph TARGETS["Metrik Kaynakları (Targets)"]
         APP["order-api (:8000/metrics)\nHTTP İstek & Gecikme"]
         NODE["Node Exporter (:9100/metrics)\nCPU, RAM, Disk, Ağ"]
         PROM_SELF["Prometheus (:9090/metrics)\nTSDB Durumu"]

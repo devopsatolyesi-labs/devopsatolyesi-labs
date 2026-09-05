@@ -1,19 +1,11 @@
 # LAB-JEN-13 — Rolling Update, Canlı Doğrulama ve Otomatik Rollback
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🔴 **ADVANCED** (İleri Seviye) | ⏱️ 45 dakika | `jenkins, kubernetes` | `8080` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| İleri | 45 dakika | `jenkins, kubernetes` | `8080` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-JEN-13.zip)](/downloads/LAB-JEN-13.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-JEN-13.zip](/downloads/LAB-JEN-13.zip)
 
-
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🔴 **ADVANCED** (İleri Seviye) | ⏱️ 45 dakika | `jenkins`, `kubernetes`, `bash` | `8080` |
-
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-JEN-13.zip)](/downloads/LAB-JEN-13.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
 
 ---
 
@@ -169,21 +161,7 @@ kubectl get deployment order-api -n production -o jsonpath='{.spec.template.spec
 
 ---
 
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: Rolling update sırasında `maxUnavailable: 0` ve `maxSurge: 1` ayarının anlamı nedir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Bu ayar, güncelleme anında hiçbir mevcut podun kapatılmamasını (`maxUnavailable: 0`), önce yeni podun oluşturulmasını (`maxSurge: 1`), ancak yeni pod tamamen `Ready` olduktan sonra eski podun kapatılmasını sağlar. Bu sayede sıfır kesinti (Zero Downtime) garanti edilir.
-
-??? question "Soru 2: `kubectl rollout undo` varsayılan olarak kaç sürüm geriye gider?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Varsayılan olarak tam bir önceki sürüme (revision N-1) döner. Eğer daha eski bir sürüme dönülmek isteniyorsa `--to-revision=<REVISION_NO>` bayrağı kullanılmalıdır.
-
----
-
-## Beklenen Sonuç & Sorun Giderme
+## Doğal Doğrulama ve Beklenen Sonuç
 
 | Durum | Açıklama |
 | :--- | :--- |

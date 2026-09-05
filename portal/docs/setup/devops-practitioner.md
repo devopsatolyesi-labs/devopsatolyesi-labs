@@ -4,12 +4,12 @@ Bu kontrol yalnız **DevOps Practitioner** eğitimine aittir.
 
 ## Sunucuda Bulunması Gereken Araçlar
 
-- Git, curl, jq ve unzip
-- Python 3, `python3-venv` ve pip
-- Docker Engine ve Docker Compose v2
-- Java 21, Jenkins ve GitLab Runner
-- Terraform
-- kind, kubectl ve Helm
+- [Git, curl, jq ve unzip](./index.md)
+- [Python 3, `python3-venv` ve pip](./index.md)
+- [Docker Engine ve Docker Compose v2](./docker-engine.md)
+- [Java 21, Jenkins ve GitLab Runner](./jenkins-installation.md)
+- [Terraform](../terraform/LAB-TF-01-terraform-docker-provider.md)
+- [kind, kubectl ve Helm](./kind-cluster.md)
 - Harbor erişimi
 - Argo CD CLI
 - Prometheus, Grafana ve ELK lablarını çalıştırabilecek en az 8 GB RAM

@@ -1,19 +1,11 @@
 # LAB-DOC-14 — Healthcheck, Restart Policy ve Kaynak Limitleri
 
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🔴 **ADVANCED** (İleri Seviye) | ⏱️ 45 dakika | `docker` | `8080` |
+| Seviye | Tahmini Süre | Profil / Araçlar | Açık Portlar |
+| --- | --- | --- | --- |
+| İleri | 45 dakika | `docker` | `8080` |
 
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-14.zip)](/downloads/LAB-DOC-14.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
+[LAB-DOC-14.zip](/downloads/LAB-DOC-14.zip)
 
-
-| 🎯 Seviye | ⏱️ Tahmini Süre | 🛠️ Profil / Araçlar | 🔌 Açık Portlar |
-| :--- | :--- | :--- | :--- |
-| 🔴 **ADVANCED** (İleri Seviye) | ⏱️ 45 dakika | `docker` | `8080` |
-
-> [!TIP]
-> 📥 **Başlangıç Paketi:** [Bu labın başlangıç paketini indir (LAB-DOC-14.zip)](/downloads/LAB-DOC-14.zip) — paket başlangıç kodlarını içerir; çözüm içermez.
 
 ---
 
@@ -211,29 +203,7 @@ docker inspect health-app --format='ExitCode={{.State.ExitCode}} OOMKilled={{.St
 
 ---
 
-### Adım 7: Temizlik
-
-```bash
-docker compose down
-```
-
----
-
-## 🧠 İnteraktif Alıştırmalar ve Senaryo Soruları
-
-??? question "Soru 1: Neden Dockerfile veya Compose içinde `HEALTHCHECK` tanımlamak sadece `docker ps` çıktısına bakmaktan daha üstündür?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        `docker ps` sadece işletim sistemi seviyesinde ana process'in (PID 1) ayakta olup olmadığına bakar. Process kilitlenmiş (deadlock), veritabanı bağlantısı kopmuş veya sonsuz döngüye girmiş olsa bile `docker ps` konteyneri "Up" gösterir. `HEALTHCHECK` ise doğrudan HTTP endpoint'ini veya veritabanı soketini sorgulayarak uygulamanın gerçekten istek karşılayabilir durumda olduğunu garanti eder.
-
-??? question "Soru 2: Çıkış kodunun `137` olması ne anlama gelir?"
-    ??? tip "💡 Çözümü Göster"
-        **Cevap:**
-        Linux'ta standart çıkış kodu formülü `128 + Sinyal Kodu`dur. `SIGKILL` sinyal kodu `9` olduğundan, `128 + 9 = 137` çıkar. Bu, sürecin normal şekilde kapanmadığını, doğrudan işletim sistemi çekirdeği (genellikle Out-Of-Memory Killer) tarafından zorla sonlandırıldığını kanıtlar.
-
----
-
-## Beklenen Sonuç
+## Doğal Doğrulama ve Beklenen Sonuç
 
 - `docker ps` çıktısında `(healthy)` ve daha sonra `(unhealthy)` ibaresi.
 - Bellek taşmasında `ExitCode=137 OOMKilled=true` doğrulaması.
