@@ -1,0 +1,18 @@
+replicaCount: 2
+image:
+  repository: hashicorp/http-echo
+  tag: "0.2.3"
+  pullPolicy: IfNotPresent
+service:
+  port: 80
+  targetPort: 5678
+appText: "orders-platform release v1"
+cache:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: redis
+    tag: "7.4-alpine"
+    pullPolicy: IfNotPresent
+  service:
+    port: 6379

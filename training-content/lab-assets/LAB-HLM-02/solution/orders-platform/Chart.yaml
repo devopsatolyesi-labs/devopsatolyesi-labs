@@ -1,0 +1,11 @@
+apiVersion: v2
+name: orders-platform
+description: Main HTTP application and local cache subchart
+type: application
+version: 1.0.0
+appVersion: "0.2.3"
+dependencies:
+  - name: cache
+    version: 0.1.0
+    repository: file://charts/cache
+    condition: cache.enabled
