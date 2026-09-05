@@ -202,6 +202,22 @@ Revizyon 3'ün oluşturulduğunu ve replika sayısının tekrar 3'e indiğini g�
 
 ---
 
+### Adım 6: Release'i kaldırma
+
+Lab sonunda Helm'in yönettiği tüm Kubernetes nesnelerini release adıyla
+temizleyin. Bu komut namespace içindeki diğer uygulamalara dokunmaz:
+
+```bash
+helm uninstall training-app
+kubectl get deployment training-app-web --ignore-not-found
+helm list
+```
+
+`helm uninstall` sonrasında deployment çıktısı boş dönmeli ve release artık
+`helm list` içinde görünmemelidir.
+
+---
+
 ## Doğal Doğrulama
 
 ```bash

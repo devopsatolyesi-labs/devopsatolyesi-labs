@@ -290,6 +290,18 @@ df163b563ef417f826d003c718484e091e56a99fba7f803a60aaf97e5a6a7fc0  ./lab-assets/L
 94aae48bbc21ab3af8aec9aecf235d92da18d1bc338f2dd081e2fe3bfe1ea118  ./lab-assets/LAB-HLM-01/solution/Chart.yaml
 6fed4811a19aa4162ab577b874c68e4e9fb8e413bc2c5497948971c15476fec4  ./lab-assets/LAB-HLM-01/solution/values.yaml
 94aae48bbc21ab3af8aec9aecf235d92da18d1bc338f2dd081e2fe3bfe1ea118  ./lab-assets/LAB-HLM-01/starter/Chart.yaml
+b79cad4dccf2f787dc57c8ca55d5491f186455771279b6fb552a4e9bad69cb16  ./lab-assets/LAB-HLM-02/README.md
+28b067fc43519d2c91429dc26476d3126ef942fea05e84f1681e0c8a62b12876  ./lab-assets/LAB-HLM-02/solution/orders-platform/Chart.yaml
+f47b9f86d29713e87ce84137c3c41d1c0510986ae40b895e7b8debac8f711741  ./lab-assets/LAB-HLM-02/solution/orders-platform/charts/cache/Chart.yaml
+9cd04b58258753737d026f8b821f7942c66a0a6500c91a4bc55e938851762166  ./lab-assets/LAB-HLM-02/solution/orders-platform/charts/cache/templates/deployment.yaml
+4805aea4b07cc286b7e3dbc4b60dc22a0e3c530f38977f254c6b07a6bea4d0e5  ./lab-assets/LAB-HLM-02/solution/orders-platform/charts/cache/templates/service.yaml
+faeef7059ee959e70502456dd9c94e35ebfa090179a32a8acbf2daa32ea145db  ./lab-assets/LAB-HLM-02/solution/orders-platform/charts/cache/values.yaml
+8c6c7ed343a045419c222a41e9c79f5bcca374dd5f1080e71bad7b64eb930f0a  ./lab-assets/LAB-HLM-02/solution/orders-platform/templates/deployment.yaml
+a45a80882dff7621dd65bb53bf732ec6ecf7d7c6df7c0bbca8d16def21b87542  ./lab-assets/LAB-HLM-02/solution/orders-platform/templates/migration-hook.yaml
+cffe10abb70ed049c0c000acef48bd60a041a0c191a2d0377b78a84a1390d426  ./lab-assets/LAB-HLM-02/solution/orders-platform/templates/service.yaml
+5ec06090824a304e417738e55323eb40a49385bb82ac80c7c4191c3b027aa96a  ./lab-assets/LAB-HLM-02/solution/orders-platform/values.yaml
+2928fa1668c7b7079d2b2d8ba945e87dd7cc1bb5573285b0b93540a2a1525ea7  ./lab-assets/LAB-HLM-02/starter/Chart.yaml
+5ec06090824a304e417738e55323eb40a49385bb82ac80c7c4191c3b027aa96a  ./lab-assets/LAB-HLM-02/starter/values.yaml
 1df7104c94d95384114fdd592ef30ce4ce7407f563788802bf136113ee46aa9b  ./lab-assets/LAB-INC-01/scripts/cleanup.sh
 09c7b92457fda98ffa6a8c9623323905f42ef6ace2a367f547746096c8914868  ./lab-assets/LAB-INC-01/scripts/reset.sh
 3a130f7eb779d93ad5238222ce13d822b2fb1ab2103cf20122ccf80504d6c4a6  ./lab-assets/LAB-INC-01/scripts/validate.sh
@@ -628,6 +640,7 @@ a229c524717836fb2f0c38a6761e03be224ca7dc675e93c02a59c68adf34c005  ./labs/docker/
 9009a52fc37fa538a516de6770f3e3447ea66c794d421677b343d7c2875f662b  ./labs/gitlab/LAB-GLB-01-gitlab-ci-pipeline.md
 3441011f08bcb15f7662ffdb54352599f5737005fb35d425eb736e8ed36421b1  ./labs/gitops/LAB-ARG-01-argocd-gitops-sync.md
 6515e06bab973f1531de4e5484b47a09e1984494a98984e91d709d6aefc328d9  ./labs/helm/LAB-HLM-01-helm-chart-deployment.md
+5fca3f59af04f679a2a8f247da5d2b638b6894ce0a795c2b04b5d138e9455ccd  ./labs/helm/LAB-HLM-02-helm-dependencies-subcharts-hooks.md
 e6b23f36251ba2939a3862249cd46ee959f563399b0082b500fc760849e45a76  ./labs/incident/LAB-INC-01-k8s-crashloop-postmortem.md
 10d0bebc554cf86d738b8d49db846ec559badd2fe167ce17d7cb20145054aa05  ./labs/jenkins/LAB-JEN-01-docker-compose-setup.md
 b7353885bcc92e7b680b0241d08ea8f12c23aab0b5d54b2c7c521be717c65a30  ./labs/jenkins/LAB-JEN-02-initial-setup-plugins.md
@@ -653,7 +666,7 @@ bc107d78ed66e59bed5ffaf14c8eb6569dc56ff9597ff7331cf60e7314534b2c  ./labs/kuberne
 7421eb152294afd9f0498fbe0fcb57d374d2a61f79e474b43ef6a2b19fd58eb0  ./labs/kubernetes/LAB-K8S-07-probes-resources.md
 73aef60f492e279be35bbbb74cddb405ab6d6c6611f50c56d5ec1df1c6bc133f  ./labs/kubernetes/LAB-K8S-08-pv-pvc.md
 078bc8db7ee2e1d70149f78ec18b7bef2a47d41457a0c92ba3e24f5ad1100bda  ./labs/kubernetes/LAB-K8S-09-ingress-nginx.md
-cb335b50c16366cff4aa15147326fa27e8b502a841e925fabaedd3f61d5f7152  ./labs/kubernetes/LAB-K8S-10-helm.md
+3cae13c421209c548bc641183062dde64f26604adeeecd4b30cb1c758a869a9c  ./labs/kubernetes/LAB-K8S-10-helm.md
 9ea721f0a1e2f49c8de48b3870155d77bf652ccce3fc67e0d3d5e1b83376d2a0  ./labs/kubernetes/LAB-K8S-11-troubleshooting.md
 2abd039e002aac2cf27bb47d14e4300965a1a9ebccde52a06b42ac873494ce89  ./labs/kubernetes/LAB-K8S-12-capstone.md
 4463f1091b8f06d398693201f6c925673b08f4c17cc8781309965a51ff32d1bd  ./labs/kubernetes/LAB-K8S-13-headlamp.md
