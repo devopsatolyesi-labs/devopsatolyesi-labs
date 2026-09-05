@@ -7,52 +7,28 @@
 [LAB-K8S-08.zip](/downloads/LAB-K8S-08.zip)
 
 
----
-
 ## Amaç
 
-- Kubernetes'in durum bilgisi içeren (stateful) uygulamalarda veri kalıcılığı mimarisini kavramak.
-- **StorageClass** üzerinden dinamik depolama birimi tahsisini (**Dynamic Provisioning**) gözlemlemek.
-- **PersistentVolumeClaim (PVC)** tanımlayarak PostgreSQL veritabanına kalıcı disk alanı bağlamak.
-- Pod silindiğinde bile veritabanı tablolarının ve kayıtlarının yeni açılan Pod tarafından eksiksiz okunduğunu kanıtlamak.
-- `emptyDir` (geçici) ile `PVC` (kalıcı) arasındaki farkı test etmek.
-
----
+- Düğüm üzerindeki yerel yolu statik bir PersistentVolume (PV) olarak tanımlamak.
+- PersistentVolumeClaim (PVC) oluşturup doğru StorageClass ile PV'ye bağlamak.
+- Pod silinse bile aynı PVC üzerindeki dosyanın yeni Pod tarafından okunabildiğini kanıtlamak.
 
 ## Ön Koşullar
 
-- Kind kümesi aktif olmalıdır.
-
----
+- LAB-K8S-01 ile oluşturulmuş çalışan bir kind kümesi.
+- `kubectl` ve Docker CLI erişimi.
 
 ## PersistentVolume ve PVC Mimarisi
 
 ```text
-[ STORAGECLASS: standard ] (Dinamik Disk Üretici)
-            │
-            ▼ Otomatik Üretir
-[ PERSISTENTVOLUME (PV) ] (1Gi HostPath Disk Alanı)
-            │
-            │ Eşleşir (Bound)
+[ PV: lab-k8s-08-local-pv ]
+  hostPath: /tmp/lab-k8s-08
+  StorageClass: lab-k8s-08-local
+            │ statik eşleşme
             ▼
-[ PERSISTENTVOLUMECLAIM (postgres-pvc) ]
-            │
-            │ volumeMounts: /var/lib/postgresql/data
-            ▼
-+------------------------------------+
-| POD: postgres-db                   |
-| - Veritabanı Tablosu: orders       |  <--- kubectl delete pod postgres-db
-+------------------------------------+
-            │
-            ▼ (Yeni Pod Oluşur)
-+------------------------------------+
-| YENİ POD: postgres-db-new          |
-| - Aynı PVC'ye bağlanır             |
-| - Veriler EKSİKSİZ KORUNUR!        |
-+------------------------------------+
+[ PVC: app-data ] ──► [ Pod: writer ] ──► /data/evidence.txt
+                                      (Pod silinse de dosya kalır)
 ```
-
----
 
 ## Adım Adım Uygulama Rehberi
 
@@ -63,133 +39,108 @@ mkdir -p ~/labs/LAB-K8S-08
 cd ~/labs/LAB-K8S-08
 ```
 
----
-
-### Adım 2: Kümedeki Varsayılan StorageClass Nesnesini İnceleyin
+### Adım 2: Yerel statik PV'yi oluşturun
 
 ```bash
-kubectl get storageclass
+cat <<'EOF' > storage.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: lab-k8s-08
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: lab-k8s-08-local-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes: [ReadWriteOnce]
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: lab-k8s-08-local
+  hostPath:
+    path: /tmp/lab-k8s-08
+    type: DirectoryOrCreate
+EOF
+
+kubectl apply -f storage.yaml
+kubectl get pv lab-k8s-08-local-pv
 ```
 
-Kind ortamında `standard (default)` adında dinamik bir yerel depolama sınıfının aktif olduğunu görün.
+PV'nin `Available` olduğunu ve `lab-k8s-08-local` sınıfını kullandığını görün.
 
----
-
-### Adım 3: PersistentVolumeClaim (PVC) Tanımlayın
+### Adım 3: PV'ye bağlanan PVC'yi oluşturun
 
 ```bash
-cat <<'EOF' > postgres-pvc.yaml
+cat <<'EOF' > pvc.yaml
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: postgres-pvc
+  name: app-data
+  namespace: lab-k8s-08
 spec:
-  accessModes:
-    - ReadWriteOnce
+  accessModes: [ReadWriteOnce]
+  storageClassName: lab-k8s-08-local
   resources:
     requests:
       storage: 1Gi
 EOF
 
-kubectl apply -f postgres-pvc.yaml
-kubectl get pvc postgres-pvc
+kubectl apply -f pvc.yaml
+kubectl get pv lab-k8s-08-local-pv
+kubectl get pvc app-data -n lab-k8s-08
 ```
 
-Durumun `Bound` olduğunu ve dinamik olarak arka planda 1Gi boyutunda bir `PersistentVolume (PV)` üretildiğini görün.
+PV ve PVC durumlarının `Bound` olduğunu görün. Bu, dinamik provisioner yerine statik PV-PVC eşleşmesidir.
 
----
-
-### Adım 4: PVC Bağlı PostgreSQL Pod'u Başlatın
+### Adım 4: PVC bağlı Pod'u başlatın
 
 ```bash
-cat <<'EOF' > postgres-pod.yaml
+cat <<'EOF' > pod.yaml
 apiVersion: v1
 kind: Pod
 metadata:
-  name: postgres-db
-  labels:
-    app: postgres
+  name: writer
+  namespace: lab-k8s-08
 spec:
   containers:
-    - name: postgres
-      image: postgres:16-alpine
-      env:
-        - name: POSTGRES_PASSWORD
-          value: "MasterPass2026"
-        - name: POSTGRES_DB
-          value: "school"
-      ports:
-        - containerPort: 5432
+    - name: writer
+      image: busybox:1.36.1
+      command: ["sh", "-c", "date -u > /data/evidence.txt; cat /data/evidence.txt; sleep 3600"]
       volumeMounts:
-        - name: db-data
-          mountPath: /var/lib/postgresql/data
+        - name: my-data
+          mountPath: /data
   volumes:
-    - name: db-data
+    - name: my-data
       persistentVolumeClaim:
-        claimName: postgres-pvc
+        claimName: app-data
 EOF
 
-kubectl apply -f postgres-pod.yaml
+kubectl apply -f pod.yaml
+kubectl wait --for=condition=Ready pod/writer -n lab-k8s-08 --timeout=120s
+kubectl exec -n lab-k8s-08 writer -- cat /data/evidence.txt
 ```
 
-Pod'un `Running` olmasını bekleyin (`kubectl get pod postgres-db -w`).
+Pod'un `Running` olduğunu ve dosyanın tarih bilgisini içerdiğini görün.
 
----
-
-### Adım 5: Veritabanına Kritik Veri Ekleyin
+### Adım 5: Pod'u silip kalıcılığı kanıtlayın
 
 ```bash
-kubectl exec -i postgres-db -- psql -U postgres -d school <<'EOF'
-CREATE TABLE students (id SERIAL PRIMARY KEY, name VARCHAR(50), grade INT);
-INSERT INTO students (name, grade) VALUES ('Ahmet Yilmaz', 95);
-INSERT INTO students (name, grade) VALUES ('Ayse Demir', 100);
-SELECT * FROM students;
-EOF
+kubectl delete pod writer -n lab-k8s-08 --wait=true
+kubectl apply -f pod.yaml
+kubectl wait --for=condition=Ready pod/writer -n lab-k8s-08 --timeout=120s
+kubectl exec -n lab-k8s-08 writer -- test -s /data/evidence.txt
+kubectl exec -n lab-k8s-08 writer -- cat /data/evidence.txt
 ```
 
----
-
-### Adım 6: Kritik Test: Pod'u Silin ve Verinin Korunduğunu Kanıtlayın
-
-Veritabanı Pod'unu tamamen yok edelim:
-
-```bash
-kubectl delete pod postgres-db
-```
-
-Şimdi aynı YAML dosyası ile yeni bir Pod oluşturalım:
-
-```bash
-kubectl apply -f postgres-pod.yaml
-sleep 5
-```
-
-Yeni Pod içerisinden verileri sorgulayın:
-
-```bash
-kubectl exec -i postgres-db -- psql -U postgres -d school -c "SELECT * FROM students;"
-```
-
-`Ahmet Yilmaz` ve `Ayse Demir` kayıtlarının silinmediğini, verilerin PVC sayesinde fiziksel diskte korunduğunu görün!
-
----
-
-## Doğal Doğrulama
-
-```bash
-# Veritabanında 2 öğrencinin bulunduğunu doğrulayın
-STUDENT_COUNT=$(kubectl exec -i postgres-db -- psql -U postgres -d school -t -c "SELECT COUNT(*) FROM students;" | tr -d ' ')
-[ "$STUDENT_COUNT" -eq 2 ] && echo "DOĞRULAMA BAŞARILI: Veri kalıcılığı PVC ile kanıtlandı."
-```
-
----
+Dosyanın yeni Pod'da da okunabildiğini görün; veri, statik PV'nin hostPath'inde korunmuştur.
 
 ## Doğal Doğrulama ve Beklenen Sonuç
 
-```text
- id |     name     | grade 
-----+--------------+-------
-  1 | Ahmet Yilmaz |    95
-  2 | Ayse Demir   |   100
-(2 rows)
+```bash
+kubectl get pv lab-k8s-08-local-pv
+kubectl get pvc app-data -n lab-k8s-08
+kubectl exec -n lab-k8s-08 writer -- test -s /data/evidence.txt
 ```
+
+PV ve PVC `Bound` olmalı, son komut başarıyla dönmeli ve `evidence.txt` tarih satırını göstermelidir.

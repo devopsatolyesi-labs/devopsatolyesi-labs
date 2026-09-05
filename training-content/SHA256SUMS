@@ -437,7 +437,7 @@ bf91d178a2a7e81b1bac9a153801b228215fab44f54c8d13cdb7205c3e7a8ae2  ./lab-assets/L
 131b3a517bf5c842fa6cc17b3a33a9e74bff5886ba257abdf236ff9a288d7209  ./lab-assets/LAB-K8S-07/starter/deployment.yaml
 b0966b5603de1ae1cefec3bc4d427ed6b29dbd35f95fc923138ef14208c58d9c  ./lab-assets/LAB-K8S-08/scripts/cleanup.sh
 4f51cbd226452016c08ee034ef9b58ff95f8f1250442f84987c37ecd14cecb48  ./lab-assets/LAB-K8S-08/scripts/reset.sh
-39be5a34127990c74ac1ffd08a9ab02fe65931adf155d7982fcd9fa8487a6ed3  ./lab-assets/LAB-K8S-08/scripts/validate.sh
+3960418a14fdf7d309d20b65a401b573831bfb5b3a48abe0703aaa112c8151fc  ./lab-assets/LAB-K8S-08/scripts/validate.sh
 52538fe6864ea577374fb04181b2f378e4cc39714fa379cec59b37455af286d3  ./lab-assets/LAB-K8S-08/solution/pod.yaml
 d01f034a1db037355a252e939a26bcc1bf57303f123202db596636134f677864  ./lab-assets/LAB-K8S-08/solution/pvc.yaml
 992b29c845af0c49616c900efcea0d6bc809113b54b2ef62c8f3ca553c87b3cd  ./lab-assets/LAB-K8S-08/starter/pod.yaml
@@ -651,7 +651,7 @@ a07cb8011a495013eb121b4b6c36e1f95530607144dd87cb64192d0274c8d3dc  ./labs/kuberne
 5a88463e6ab921f743cff442f3804d7e09500ecf04b3493a500a54865c05cb3a  ./labs/kubernetes/LAB-K8S-05-service-dns.md
 bc107d78ed66e59bed5ffaf14c8eb6569dc56ff9597ff7331cf60e7314534b2c  ./labs/kubernetes/LAB-K8S-06-configmap-secret.md
 7421eb152294afd9f0498fbe0fcb57d374d2a61f79e474b43ef6a2b19fd58eb0  ./labs/kubernetes/LAB-K8S-07-probes-resources.md
-53af3f1fb516bcadf8d39c711adb851d881ba44b18b18a4573a0e563d4d0e8c3  ./labs/kubernetes/LAB-K8S-08-pv-pvc.md
+73aef60f492e279be35bbbb74cddb405ab6d6c6611f50c56d5ec1df1c6bc133f  ./labs/kubernetes/LAB-K8S-08-pv-pvc.md
 078bc8db7ee2e1d70149f78ec18b7bef2a47d41457a0c92ba3e24f5ad1100bda  ./labs/kubernetes/LAB-K8S-09-ingress-nginx.md
 cb335b50c16366cff4aa15147326fa27e8b502a841e925fabaedd3f61d5f7152  ./labs/kubernetes/LAB-K8S-10-helm.md
 9ea721f0a1e2f49c8de48b3870155d77bf652ccce3fc67e0d3d5e1b83376d2a0  ./labs/kubernetes/LAB-K8S-11-troubleshooting.md
