@@ -52,8 +52,12 @@ markdown_extensions:
 extra:
   generator: false
 
+extra_css:
+  - stylesheets/image-lightbox.css?v=20260905-3
+
 extra_javascript:
   - javascripts/course_access.js?v=20260905-1
+  - javascripts/image-lightbox.js?v=20260905-3
   - javascripts/open_in_new_tab.js?v=20260905-1
 
 nav:

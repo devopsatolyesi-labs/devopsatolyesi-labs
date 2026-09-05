@@ -140,6 +140,8 @@ class StageContentTest(unittest.TestCase):
         self.assertNotIn("All 20 Docker labs", javascript)
         self.assertNotIn("mermaid-init.js", config)
         self.assertNotIn("navigation.top", config)
+        self.assertIn("stylesheets/image-lightbox.css", config)
+        self.assertIn("javascripts/image-lightbox.js", config)
 
         for guide in (REPOSITORY / "training-content/labs").rglob("*.md"):
             self.assertNotIn("```mermaid", guide.read_text(), guide)
